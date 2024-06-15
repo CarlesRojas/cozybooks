@@ -1,7 +1,7 @@
 const Finished = async () => {
     return (
-        <main className="flex h-screen w-full items-center justify-center">
-            <h1 className="text-4xl font-semibold tracking-wide">Finished</h1>
+        <main className="relative flex h-fit w-full flex-col">
+            <h1 className="mx-auto my-20 text-4xl font-semibold tracking-wide">Finished</h1>
         </main>
     );
 };

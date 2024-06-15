@@ -32,25 +32,30 @@ const Navigation = () => {
 
                 <div className="flex h-fit items-center rounded-full bg-neutral-300/70 backdrop-blur-md dark:bg-neutral-700/60">
                     {routes.map((route) => (
-                        <Link key={route} href={route}>
-                            <Button variant="navigation" className={cn("relative", route === currentRoute && "text-neutral-50")}>
+                        <Button
+                            asChild
+                            key={route}
+                            variant="navigation"
+                            className={cn("group relative", route === currentRoute && "text-neutral-50")}
+                        >
+                            <Link href={route}>
                                 {route === currentRoute && (
                                     <motion.div
-                                        className="absolute inset-1 z-40"
+                                        className="pointer-events-none absolute inset-1 z-40 rounded-full bg-neutral-600/60 dark:bg-neutral-400/60"
                                         layoutId="activeSection"
                                         transition={{
                                             type: "keyframes",
                                             stiffness: 380,
                                             damping: 30,
                                         }}
-                                    >
-                                        <div className="z-40 h-full w-full rounded-full bg-neutral-600/60 transition-all dark:bg-neutral-400/60" />
-                                    </motion.div>
+                                    />
                                 )}
 
+                                <div className="pointer-events-none absolute inset-1 z-40 rounded-full bg-neutral-500/25 opacity-0 dark:bg-neutral-400/40 mouse:group-hover:opacity-100" />
+
                                 <p className="z-50">{routeTitle[route]}</p>
-                            </Button>
-                        </Link>
+                            </Link>
+                        </Button>
                     ))}
                 </div>
 

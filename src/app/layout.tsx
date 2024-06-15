@@ -33,7 +33,9 @@ const RootLayout = ({ children }: Readonly<Props>) => (
         </head>
 
         <QueryProvider>
-            <body className={`${montserrat.className} overflow-y-auto bg-stone-50 text-stone-950 dark:bg-stone-950 dark:text-stone-50`}>
+            <body
+                className={`${montserrat.className} overflow-y-auto bg-stone-50 pb-20 text-stone-950 dark:bg-stone-950 dark:text-stone-50 mouse:pb-0 mouse:pt-20`}
+            >
                 <ThemeProvider>
                     {children}
 

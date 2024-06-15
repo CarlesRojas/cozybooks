@@ -6,6 +6,10 @@
     .icon {
         @apply size-5 min-h-5 min-w-5 stroke-[3];
     }
+
+    .focus-scale {
+        @apply mouse:transition-transform mouse:focus-visible:z-10 mouse:focus-visible:scale-110 mouse:focus-visible:outline-none;
+    }
 }
 
 * {

@@ -5,13 +5,13 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center whitespace-nowrap rounded-full text-base font-bold tracking-wide transition-colors disabled:pointer-events-none disabled:opacity-50",
+    "focus-scale inline-flex items-center justify-center whitespace-nowrap rounded-full text-base font-bold tracking-wide transition-colors disabled:pointer-events-none disabled:opacity-50",
     {
         variants: {
             variant: {
                 default: "bg-neutral-150 text-neutral-400",
                 navigation: "dark:text-neutral-50 text-neutral-700",
-                glass: "bg-neutral-300/70 backdrop-blur-md dark:bg-neutral-700/60 dark:text-neutral-50 text-neutral-700",
+                glass: "bg-neutral-300/70 backdrop-blur-md dark:bg-neutral-700/60 dark:text-neutral-50 text-neutral-700 mouse:hover:bg-neutral-400/50 mouse:hover:dark:bg-neutral-500/50",
             },
             size: {
                 default: "h-12 px-5 py-3",

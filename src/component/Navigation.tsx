@@ -41,7 +41,7 @@ const Navigation = () => {
                             <Link href={route}>
                                 {route === currentRoute && (
                                     <motion.div
-                                        className="pointer-events-none absolute inset-1 z-40 rounded-full bg-neutral-600/60 dark:bg-neutral-400/60"
+                                        className="pointer-events-none absolute inset-1 z-40 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"
                                         layoutId="activeSection"
                                         transition={{
                                             type: "keyframes",

@@ -51,7 +51,7 @@ const Navigation = () => {
                                     />
                                 )}
 
-                                <div className="pointer-events-none absolute inset-1 z-40 rounded-full bg-neutral-500/25 opacity-0 dark:bg-neutral-400/40 mouse:group-hover:opacity-100" />
+                                <div className="pointer-events-none absolute inset-1 z-40 rounded-full bg-neutral-500/25 opacity-0 dark:bg-neutral-300/15 mouse:group-hover:opacity-100" />
 
                                 <p className="z-50">{routeTitle[route]}</p>
                             </Link>

@@ -14,8 +14,8 @@ const Navigation = () => {
 
     const routes = [Route.READING, Route.FINISHED, Route.SEARCH];
     const routeTitle: Record<Route, ReactElement | string> = {
-        [Route.READING]: "Reading",
-        [Route.FINISHED]: "Finished",
+        [Route.READING]: <p className="z-50">Reading</p>,
+        [Route.FINISHED]: <p className="z-50">Finished</p>,
         [Route.SEARCH]: <LuSearch className="icon" />,
     };
 
@@ -23,8 +23,9 @@ const Navigation = () => {
         <>
             <motion.nav
                 className="fixed inset-x-0 bottom-0 z-50 mt-8 flex h-20 items-center justify-between px-4 mouse:bottom-[unset] mouse:top-0 mouse:mt-0"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
             >
                 <Button size="icon" variant="glass">
                     <LuArrowDownUp className="icon" />
@@ -36,24 +37,21 @@ const Navigation = () => {
                             asChild
                             key={route}
                             variant="navigation"
-                            className={cn("group relative", route === currentRoute && "text-neutral-50")}
+                            className={cn(
+                                "group relative mouse:hover:text-neutral-400 mouse:hover:dark:text-neutral-400",
+                                route === currentRoute && "!text-neutral-50",
+                            )}
                         >
                             <Link href={route}>
                                 {route === currentRoute && (
                                     <motion.div
                                         className="pointer-events-none absolute inset-1 z-40 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"
                                         layoutId="activeSection"
-                                        transition={{
-                                            type: "keyframes",
-                                            stiffness: 380,
-                                            damping: 30,
-                                        }}
+                                        transition={{ type: "keyframes", stiffness: 380, damping: 30 }}
                                     />
                                 )}
 
-                                <div className="pointer-events-none absolute inset-1 z-40 rounded-full bg-neutral-500/25 opacity-0 dark:bg-neutral-300/15 mouse:group-hover:opacity-100" />
-
-                                <p className="z-50">{routeTitle[route]}</p>
+                                {routeTitle[route]}
                             </Link>
                         </Button>
                     ))}

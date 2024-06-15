@@ -1,9 +1,12 @@
+import "@/app/animation.css";
+import "@/app/global.css";
+import Navigation from "@/component/Navigation";
 import { QueryProvider } from "@/provider/QueryProvider";
 import ThemeProvider from "@/provider/ThemeProvider";
 import type { Metadata, Viewport } from "next";
 import { Montserrat } from "next/font/google";
+import Script from "next/script";
 import { ReactNode } from "react";
-import "./globals.css";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -23,14 +26,22 @@ interface Props {
     children: ReactNode;
 }
 
-export default function RootLayout({ children }: Readonly<Props>) {
-    return (
-        <html lang="en">
-            <QueryProvider>
-                <body className={`${montserrat.className} bg-stone-50 text-stone-950 dark:bg-stone-950 dark:text-stone-50`}>
-                    <ThemeProvider>{children}</ThemeProvider>
-                </body>
-            </QueryProvider>
-        </html>
-    );
-}
+const RootLayout = ({ children }: Readonly<Props>) => (
+    <html lang="en" suppressHydrationWarning>
+        <head>
+            <Script src="https://flackr.github.io/scroll-timeline/dist/scroll-timeline.js" />
+        </head>
+
+        <QueryProvider>
+            <body className={`${montserrat.className} overflow-y-auto bg-stone-50 text-stone-950 dark:bg-stone-950 dark:text-stone-50`}>
+                <ThemeProvider>
+                    {children}
+
+                    <Navigation />
+                </ThemeProvider>
+            </body>
+        </QueryProvider>
+    </html>
+);
+
+export default RootLayout;

@@ -3,7 +3,11 @@
 import { ThemeProvider as ThemeProviderInternal } from "next-themes";
 import { ReactNode } from "react";
 
-const ThemeProvider = ({ children }: { children: ReactNode }) => {
+interface Props {
+    children: ReactNode;
+}
+
+const ThemeProvider = ({ children }: Props) => {
     return (
         <ThemeProviderInternal attribute="class" defaultTheme="system" enableSystem>
             {children}

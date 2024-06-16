@@ -23,7 +23,7 @@ const refreshAccessToken = async (token: JWT) => {
                 client_id: env.GOOGLE_CLIENT_ID,
                 client_secret: env.GOOGLE_CLIENT_SECRET,
                 grant_type: "refresh_token",
-                refresh_token: token.refreshToken as string,
+                refresh_token: token.refresh_token as string,
             });
 
         const response = await fetch(url, { headers: { "Content-Type": "application/x-www-form-urlencoded" }, method: "POST" });
@@ -32,11 +32,13 @@ const refreshAccessToken = async (token: JWT) => {
 
         const newToken: JWT = {
             ...token,
-            idToken: refreshedTokens.id_token ?? token.idToken,
-            accessToken: refreshedTokens.access_token ?? token.accessToken,
+            id_token: refreshedTokens.id_token ?? token.id_token,
+            access_token: refreshedTokens.access_token ?? token.access_token,
             accessTokenExpires: Date.now() + (refreshedTokens.expires_in ?? 3599) * 1000,
-            refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
+            refresh_token: refreshedTokens.refresh_token ?? token.refresh_token,
         };
+
+        console.log("NEW");
 
         return newToken;
     } catch (error) {
@@ -62,12 +64,16 @@ const authOptions: NextAuthConfig = {
     callbacks: {
         async jwt({ token, user, account }) {
             // Initial sign in
-            if (account && user)
+            if (account && user) {
+                // console.log(account);
                 return {
                     ...account,
                     accessTokenExpires: account.expires_at ? account.expires_at * 1000 : Date.now() + 60 * 30,
                     user,
                 };
+            }
+
+            console.log("ORIGINAL");
 
             // Return previous token if the access token has not expired yet
             if (Date.now() < (token.accessTokenExpires as number)) return token;

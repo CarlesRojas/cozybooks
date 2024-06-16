@@ -1,6 +1,7 @@
 "use client";
 
 import BookCover from "@/component/BookCover";
+import Pagination from "@/component/Pagination";
 import { Input } from "@/component/ui/input";
 import { useUrlState } from "@/hook/useUrlState";
 import { useSearchedBooks } from "@/server/use/useSearchedBooks";
@@ -11,14 +12,21 @@ import { LuLoader, LuSearch } from "react-icons/lu";
 import { useDebouncedCallback } from "use-debounce";
 import { z } from "zod";
 
+const PAGE_SIZE = 8;
+
 const Search = () => {
+    const [page, setPage] = useUrlState("page", 1, z.coerce.number());
+
     const [query, setQuery] = useUrlState("query", "", z.string());
     const [internalQuery, setInternalQuery] = useState(query);
     const setQueryDebounced = useDebouncedCallback((value) => {
-        setQuery(value);
+        setQuery(value, true, [{ key: "page", value: "1" }]);
     }, 400);
 
-    const searchedBooks = useSearchedBooks({ query });
+    const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE });
+
+    const numberOfPages = Math.ceil((searchedBooks.data?.totalItems || 1) / PAGE_SIZE);
+    const currentPage = Math.max(Math.min(page, numberOfPages), 1);
 
     return (
         <main className={cn("relative mb-20 flex h-fit w-full flex-col gap-5 pb-6", isIOS && "mb-24")}>
@@ -58,9 +66,9 @@ const Search = () => {
                 <LuLoader className="duration-2000 size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50" />
             </div>
 
-            <div className="flex h-fit w-full flex-col gap-16">
+            <div className="flex h-fit w-full flex-col gap-12">
                 {searchedBooks.data && searchedBooks.data.items.length > 0 && (
-                    <section className="flex h-fit w-full flex-col gap-7">
+                    <section className="flex h-fit w-full flex-col gap-6">
                         <div className="sticky top-[5rem] z-30 bg-neutral-50 pb-2 dark:bg-neutral-950">
                             <h2 className="h2 mx-auto max-w-screen-lg px-6">Results</h2>
                         </div>
@@ -69,6 +77,14 @@ const Search = () => {
                             {searchedBooks.data.items.map((book) => (
                                 <BookCover key={book.id} book={book} isInteractive />
                             ))}
+                        </div>
+
+                        <div className="mx-auto w-full max-w-screen-lg px-6">
+                            <Pagination
+                                numberOfPages={numberOfPages}
+                                currentPage={currentPage - 1}
+                                onPageChange={(page) => setPage(page + 1)}
+                            />
                         </div>
                     </section>
                 )}

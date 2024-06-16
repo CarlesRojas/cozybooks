@@ -21,7 +21,7 @@ export type UserInfo = z.infer<typeof UserInfoSchema>;
 
 export const VolumeInfoSchema = z.object({
     title: z.string(),
-    authors: z.array(z.string()),
+    authors: z.array(z.string()).optional(),
     publisher: z.string().optional(),
     publishedDate: z.coerce.date().optional(),
     description: z.string().optional(),

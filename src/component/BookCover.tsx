@@ -35,7 +35,7 @@ const BookCover = ({ book, isInteractive = false }: Props) => {
 
             {smallestImage.current && (
                 <Image
-                    className="absolute inset-0 -z-10 hidden h-full w-full object-cover opacity-0 blur-lg transition-opacity group-focus-within:opacity-70 group-hover:opacity-90 dark:group-focus-within:opacity-70 dark:group-hover:opacity-50 mouse:block"
+                    className="absolute inset-0 -z-10 hidden h-full w-full object-cover object-center opacity-0 blur-lg transition-opacity group-focus-within:opacity-70 group-hover:opacity-90 dark:group-focus-within:opacity-70 dark:group-hover:opacity-50 mouse:block"
                     width={200}
                     height={300}
                     src={src}
@@ -45,7 +45,7 @@ const BookCover = ({ book, isInteractive = false }: Props) => {
             )}
 
             <Image
-                className={cn("h-full w-full rounded-xl object-cover", isInteractive && "mouse:group-hover:scale-[1.02]")}
+                className={cn("h-full w-full rounded-xl object-cover object-center", isInteractive && "mouse:group-hover:scale-[1.02]")}
                 width={400}
                 height={600}
                 src={src}

@@ -38,8 +38,6 @@ const refreshAccessToken = async (token: JWT) => {
             refresh_token: refreshedTokens.refresh_token ?? token.refresh_token,
         };
 
-        console.log("NEW");
-
         return newToken;
     } catch (error) {
         return { ...token, error: REFRESH_TOKEN_ERROR };
@@ -64,16 +62,12 @@ const authOptions: NextAuthConfig = {
     callbacks: {
         async jwt({ token, user, account }) {
             // Initial sign in
-            if (account && user) {
-                // console.log(account);
+            if (account && user)
                 return {
                     ...account,
                     accessTokenExpires: account.expires_at ? account.expires_at * 1000 : Date.now() + 60 * 30,
                     user,
                 };
-            }
-
-            console.log("ORIGINAL");
 
             // Return previous token if the access token has not expired yet
             if (Date.now() < (token.accessTokenExpires as number)) return token;

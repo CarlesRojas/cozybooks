@@ -32,6 +32,9 @@ const config: Config = {
                 "neutral-150": "#F1F1F1",
                 "neutral-850": "#1B1B1B",
             },
+            aspectRatio: {
+                book: "2 / 3",
+            },
         },
     },
     plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],

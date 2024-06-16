@@ -10,7 +10,7 @@ interface Props {
     offset?: number;
 }
 
-export const searchBooks = withToken(async ({ query, booksPerPage = 12, offset = 0, token }: Props & TokenProps) => {
+export const searchBooks = withToken(async ({ query, booksPerPage = 8, offset = 0, token }: Props & TokenProps) => {
     const response = await axios.get(
         `${GOOGLE_BOOKS_URL}/volumes?q=${query}&maxResults=${booksPerPage}&startIndex=${offset}&printType=books&orderBy=relevance&access_token=${token}`,
     );

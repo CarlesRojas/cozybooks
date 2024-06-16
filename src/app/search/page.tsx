@@ -1,10 +1,10 @@
 "use client";
 
+import BookCover from "@/component/BookCover";
 import { Input } from "@/component/ui/input";
 import { useUrlState } from "@/hook/useUrlState";
 import { useSearchedBooks } from "@/server/use/useSearchedBooks";
-import { cn, getBiggestBookImage } from "@/util";
-import Image from "next/image";
+import { cn } from "@/util";
 import { useState } from "react";
 import { isIOS } from "react-device-detect";
 import { LuSearch } from "react-icons/lu";
@@ -20,12 +20,9 @@ const Search = () => {
 
     const searchedBooks = useSearchedBooks({ query });
 
-    // "http://books.google.com/books/content?id=zl13g5uRM4EC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"
-    // https://books.google.com/books/publisher/content/images/frontcover/zl13g5uRM4EC?fife=w400-h600&source=gbs_api
-
     return (
-        <main className={cn("max-w-screen-l relative mb-20 flex h-fit w-full flex-col gap-8 p-6", isIOS && "mb-24")}>
-            <section className="flex h-fit w-full flex-col">
+        <main className={cn("relative mx-auto mb-20 flex h-fit w-full max-w-screen-lg flex-col gap-5 px-6 pb-6", isIOS && "mb-24")}>
+            <section className="sticky top-0 z-40 flex h-fit w-full flex-col bg-neutral-50 pb-3 pt-6 dark:bg-neutral-950">
                 <Input
                     placeholder="Search"
                     type="text"
@@ -41,26 +38,23 @@ const Search = () => {
                 />
             </section>
 
-            {searchedBooks.data && (
+            <div className="flex h-fit w-full flex-col gap-16">
+                {searchedBooks.data && (
+                    <section className="flex h-fit min-h-[30vh] w-full flex-col gap-2">
+                        <h2 className="sticky top-[5rem] bg-neutral-50 pb-3 text-3xl font-bold dark:bg-neutral-950">Results</h2>
+
+                        <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                            {searchedBooks.data.items.map((book) => (
+                                <BookCover key={book.id} book={book} />
+                            ))}
+                        </div>
+                    </section>
+                )}
+
                 <section className="flex h-fit min-h-[30vh] w-full flex-col">
-                    <h2 className="sticky top-6 text-3xl font-bold opacity-90">Results</h2>
-
-                    <div className="grid w-full">
-                        {searchedBooks.data.items.map((book) => {
-                            const bookImage = book.volumeInfo.imageLinks && getBiggestBookImage(book.volumeInfo.imageLinks);
-                            if (!bookImage) return null;
-
-                            return (
-                                <Image key={book.id} className="" width={256} height={256} src={bookImage} alt={book.volumeInfo.title} />
-                            );
-                        })}
-                    </div>
+                    <h2 className="sticky top-6 text-3xl font-bold opacity-90">Recommended for you</h2>
                 </section>
-            )}
-
-            <section className="flex h-fit min-h-[30vh] w-full flex-col">
-                <h2 className="sticky top-6 text-3xl font-bold opacity-90">Recommended for you</h2>
-            </section>
+            </div>
         </main>
     );
 };

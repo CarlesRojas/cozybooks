@@ -27,7 +27,10 @@ const Navigation = () => {
     return (
         <>
             <motion.nav
-                className={cn("fixed inset-x-0 bottom-0 z-50 flex h-20 items-center justify-evenly", isIOS && "bottom-4")}
+                className={cn(
+                    "fixed inset-x-0 bottom-0 z-50 mx-auto flex h-20 max-w-screen-lg items-center justify-evenly",
+                    isIOS && "bottom-4",
+                )}
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
             >

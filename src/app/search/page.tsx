@@ -41,7 +41,7 @@ const Search = () => {
             <div className="flex h-fit w-full flex-col gap-16">
                 {searchedBooks.data && (
                     <section className="flex h-fit min-h-[30vh] w-full flex-col gap-2">
-                        <h2 className="sticky top-[5rem] bg-neutral-50 pb-3 text-3xl font-bold dark:bg-neutral-950">Results</h2>
+                        <h2 className="h2 sticky top-[5rem] bg-neutral-50 pb-3 dark:bg-neutral-950">Results</h2>
 
                         <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                             {searchedBooks.data.items.map((book) => (
@@ -52,7 +52,7 @@ const Search = () => {
                 )}
 
                 <section className="flex h-fit min-h-[30vh] w-full flex-col">
-                    <h2 className="sticky top-6 text-3xl font-bold opacity-90">Recommended for you</h2>
+                    <h2 className="h2 sticky top-[5rem] bg-neutral-50 pb-3 dark:bg-neutral-950">Recommended for you</h2>
                 </section>
             </div>
         </main>

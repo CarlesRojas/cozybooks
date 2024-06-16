@@ -6,7 +6,13 @@ import axios from "axios";
 import { z } from "zod";
 
 export const getBookShelves = withToken(async ({ token }: TokenProps) => {
-    const response = await axios.get(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves?access_token=${token}`);
+    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves`, GOOGLE_BOOKS_URL);
+    const params = new URLSearchParams({
+        access_token: token,
+    });
+    url.search = params.toString();
+
+    const response = await axios.get(url.toString());
 
     const knownBookShelves = filteredArray(BookShelfSchema).parse(response.data.items);
     return z.array(BookShelfSchema).parse(knownBookShelves) as BookShelf[];

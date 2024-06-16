@@ -1,7 +1,7 @@
 import { DYNAMIC_ROUTES, Route } from "@/type/Route";
 import { usePathname } from "next/navigation";
 
-const pathnameToRoute = (pathname: string): Route => {
+export const pathnameToRoute = (pathname: string): Route => {
     const exactMatch = Object.values(Route).find((route) => route === pathname) as Route;
     if (exactMatch) return exactMatch;
 

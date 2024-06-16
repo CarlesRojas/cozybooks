@@ -1,6 +1,7 @@
 import "@/app/animation.css";
 import "@/app/global.css";
 import Navigation from "@/component/Navigation";
+import AuthProvider from "@/provider/AuthProvider";
 import { QueryProvider } from "@/provider/QueryProvider";
 import ThemeProvider from "@/provider/ThemeProvider";
 import type { Metadata, Viewport } from "next";
@@ -26,22 +27,22 @@ interface Props {
     children: ReactNode;
 }
 
-const RootLayout = ({ children }: Readonly<Props>) => (
+const RootLayout = async ({ children }: Readonly<Props>) => (
     <html lang="en" suppressHydrationWarning>
         <head>
             <Script src="https://flackr.github.io/scroll-timeline/dist/scroll-timeline.js" />
         </head>
 
         <QueryProvider>
-            <body
-                className={`${montserrat.className} overflow-y-auto bg-stone-50 pb-20 text-stone-950 dark:bg-stone-950 dark:text-stone-50 mouse:pb-0 mouse:pt-20`}
-            >
-                <ThemeProvider>
-                    {children}
+            <AuthProvider>
+                <body className={`${montserrat.className} overflow-y-auto bg-stone-50 text-stone-950 dark:bg-stone-950 dark:text-stone-50`}>
+                    <ThemeProvider>
+                        {children}
 
-                    <Navigation />
-                </ThemeProvider>
-            </body>
+                        <Navigation />
+                    </ThemeProvider>
+                </body>
+            </AuthProvider>
         </QueryProvider>
     </html>
 );

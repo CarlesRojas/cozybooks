@@ -1,6 +1,8 @@
 "use client";
 
+import { useUser } from "@/auth/useUser";
 import { Button } from "@/components/ui/button";
+import { useMediaQuery } from "@/hook/useMediaQuery";
 import { useRoute } from "@/hook/useRoute";
 import { cn } from "@/lib/utils";
 import { Route } from "@/type/Route";
@@ -11,21 +13,24 @@ import { LuArrowDownUp, LuSearch, LuUser2 } from "react-icons/lu";
 
 const Navigation = () => {
     const currentRoute = useRoute();
+    const user = useUser();
+    const isMouse = useMediaQuery("(hover: hover)");
 
     const routes = [Route.READING, Route.FINISHED, Route.SEARCH];
-    const routeTitle: Record<Route, ReactElement | string> = {
+    const routeTitle: Partial<Record<Route, ReactElement>> = {
         [Route.READING]: <p className="z-50 transition-colors">Reading</p>,
         [Route.FINISHED]: <p className="z-50 transition-colors">Finished</p>,
         [Route.SEARCH]: <LuSearch className="icon z-50 min-w-10 transition-colors" />,
     };
 
+    if (user.isLoading || user.isError || !user.data) return null;
+
     return (
         <>
             <motion.nav
-                className="fixed inset-x-0 bottom-0 z-50 mt-8 flex h-20 items-center justify-between px-4 mouse:bottom-[unset] mouse:top-0 mouse:mt-0"
-                initial={{ opacity: 0, y: 100 }}
+                className="fixed inset-x-0 bottom-0 z-50 mt-8 flex h-20 items-center justify-evenly mouse:bottom-[unset] mouse:top-0 mouse:mt-0"
+                initial={{ opacity: 0, y: isMouse ? -100 : 100 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25 }}
             >
                 <Button size="icon" variant="glass">
                     <LuArrowDownUp className="icon" />

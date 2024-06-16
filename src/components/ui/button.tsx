@@ -5,11 +5,11 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-    "focus-scale inline-flex items-center justify-center whitespace-nowrap rounded-full text-base font-bold tracking-wide transition-colors disabled:pointer-events-none disabled:opacity-50",
+    "focus-scale inline-flex items-center justify-center whitespace-nowrap rounded-full text-base font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50",
     {
         variants: {
             variant: {
-                default: "bg-neutral-150 text-neutral-400",
+                default: "bg-purple-500 text-neutral-50",
                 navigation: "dark:text-neutral-200 text-neutral-600",
                 glass: "bg-neutral-300/70 backdrop-blur-md dark:bg-neutral-700/60 dark:text-neutral-200 text-neutral-600 mouse:hover:text-black mouse:hover:dark:text-white mouse:hover:bg-neutral-400/50 mouse:hover:dark:bg-neutral-500/50",
             },

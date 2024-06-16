@@ -14,9 +14,9 @@ const Navigation = () => {
 
     const routes = [Route.READING, Route.FINISHED, Route.SEARCH];
     const routeTitle: Record<Route, ReactElement | string> = {
-        [Route.READING]: <p className="z-50">Reading</p>,
-        [Route.FINISHED]: <p className="z-50">Finished</p>,
-        [Route.SEARCH]: <LuSearch className="icon" />,
+        [Route.READING]: <p className="z-50 transition-colors">Reading</p>,
+        [Route.FINISHED]: <p className="z-50 transition-colors">Finished</p>,
+        [Route.SEARCH]: <LuSearch className="icon z-50 min-w-10 transition-colors" />,
     };
 
     return (
@@ -25,7 +25,7 @@ const Navigation = () => {
                 className="fixed inset-x-0 bottom-0 z-50 mt-8 flex h-20 items-center justify-between px-4 mouse:bottom-[unset] mouse:top-0 mouse:mt-0"
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.25 }}
             >
                 <Button size="icon" variant="glass">
                     <LuArrowDownUp className="icon" />
@@ -38,7 +38,7 @@ const Navigation = () => {
                             key={route}
                             variant="navigation"
                             className={cn(
-                                "group relative mouse:hover:text-neutral-400 mouse:hover:dark:text-neutral-400",
+                                "group relative mouse:hover:text-black mouse:hover:dark:text-white",
                                 route === currentRoute && "!text-neutral-50",
                             )}
                         >
@@ -47,7 +47,7 @@ const Navigation = () => {
                                     <motion.div
                                         className="pointer-events-none absolute inset-1 z-40 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"
                                         layoutId="activeSection"
-                                        transition={{ type: "keyframes", stiffness: 380, damping: 30 }}
+                                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                     />
                                 )}
 

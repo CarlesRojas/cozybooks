@@ -10,8 +10,8 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default: "bg-neutral-150 text-neutral-400",
-                navigation: "dark:text-neutral-50 text-neutral-700",
-                glass: "bg-neutral-300/70 backdrop-blur-md dark:bg-neutral-700/60 dark:text-neutral-50 text-neutral-700 mouse:hover:bg-neutral-400/50 mouse:hover:dark:bg-neutral-500/50",
+                navigation: "dark:text-neutral-200 text-neutral-600",
+                glass: "bg-neutral-300/70 backdrop-blur-md dark:bg-neutral-700/60 dark:text-neutral-200 text-neutral-600 mouse:hover:text-black mouse:hover:dark:text-white mouse:hover:bg-neutral-400/50 mouse:hover:dark:bg-neutral-500/50",
             },
             size: {
                 default: "h-12 px-5 py-3",

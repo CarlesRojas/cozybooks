@@ -28,6 +28,7 @@ const Search = () => {
                         placeholder="Search"
                         type="text"
                         autoComplete="off"
+                        autoFocus
                         value={internalQuery}
                         onChange={(event) => {
                             setInternalQuery(event.target.value);

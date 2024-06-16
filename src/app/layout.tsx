@@ -13,13 +13,13 @@ const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "CozyBooks",
-    description: "", // TODO Add description
+    description: "The best way to keep track of all the books you have and enjoy all the ones you want to read.",
 };
 
 export const viewport: Viewport = {
     themeColor: [
-        { media: "(prefers-color-scheme: light)", color: "#f5f5f4" },
-        { media: "(prefers-color-scheme: dark)", color: "#0c0a09" },
+        { media: "(prefers-color-scheme: light)", color: "#fafafa" },
+        { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
     ],
 };
 
@@ -35,7 +35,9 @@ const RootLayout = async ({ children }: Readonly<Props>) => (
 
         <QueryProvider>
             <AuthProvider>
-                <body className={`${montserrat.className} overflow-y-auto bg-stone-50 text-stone-950 dark:bg-stone-950 dark:text-stone-50`}>
+                <body
+                    className={`${montserrat.className} overflow-y-auto bg-neutral-50 text-neutral-950 dark:bg-neutral-950 dark:text-neutral-50`}
+                >
                     <ThemeProvider>
                         {children}
 

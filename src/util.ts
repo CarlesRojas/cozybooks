@@ -37,3 +37,14 @@ export const getBiggestBookImage = (imageLinks: BookImageLinks) => {
 
     return undefined;
 };
+
+export const getSmallestBookImage = (imageLinks: BookImageLinks) => {
+    if (imageLinks.smallThumbnail) return imageLinks.smallThumbnail;
+    if (imageLinks.thumbnail) return imageLinks.thumbnail;
+    if (imageLinks.small) return imageLinks.small;
+    if (imageLinks.medium) return imageLinks.medium;
+    if (imageLinks.large) return imageLinks.large;
+    if (imageLinks.extraLarge) return imageLinks.extraLarge;
+
+    return undefined;
+};

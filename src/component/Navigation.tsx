@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/component/ui/button";
-import { useMediaQuery } from "@/hook/useMediaQuery";
 import { useRoute } from "@/hook/useRoute";
 import { useUser } from "@/server/use/useUser";
 import { Route } from "@/type/Route";
@@ -9,12 +8,12 @@ import { cn } from "@/util";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ReactElement } from "react";
+import { isIOS } from "react-device-detect";
 import { LuArrowDownUp, LuSearch, LuUser2 } from "react-icons/lu";
 
 const Navigation = () => {
     const currentRoute = useRoute();
     const user = useUser();
-    const isMouse = useMediaQuery("(hover: hover)");
 
     const routes = [Route.READING, Route.FINISHED, Route.SEARCH];
     const routeTitle: Partial<Record<Route, ReactElement>> = {
@@ -28,8 +27,8 @@ const Navigation = () => {
     return (
         <>
             <motion.nav
-                className="fixed inset-x-0 bottom-0 z-50 mt-8 flex h-20 items-center justify-evenly mouse:bottom-[unset] mouse:top-0 mouse:mt-0"
-                initial={{ opacity: 0, y: isMouse ? -100 : 100 }}
+                className={cn("fixed inset-x-0 bottom-0 z-50 flex h-20 items-center justify-evenly", isIOS && "bottom-4")}
+                initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
             >
                 <Button size="icon" variant="glass">

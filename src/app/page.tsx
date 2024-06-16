@@ -6,7 +6,7 @@ import { useUser } from "@/server/use/useUser";
 const Reading = () => {
     const user = useUser();
     const bookShelves = useBookShelves(user.data);
-    console.log(bookShelves.error);
+    console.log(bookShelves.data);
 
     return (
         <main className="relative mb-20 flex h-fit w-full flex-col mouse:mb-0 mouse:mt-20">

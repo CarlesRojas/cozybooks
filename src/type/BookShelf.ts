@@ -18,8 +18,6 @@ export enum BookShelfType {
     BROWSING_HISTORY = 9,
 }
 
-export const filteredArray = (s: z.ZodTypeAny) => z.array(z.any()).transform((as) => as.filter((a) => s.safeParse(a).success));
-
 export const BookShelfSchema = z.object({
     id: z.nativeEnum(BookShelfType),
     title: z.string(),

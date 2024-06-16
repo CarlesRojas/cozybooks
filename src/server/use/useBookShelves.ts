@@ -1,7 +1,6 @@
 import { GOOGLE_BOOKS_URL } from "@/const";
-import { BookShelf, BookShelfSchema, filteredArray } from "@/type/BookShelf";
-import { User } from "@/type/User";
-import { TokenProps, withToken } from "@/util";
+import { BookShelf, BookShelfSchema } from "@/type/BookShelf";
+import { TokenProps, filteredArray, withToken } from "@/util";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { z } from "zod";
@@ -13,10 +12,9 @@ export const getBookShelves = withToken(async ({ token }: TokenProps) => {
     return z.array(BookShelfSchema).parse(knownBookShelves) as BookShelf[];
 });
 
-export const useBookShelves = (user?: User) => {
+export const useBookShelves = () => {
     return useQuery({
         queryKey: ["bookShelves"],
-        queryFn: () => getBookShelves({ token: user!.accessToken }),
-        enabled: !!user,
+        queryFn: () => getBookShelves(),
     });
 };

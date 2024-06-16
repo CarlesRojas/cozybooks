@@ -12,6 +12,7 @@ export const getUserFromSession = async (session: Session | null) => {
     // TODO Get user from database and create a new user if not found
     // const user = await getUser(email, name, image);
     // return user;
+    console.log(session.user);
 
     return { email, name, image };
 };

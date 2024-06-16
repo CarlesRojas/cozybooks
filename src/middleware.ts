@@ -22,7 +22,6 @@ export default auth((request) => {
     if (excludedPaths.some((excludedPath) => path.includes(excludedPath))) return NextResponse.next();
 
     const route = pathnameToRoute(path || "/");
-    console.log(path, route, request.auth);
 
     if (!request.auth && PRIVATE_ROUTES.includes(route))
         return NextResponse.redirect(new URL(`${Route.AUTH_SIGN_IN}?callbackUrl=${encodeURIComponent(path)}`, request.url));

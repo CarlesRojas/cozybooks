@@ -16,7 +16,7 @@ const Search = () => {
     const [internalQuery, setInternalQuery] = useState(query);
     const setQueryDebounced = useDebouncedCallback((value) => {
         setQuery(value);
-    }, 300);
+    }, 400);
 
     const searchedBooks = useSearchedBooks({ query });
 
@@ -35,6 +35,14 @@ const Search = () => {
                         }}
                         icon={
                             <LuSearch className="icon stroke-2 text-neutral-500 transition-colors group-focus-within:text-neutral-950 group-focus-within:dark:text-neutral-50" />
+                        }
+                        onClear={
+                            internalQuery.length > 0
+                                ? () => {
+                                      setInternalQuery("");
+                                      setQueryDebounced("");
+                                  }
+                                : undefined
                         }
                     />
                 </div>

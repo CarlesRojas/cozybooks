@@ -12,10 +12,12 @@ const buttonVariants = cva(
                 default: "bg-purple-500 text-neutral-50",
                 navigation: "dark:text-neutral-200 text-neutral-600",
                 glass: "bg-neutral-300/70 backdrop-blur-md dark:bg-neutral-700/60 dark:text-neutral-200 text-neutral-600 mouse:hover:text-black mouse:hover:dark:text-white mouse:hover:bg-neutral-400/50 mouse:hover:dark:bg-neutral-500/50",
+                ghost: "bg-transparent text-neutral-500 mouse:focus-visible:text-neutral-950 mouse:focus-visible:dark:text-neutral-50 mouse:hover:text-neutral-950 mouse:hover:dark:text-neutral-50",
             },
             size: {
                 default: "h-12 px-5 py-3",
                 icon: "h-12 w-12",
+                ghost: "h-fit w-fit",
             },
         },
         defaultVariants: {

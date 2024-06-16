@@ -29,10 +29,12 @@ const BookCover = ({ book, isInteractive = false }: Props) => {
     if (!src) return null;
 
     return (
-        <div className="group relative aspect-book w-full mouse:cursor-pointer">
+        <div className="aspect-book group relative w-full rounded-xl border border-neutral-200 dark:border-neutral-800 mouse:cursor-pointer">
+            <div className="skeleton absolute inset-0 -z-20 h-full w-full rounded-xl"></div>
+
             {smallestImage.current && (
                 <Image
-                    className="absolute inset-0 -z-10 h-full w-full rounded-xl object-cover opacity-0 blur-md transition-opacity group-focus-within:opacity-70 group-hover:opacity-70 dark:group-focus-within:opacity-50 dark:group-hover:opacity-50"
+                    className="absolute inset-0 -z-10 hidden h-full w-full object-cover opacity-0 blur-lg transition-opacity group-focus-within:opacity-70 group-hover:opacity-90 dark:group-focus-within:opacity-70 dark:group-hover:opacity-50 mouse:block"
                     width={200}
                     height={300}
                     src={src}

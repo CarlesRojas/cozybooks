@@ -4,9 +4,16 @@ import NextAuth, { type NextAuthConfig, type User } from "next-auth";
 import { type JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
 
+const scopes = [
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/userinfo.profile",
+    "https://www.googleapis.com/auth/books",
+    "openid",
+];
+
 const GOOGLE_AUTHORIZATION_URL =
     "https://accounts.google.com/o/oauth2/v2/auth?" +
-    new URLSearchParams({ prompt: "consent", access_type: "offline", response_type: "code" });
+    new URLSearchParams({ prompt: "consent", access_type: "offline", response_type: "code", scope: scopes.join(" ") });
 
 const refreshAccessToken = async (token: JWT) => {
     try {

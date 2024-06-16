@@ -5,10 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 export const getBookShelves = withToken(async ({ token }: TokenProps) => {
-    console.log(token);
-    const response = await axios.get(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves`, {
-        headers: { Authorization: token },
-    });
+    const response = await axios.get(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves?access_token=${token}`);
 
     console.log(response.data);
     return true;

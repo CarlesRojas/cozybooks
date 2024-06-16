@@ -10,7 +10,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, icon, onClear, ...props }, ref) => {
     return (
-        <div className="bg-neutral-150 dark:bg-neutral-850 relative flex w-full items-center gap-3 rounded-xl px-3 sm:max-w-[30rem]">
+        <div className="relative flex w-full items-center gap-3 rounded-xl bg-neutral-150 px-3 dark:bg-neutral-850 sm:max-w-[30rem]">
             <label className={cn("group flex h-12 grow items-center gap-3 focus-within:outline-none", className)}>
                 {icon}
 

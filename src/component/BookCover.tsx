@@ -28,7 +28,7 @@ const BookCover = ({ book, isInteractive = false }: Props) => {
     const [src, setSrc] = useState(scaledImage ?? biggestImage.current);
 
     return (
-        <div className="aspect-book group relative w-full rounded-xl border border-neutral-200 dark:border-neutral-800 mouse:cursor-pointer">
+        <div className="group relative aspect-book w-full rounded-xl border border-neutral-200 dark:border-neutral-800 mouse:cursor-pointer">
             <div className="skeleton absolute inset-0 -z-20 h-full w-full rounded-xl"></div>
 
             {src && (

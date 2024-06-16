@@ -63,7 +63,7 @@ const Search = () => {
                     searchedBooks.isPlaceholderData && "-mt-0",
                 )}
             >
-                <LuLoader className="duration-2000 size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50" />
+                <LuLoader className="size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50 duration-2000" />
             </div>
 
             <div className="flex h-fit w-full flex-col gap-12">

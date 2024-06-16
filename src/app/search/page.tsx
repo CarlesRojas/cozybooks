@@ -7,7 +7,7 @@ import { useSearchedBooks } from "@/server/use/useSearchedBooks";
 import { cn } from "@/util";
 import { useState } from "react";
 import { isIOS } from "react-device-detect";
-import { LuSearch } from "react-icons/lu";
+import { LuLoader, LuSearch } from "react-icons/lu";
 import { useDebouncedCallback } from "use-debounce";
 import { z } from "zod";
 
@@ -48,9 +48,18 @@ const Search = () => {
                 </div>
             </section>
 
+            <div
+                className={cn(
+                    "-mt-14 flex h-10 max-h-10 w-full items-center justify-center px-6 pb-2 transition-all",
+                    searchedBooks.isPlaceholderData && "-mt-0",
+                )}
+            >
+                <LuLoader className="duration-2000 size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50" />
+            </div>
+
             <div className="flex h-fit w-full flex-col gap-16">
-                {searchedBooks.data && (
-                    <section className="flex h-fit min-h-[30vh] w-full flex-col gap-7">
+                {searchedBooks.data && searchedBooks.data.items.length > 0 && (
+                    <section className="flex h-fit w-full flex-col gap-7">
                         <div className="sticky top-[5rem] z-30 bg-neutral-50 pb-2 dark:bg-neutral-950">
                             <h2 className="h2 mx-auto max-w-screen-lg px-6">Results</h2>
                         </div>
@@ -63,7 +72,7 @@ const Search = () => {
                     </section>
                 )}
 
-                <section className="flex h-fit min-h-[30vh] w-full flex-col gap-8">
+                <section className="flex h-fit w-full flex-col gap-8">
                     <div className="sticky top-[5rem] z-30 bg-neutral-50 pb-2 dark:bg-neutral-950">
                         <h2 className="h2 mx-auto max-w-screen-lg px-6">Recommended for you</h2>
                     </div>

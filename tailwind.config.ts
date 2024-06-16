@@ -35,6 +35,9 @@ const config: Config = {
             aspectRatio: {
                 book: "2 / 3",
             },
+            transitionDuration: {
+                "2000": "2000ms",
+            },
         },
     },
     plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],

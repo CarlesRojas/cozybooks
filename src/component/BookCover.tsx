@@ -15,6 +15,7 @@ const BookCover = ({ book, isInteractive = false }: Props) => {
     const biggestImage = useRef(book.volumeInfo.imageLinks && getBiggestBookImage(book.volumeInfo.imageLinks));
 
     const scaledImage = useMemo(() => {
+        // TODO Get missing image
         if (!biggestImage.current) return null;
 
         const imageParams = new URLSearchParams(biggestImage.current.split("?")[1]);

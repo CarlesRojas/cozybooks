@@ -1,6 +1,6 @@
-import { TokenProps, withToken } from "@/server/action/withToken";
+import { GOOGLE_BOOKS_URL } from "@/const";
 import { User } from "@/type/User";
-import { GOOGLE_BOOKS_URL } from "@/utils";
+import { TokenProps, withToken } from "@/util";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 

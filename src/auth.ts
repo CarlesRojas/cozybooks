@@ -1,3 +1,4 @@
+import { REFRESH_TOKEN_ERROR } from "@/const";
 import { env } from "@/env";
 import NextAuth, { type NextAuthConfig, type User } from "next-auth";
 import { type JWT } from "next-auth/jwt";
@@ -6,8 +7,6 @@ import GoogleProvider from "next-auth/providers/google";
 const GOOGLE_AUTHORIZATION_URL =
     "https://accounts.google.com/o/oauth2/v2/auth?" +
     new URLSearchParams({ prompt: "consent", access_type: "offline", response_type: "code" });
-
-export const REFRESH_TOKEN_ERROR = "RefreshAccessTokenError";
 
 const refreshAccessToken = async (token: JWT) => {
     try {

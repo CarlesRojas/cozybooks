@@ -5,7 +5,7 @@ import { useMediaQuery } from "@/hook/useMediaQuery";
 import { useRoute } from "@/hook/useRoute";
 import { useUser } from "@/server/use/useUser";
 import { Route } from "@/type/Route";
-import { cn } from "@/utils";
+import { cn } from "@/util";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ReactElement } from "react";

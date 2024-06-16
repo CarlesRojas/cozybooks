@@ -1,10 +1,10 @@
 "use client";
 
-import { useUser } from "@/auth/useUser";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/component/ui/button";
 import { useMediaQuery } from "@/hook/useMediaQuery";
 import { useRoute } from "@/hook/useRoute";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/server/use/useUser";
 import { Route } from "@/type/Route";
 import { motion } from "framer-motion";
 import Link from "next/link";

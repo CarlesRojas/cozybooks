@@ -1,6 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
+"use server";
+
+import { signIn, signOut } from "@/auth";
+import { Route } from "@/type/Route";
 import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
+
+export const signInWithGoogle = async (callbackUrl: string = Route.READING) => {
+    await signIn("google", { callbackUrl });
+};
+
+export const signOutWithGoogle = async () => {
+    await signOut({ redirect: true, redirectTo: Route.AUTH_SIGN_IN });
+};
 
 export const getUserFromSession = async (session: Session | null) => {
     if (!session?.user || !session.user.email) return null;
@@ -15,16 +25,4 @@ export const getUserFromSession = async (session: Session | null) => {
     console.log(session.user);
 
     return { email, name, image };
-};
-
-const getClientSide = async () => {
-    const session = await getSession();
-    return getUserFromSession(session);
-};
-
-export const useUser = () => {
-    return useQuery({
-        queryKey: ["user"],
-        queryFn: () => getClientSide(),
-    });
 };

@@ -1,7 +1,7 @@
 "use client";
 
-import { signInWithGoogle } from "@/auth/actions";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/component/ui/button";
+import { signInWithGoogle } from "@/server/action/user";
 
 const SignInButton = () => {
     return <Button onClick={async () => await signInWithGoogle()}>Continue</Button>;

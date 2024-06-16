@@ -9,7 +9,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, icon,
     return (
         <label
             className={cn(
-                "bg-neutral-150 dark:bg-neutral-850 group flex h-12 w-full items-center gap-3 rounded-xl px-3 focus-within:outline-none",
+                "group flex h-12 w-full items-center gap-3 rounded-xl bg-neutral-150 px-3 focus-within:outline-none dark:bg-neutral-850",
                 className,
             )}
         >

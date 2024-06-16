@@ -3,9 +3,9 @@
 import { Button } from "@/component/ui/button";
 import { useMediaQuery } from "@/hook/useMediaQuery";
 import { useRoute } from "@/hook/useRoute";
-import { cn } from "@/lib/utils";
 import { useUser } from "@/server/use/useUser";
 import { Route } from "@/type/Route";
+import { cn } from "@/utils";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ReactElement } from "react";

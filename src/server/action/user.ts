@@ -2,6 +2,7 @@
 
 import { signIn, signOut } from "@/auth";
 import { Route } from "@/type/Route";
+import { User, UserSchema } from "@/type/User";
 import { Session } from "next-auth";
 
 export const signInWithGoogle = async (callbackUrl: string = Route.READING) => {
@@ -13,16 +14,17 @@ export const signOutWithGoogle = async () => {
 };
 
 export const getUserFromSession = async (session: Session | null) => {
-    if (!session?.user || !session.user.email) return null;
-
-    const email = session.user.email;
-    const name = session.user.name ?? email;
-    const image = session.user.image ?? undefined;
+    if (!session?.user || !session.user.email) return undefined;
 
     // TODO Get user from database and create a new user if not found
     // const user = await getUser(email, name, image);
     // return user;
-    console.log(session.user);
-
-    return { email, name, image };
+    return UserSchema.parse({
+        id: 1,
+        email: session.user.email,
+        name: session.user.name ?? session.user.email,
+        image: session.user.image ?? undefined,
+        error: session.user.error,
+        accessToken: session.user.access_token,
+    }) as User;
 };

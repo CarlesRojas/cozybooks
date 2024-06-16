@@ -6,6 +6,7 @@ export const UserSchema = z.object({
     name: z.string(),
     image: z.string().optional(),
     accessToken: z.string(),
+    error: z.string().optional(),
 });
 
 export type User = z.infer<typeof UserSchema>;

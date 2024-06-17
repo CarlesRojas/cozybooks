@@ -3,6 +3,7 @@
 import BookList from "@/component/BookList";
 import { Input } from "@/component/ui/input";
 import { useUrlState } from "@/hook/useUrlState";
+import { useBookShelves } from "@/server/use/useBookShelves";
 import { useSearchedBooks } from "@/server/use/useSearchedBooks";
 import { cn } from "@/util";
 import { useEffect, useState } from "react";
@@ -25,9 +26,11 @@ const Search = () => {
     useEffect(() => setInternalQuery(query), [query]);
 
     const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE, offset: (pageState[0] - 1) * PAGE_SIZE });
+    const bookShelves = useBookShelves();
+    console.log(bookShelves.data);
 
     return (
-        <main className={cn("relative mb-20 flex h-fit w-full flex-col gap-5 pb-6", isIOS && "mb-24")}>
+        <main suppressHydrationWarning className={cn("relative mb-20 flex h-fit w-full flex-col gap-5 pb-6", isIOS && "mb-24")}>
             <section className="sticky top-0 z-40 h-fit w-full bg-neutral-50 pb-3 pt-6 dark:bg-neutral-950">
                 <div className="mx-auto flex h-fit w-full max-w-screen-lg px-6">
                     <Input
@@ -67,6 +70,7 @@ const Search = () => {
             <div className="flex h-fit w-full flex-col gap-12">
                 {searchedBooks.data && searchedBooks.data.items.length > 0 && (
                     <BookList
+                        title="Results"
                         books={searchedBooks.data.items}
                         pageState={pageState}
                         totalItems={searchedBooks.data.totalItems}

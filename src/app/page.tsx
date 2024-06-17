@@ -13,6 +13,7 @@ const Reading = () => {
 
     return (
         <main
+            suppressHydrationWarning
             className={cn(
                 "relative mx-auto mb-20 flex h-fit min-h-[calc(100vh_-_5rem)] w-full max-w-screen-lg flex-col gap-8 p-6",
                 isIOS && "mb-24",

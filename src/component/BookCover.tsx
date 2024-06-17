@@ -32,7 +32,7 @@ const BookCover = forwardRef<HTMLButtonElement, Props>(({ book, className, asChi
     const Comp = asChild ? Slot : "button";
     return (
         <Comp
-            className={cn("aspect-book group relative w-full focus-visible:outline-none mouse:cursor-pointer", className)}
+            className={cn("group relative aspect-book w-full focus-visible:outline-none mouse:cursor-pointer", className)}
             ref={ref}
             {...props}
         >

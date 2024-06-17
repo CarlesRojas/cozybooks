@@ -2,7 +2,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ZodType } from "zod";
 
 export const useUrlState = <T = string>(key: string, defaultState: T, schema: ZodType<T>) => {
-    const { replace } = useRouter();
+    const { push } = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const state = schema.parse(searchParams.get(key) === "null" ? null : searchParams.get(key) ?? defaultState);
@@ -17,7 +17,7 @@ export const useUrlState = <T = string>(key: string, defaultState: T, schema: Zo
 
         extraParams.forEach(({ key, value }) => (value ? params.set(key, String(value)) : params.delete(key)));
 
-        replace(`${pathname}?${params.toString()}`, { scroll });
+        push(`${pathname}?${params.toString()}`, { scroll });
     };
 
     return [state, setState] as const;

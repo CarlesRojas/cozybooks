@@ -1,12 +1,11 @@
 "use client";
 
-import BookCover from "@/component/BookCover";
-import Pagination from "@/component/Pagination";
+import BookList from "@/component/BookList";
 import { Input } from "@/component/ui/input";
 import { useUrlState } from "@/hook/useUrlState";
 import { useSearchedBooks } from "@/server/use/useSearchedBooks";
 import { cn } from "@/util";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { isIOS } from "react-device-detect";
 import { LuLoader, LuSearch } from "react-icons/lu";
 import { useDebouncedCallback } from "use-debounce";
@@ -15,7 +14,7 @@ import { z } from "zod";
 const PAGE_SIZE = 8;
 
 const Search = () => {
-    const [page, setPage] = useUrlState("page", 1, z.coerce.number());
+    const pageState = useUrlState("page", 1, z.coerce.number());
 
     const [query, setQuery] = useUrlState("query", "", z.string());
     const [internalQuery, setInternalQuery] = useState(query);
@@ -23,10 +22,9 @@ const Search = () => {
         setQuery(value, true, [{ key: "page", value: "1" }]);
     }, 400);
 
-    const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE });
+    useEffect(() => setInternalQuery(query), [query]);
 
-    const numberOfPages = Math.ceil((searchedBooks.data?.totalItems || 1) / PAGE_SIZE);
-    const currentPage = Math.max(Math.min(page, numberOfPages), 1);
+    const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE, offset: (pageState[0] - 1) * PAGE_SIZE });
 
     return (
         <main className={cn("relative mb-20 flex h-fit w-full flex-col gap-5 pb-6", isIOS && "mb-24")}>
@@ -68,25 +66,13 @@ const Search = () => {
 
             <div className="flex h-fit w-full flex-col gap-12">
                 {searchedBooks.data && searchedBooks.data.items.length > 0 && (
-                    <section className="flex h-fit w-full flex-col gap-4 mouse:gap-6">
-                        <div className="sticky top-[5rem] z-30 bg-neutral-50 pb-2 dark:bg-neutral-950">
-                            <h2 className="h2 mx-auto max-w-screen-lg px-6">Results</h2>
-                        </div>
-
-                        <div className="mx-auto grid w-full max-w-screen-lg grid-cols-2 gap-6 px-6 sm:grid-cols-3 md:grid-cols-4">
-                            {searchedBooks.data.items.map((book) => (
-                                <BookCover key={book.id} book={book} />
-                            ))}
-                        </div>
-
-                        <div className="mx-auto w-full max-w-screen-lg px-6">
-                            <Pagination
-                                numberOfPages={Math.min(numberOfPages, 5)}
-                                currentPage={currentPage - 1}
-                                onPageChange={(page) => setPage(page + 1, true)}
-                            />
-                        </div>
-                    </section>
+                    <BookList
+                        books={searchedBooks.data.items}
+                        pageState={pageState}
+                        totalItems={searchedBooks.data.totalItems}
+                        stickyClassName="top-[5rem]"
+                        pageSize={PAGE_SIZE}
+                    />
                 )}
 
                 <section className="flex h-fit w-full flex-col gap-8"></section>

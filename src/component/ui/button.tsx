@@ -15,6 +15,7 @@ const buttonVariants = cva(
                 ghost: "bg-transparent rounded-full text-neutral-500 mouse:focus-visible:text-neutral-950 mouse:focus-visible:dark:text-neutral-50 mouse:hover:text-neutral-950 mouse:hover:dark:text-neutral-50",
                 pagination: "group mouse:focus-visible:scale-125",
                 paginationActive: "mouse:focus-visible:scale-125",
+                link: "font-semibold text-neutral-900 underline-offset-4 mouse:hover:underline dark:text-neutral-50",
             },
             size: {
                 default: "h-12 px-5 py-3",

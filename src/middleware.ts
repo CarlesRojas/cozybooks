@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { pathnameToRoute } from "@/hook/useRoute";
-import { PRIVATE_ROUTES, Route } from "@/type/Route";
+import { LEGAL_ROUTES, PRIVATE_ROUTES, Route } from "@/type/Route";
 import { NextResponse } from "next/server";
 
 const excludedPaths = [
@@ -26,5 +26,6 @@ export default auth((request) => {
     if (!request.auth && PRIVATE_ROUTES.includes(route))
         return NextResponse.redirect(new URL(`${Route.AUTH_SIGN_IN}?callbackUrl=${encodeURIComponent(path)}`, request.url));
 
-    if (!!request.auth && !PRIVATE_ROUTES.includes(route)) return NextResponse.redirect(new URL(Route.READING, request.url));
+    if (!!request.auth && !PRIVATE_ROUTES.includes(route) && !LEGAL_ROUTES.includes(route))
+        return NextResponse.redirect(new URL(Route.READING, request.url));
 });

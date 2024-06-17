@@ -36,7 +36,7 @@ const RootLayout = async ({ children }: Readonly<Props>) => (
         <QueryProvider>
             <AuthProvider>
                 <body
-                    className={`${montserrat.className} overflow-y-auto bg-neutral-50 text-neutral-950 dark:bg-neutral-950 dark:text-neutral-50`}
+                    className={`${montserrat.className} relative overflow-y-auto bg-neutral-50 text-neutral-950 dark:bg-neutral-950 dark:text-neutral-50`}
                 >
                     <ThemeProvider>
                         {children}

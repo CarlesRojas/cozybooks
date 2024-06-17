@@ -63,39 +63,33 @@ const Search = () => {
                     searchedBooks.isPlaceholderData && "-mt-0",
                 )}
             >
-                <LuLoader className="size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50 duration-2000" />
+                <LuLoader className="duration-2000 size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50" />
             </div>
 
             <div className="flex h-fit w-full flex-col gap-12">
                 {searchedBooks.data && searchedBooks.data.items.length > 0 && (
-                    <section className="flex h-fit w-full flex-col gap-6">
+                    <section className="flex h-fit w-full flex-col gap-4 mouse:gap-6">
                         <div className="sticky top-[5rem] z-30 bg-neutral-50 pb-2 dark:bg-neutral-950">
                             <h2 className="h2 mx-auto max-w-screen-lg px-6">Results</h2>
                         </div>
 
-                        <div className="mx-auto grid w-full max-w-screen-lg grid-cols-2 gap-5 px-6 sm:grid-cols-3 md:grid-cols-4">
+                        <div className="mx-auto grid w-full max-w-screen-lg grid-cols-2 gap-6 px-6 sm:grid-cols-3 md:grid-cols-4">
                             {searchedBooks.data.items.map((book) => (
-                                <BookCover key={book.id} book={book} isInteractive />
+                                <BookCover key={book.id} book={book} />
                             ))}
                         </div>
 
                         <div className="mx-auto w-full max-w-screen-lg px-6">
                             <Pagination
-                                numberOfPages={numberOfPages}
+                                numberOfPages={Math.min(numberOfPages, 5)}
                                 currentPage={currentPage - 1}
-                                onPageChange={(page) => setPage(page + 1)}
+                                onPageChange={(page) => setPage(page + 1, true)}
                             />
                         </div>
                     </section>
                 )}
 
-                <section className="flex h-fit w-full flex-col gap-8">
-                    <div className="sticky top-[5rem] z-30 bg-neutral-50 pb-2 dark:bg-neutral-950">
-                        <h2 className="h2 mx-auto max-w-screen-lg px-6">Recommended for you</h2>
-                    </div>
-
-                    <div className="mx-auto grid w-full max-w-screen-lg grid-cols-2 gap-5 px-6 sm:grid-cols-3 md:grid-cols-4"></div>
-                </section>
+                <section className="flex h-fit w-full flex-col gap-8"></section>
             </div>
         </main>
     );

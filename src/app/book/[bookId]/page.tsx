@@ -57,7 +57,7 @@ const BookPage = async ({ params: { bookId } }: Props) => {
 
                 {description && (
                     <div className="prose prose-neutral dark:prose-invert">
-                        <ShowMore className="opacity-90" truncate={128} expandText="Expand description" collapseText="Collapse description">
+                        <ShowMore className="opacity-90" truncate={256} expandText="Expand description" collapseText="Collapse description">
                             {convertHtmlToReact(description)}
                         </ShowMore>
                     </div>

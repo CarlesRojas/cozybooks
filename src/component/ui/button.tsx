@@ -19,6 +19,7 @@ const buttonVariants = cva(
             },
             size: {
                 default: "h-12 px-5 py-3",
+                small: "h-9 px-4",
                 icon: "h-12 w-12",
                 ghost: "h-fit w-fit",
                 pagination: "h-8 w-8",

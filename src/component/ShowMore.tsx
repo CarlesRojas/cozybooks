@@ -23,14 +23,12 @@ export const ShowMore = ({ truncate, children, expandText, collapseText, classNa
             truncate={truncate}
             expanded={expanded}
             showMore={
-                <>
-                    <Button variant="ghost" size="ghost" onClick={onShowMore}>
-                        {expandText ?? "Show more"}
-                    </Button>
-                </>
+                <Button variant="glass" size="small" onClick={onShowMore} className="mt-2">
+                    {expandText ?? "Show more"}
+                </Button>
             }
             showLess={
-                <Button variant="ghost" size="ghost" onClick={onShowLess}>
+                <Button variant="glass" size="small" onClick={onShowLess} className="mt-2">
                     {collapseText ?? "Show less"}
                 </Button>
             }

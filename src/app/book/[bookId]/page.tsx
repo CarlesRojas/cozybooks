@@ -19,8 +19,10 @@ const BookPage = async ({ params: { bookId } }: Props) => {
     if (!book) return <NotFound type={NotFoundType.BOOK} />;
 
     const {
-        volumeInfo: { title, authors, description, pageCount, previewLink },
+        volumeInfo: { title, authors, description, pageCount, previewLink, categories },
     } = book;
+
+    const categorySet = new Set(categories?.flatMap((category) => category.split("/").map((category) => category.trim())) ?? []);
 
     return (
         <main
@@ -56,15 +58,23 @@ const BookPage = async ({ params: { bookId } }: Props) => {
                 {/* TODO show rating */}
 
                 {description && (
-                    <div className="prose prose-neutral dark:prose-invert">
-                        <ShowMore className="opacity-90" truncate={256} expandText="Expand description" collapseText="Collapse description">
+                    <div className="prose prose-neutral flex w-fit flex-col items-center rounded-3xl border border-neutral-200 bg-neutral-150 px-4 pb-5 pt-1 dark:prose-invert dark:border-neutral-800 dark:bg-neutral-850 sm:px-6 sm:pb-6 sm:pt-2">
+                        <ShowMore truncate={256} expandText="Expand description" collapseText="Collapse description">
                             {convertHtmlToReact(description)}
                         </ShowMore>
                     </div>
                 )}
 
+                <div className="mb-8 mt-12 flex w-full flex-wrap justify-center gap-x-4 gap-y-2">
+                    {Array.from(categorySet).map((category) => (
+                        <p key={category} className="text-sm font-medium leading-snug tracking-wide opacity-50">
+                            {category}
+                        </p>
+                    ))}
+                </div>
+
                 {previewLink && (
-                    <Button asChild variant="glass">
+                    <Button asChild variant="ghost">
                         <Link href={previewLink} target="_blank" rel="noopener noreferrer">
                             <FaGoogle className="icon mr-3" />
                             <p>View on Google Books</p>

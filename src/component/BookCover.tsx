@@ -1,17 +1,17 @@
 "use client";
 
 import { Book } from "@/type/Book";
-import { cn, getBiggestBookImage, getSmallestBookImage } from "@/util";
+import { cn, getBiggestBookImage } from "@/util";
 import Image from "next/image";
 import Link from "next/link";
 import { AnchorHTMLAttributes, ReactNode, forwardRef, useMemo, useRef, useState } from "react";
 
 export interface Props extends AnchorHTMLAttributes<HTMLAnchorElement> {
     book: Book;
+    maxWidth?: number;
 }
 
-const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, className, ...props }, ref) => {
-    const smallestImage = useRef(book.volumeInfo.imageLinks && getSmallestBookImage(book.volumeInfo.imageLinks));
+const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, className, ...props }, ref) => {
     const biggestImage = useRef(book.volumeInfo.imageLinks && getBiggestBookImage(book.volumeInfo.imageLinks));
 
     const scaledImage = useMemo(() => {
@@ -54,7 +54,7 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, className,
                             "opacity-0 group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-60 dark:group-focus:opacity-60",
                     )}
                     width={200}
-                    height={300}
+                    height={200 * 1.5}
                     src={src}
                     alt={book.volumeInfo.title}
                     onError={() => setSrc(biggestImage.current)}
@@ -67,8 +67,8 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, className,
                         "h-full w-full select-none rounded-xl border border-neutral-500/10 object-cover object-center transition-transform",
                         href && "mouse:group-hover:scale-[1.02] mouse:group-focus:scale-[1.02]",
                     )}
-                    width={400}
-                    height={600}
+                    width={maxWidth ?? 400}
+                    height={(maxWidth ?? 400) * 1.5}
                     src={src}
                     alt={book.volumeInfo.title}
                     onError={() => setSrc(biggestImage.current)}

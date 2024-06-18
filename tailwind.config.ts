@@ -38,6 +38,7 @@ const config: Config = {
             transitionDuration: {
                 "2000": "2000ms",
             },
+            typography: { DEFAULT: { css: { p: { marginTop: "0.75em", marginBottom: "0.75em" } } } },
         },
     },
     plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],

@@ -3,8 +3,9 @@
 import BookList from "@/component/BookList";
 import { Input } from "@/component/ui/input";
 import { useUrlState } from "@/hook/useUrlState";
-import { useBookShelves } from "@/server/use/useBookShelves";
+import { useBookShelf } from "@/server/use/useBookShelf";
 import { useSearchedBooks } from "@/server/use/useSearchedBooks";
+import { BookShelfType } from "@/type/BookShelf";
 import { cn } from "@/util";
 import { useEffect, useState } from "react";
 import { isIOS } from "react-device-detect";
@@ -15,19 +16,24 @@ import { z } from "zod";
 const PAGE_SIZE = 8;
 
 const Search = () => {
-    const pageState = useUrlState("page", 1, z.coerce.number());
+    const searchPageState = useUrlState("search-page", 1, z.coerce.number());
+    const recommendedPageState = useUrlState("recommended-page", 1, z.coerce.number());
 
     const [query, setQuery] = useUrlState("query", "", z.string());
     const [internalQuery, setInternalQuery] = useState(query);
     const setQueryDebounced = useDebouncedCallback((value) => {
-        setQuery(value, true, [{ key: "page", value: "1" }]);
+        setQuery(value, true, [{ key: "search-page", value: "1" }]);
+        setQuery(value, true, [{ key: "recommended-page", value: "1" }]);
     }, 400);
 
     useEffect(() => setInternalQuery(query), [query]);
 
-    const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE, offset: (pageState[0] - 1) * PAGE_SIZE });
-    const bookShelves = useBookShelves();
-    console.log(bookShelves.data);
+    const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE, offset: (searchPageState[0] - 1) * PAGE_SIZE });
+    const recommendedBooks = useBookShelf({
+        type: BookShelfType.BOOKS_FOR_YOU,
+        booksPerPage: PAGE_SIZE,
+        offset: (recommendedPageState[0] - 1) * PAGE_SIZE,
+    });
 
     return (
         <main suppressHydrationWarning className={cn("relative mb-20 flex h-fit w-full flex-col gap-5 pb-6", isIOS && "mb-24")}>
@@ -72,14 +78,23 @@ const Search = () => {
                     <BookList
                         title="Results"
                         books={searchedBooks.data.items}
-                        pageState={pageState}
+                        pageState={searchPageState}
                         totalItems={searchedBooks.data.totalItems}
                         stickyClassName="top-[5rem]"
                         pageSize={PAGE_SIZE}
                     />
                 )}
 
-                <section className="flex h-fit w-full flex-col gap-8"></section>
+                {recommendedBooks.data && recommendedBooks.data.items.length > 0 && (
+                    <BookList
+                        title="Recommended for you"
+                        books={recommendedBooks.data.items}
+                        pageState={recommendedPageState}
+                        totalItems={recommendedBooks.data.totalItems}
+                        stickyClassName="top-[5rem]"
+                        pageSize={PAGE_SIZE}
+                    />
+                )}
             </div>
         </main>
     );

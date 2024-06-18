@@ -1,6 +1,7 @@
 import { REFRESH_TOKEN_ERROR } from "@/const";
 import { getServerUser } from "@/server/use/useServerUser";
 import { BookImageLinks } from "@/type/Book";
+import { BookShelf, BookShelfType } from "@/type/BookShelf";
 import { Route } from "@/type/Route";
 import { clsx, type ClassValue } from "clsx";
 import { signOut } from "next-auth/react";
@@ -47,4 +48,15 @@ export const getSmallestBookImage = (imageLinks: BookImageLinks) => {
     if (imageLinks.extraLarge) return imageLinks.extraLarge;
 
     return undefined;
+};
+
+export const getBookShelfOfType = (type: BookShelfType, bookShelves: BookShelf[]) => {
+    return bookShelves.find((bookShelf) => bookShelf.id === type);
+};
+
+export const coercedArray = <T extends z.ZodTypeAny>(arg: T) => {
+    return z
+        .array(arg)
+        .optional()
+        .transform((val) => val ?? []);
 };

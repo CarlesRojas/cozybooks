@@ -65,7 +65,7 @@ export const renderObject = (obj: Record<string, any>, level = 0) => {
     if (!obj) return null;
 
     return (
-        <ul style={{ marginLeft: `${level * 32}px` }}>
+        <ul style={{ marginLeft: `${level * 32}px` }} className="max-w-100vw overflow-x-hidden">
             {Object.entries(obj).map(([key, value], index) => (
                 <li key={index}>
                     <strong className="text-sky-500">{key}:</strong> {typeof value === "object" ? renderObject(value, level + 1) : value}

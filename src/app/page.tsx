@@ -9,7 +9,6 @@ import { isIOS } from "react-device-detect";
 
 const Reading = () => {
     const bookShelves = useBookShelves();
-    console.log(bookShelves.data);
 
     return (
         <main

@@ -8,8 +8,8 @@ const BackButton = () => {
     const { back } = useRouter();
 
     return (
-        <Button onClick={back} className="sticky top-4 z-20 mouse:top-20">
-            <LuArrowLeft className="mr-3 h-4 w-4 stroke-[3]" />
+        <Button onClick={back} size="icon" variant="glass">
+            <LuArrowLeft className="icon" />
         </Button>
     );
 };

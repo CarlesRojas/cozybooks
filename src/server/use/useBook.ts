@@ -16,10 +16,12 @@ export const getBook = withToken(async ({ bookId, token }: Props & TokenProps) =
     });
     url.search = params.toString();
 
-    const response = await axios.get(url.toString());
-    console.log(response.data);
-
-    return BookSchema.parse(response.data) as Book;
+    try {
+        const response = await axios.get(url.toString());
+        return BookSchema.parse(response.data) as Book;
+    } catch (error) {
+        return undefined;
+    }
 });
 
 export const useBook = ({ bookId }: Props) => {

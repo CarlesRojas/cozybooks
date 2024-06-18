@@ -5,7 +5,10 @@ const TermsAndConditions = () => {
     return (
         <main
             suppressHydrationWarning
-            className={cn("prose prose-stone relative mx-auto mb-20 h-fit w-full max-w-screen-lg p-6 dark:prose-invert", isIOS && "mb-24")}
+            className={cn(
+                "prose prose-neutral relative mx-auto mb-20 h-fit w-full max-w-screen-lg p-6 dark:prose-invert",
+                isIOS && "mb-24",
+            )}
         >
             {/* TODO add back button */}
             <h1>Terms &amp; Conditions</h1>

@@ -37,7 +37,7 @@ const BookPage = async ({ params: { bookId } }: Props) => {
                 </div>
 
                 <div className="relative flex w-full flex-col items-center gap-2">
-                    <h1 className="mx-auto w-full text-balance text-center text-3xl font-bold leading-tight tracking-wide sm:max-w-[20rem]">
+                    <h1 className="mx-auto w-full text-pretty text-center text-3xl font-bold leading-tight tracking-wide sm:max-w-screen-sm">
                         {title}
                     </h1>
 
@@ -58,7 +58,7 @@ const BookPage = async ({ params: { bookId } }: Props) => {
                 {/* TODO show rating */}
 
                 {description && (
-                    <div className="prose prose-neutral flex w-fit flex-col items-center rounded-3xl border border-neutral-200 bg-neutral-150 px-4 pb-5 pt-1 dark:prose-invert dark:border-neutral-800 dark:bg-neutral-850 sm:px-6 sm:pb-6 sm:pt-2">
+                    <div className="prose prose-neutral flex w-fit flex-col items-center rounded-3xl border border-neutral-200 bg-gradient-to-tl from-neutral-150 to-neutral-200 px-4 pb-5 pt-1 dark:prose-invert dark:border-neutral-800 dark:from-neutral-850 dark:to-neutral-800 sm:px-6 sm:pb-6 sm:pt-2">
                         <ShowMore truncate={256} expandText="Expand description" collapseText="Collapse description">
                             {convertHtmlToReact(description)}
                         </ShowMore>

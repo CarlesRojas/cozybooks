@@ -60,3 +60,17 @@ export const coercedArray = <T extends z.ZodTypeAny>(arg: T) => {
         .optional()
         .transform((val) => val ?? []);
 };
+
+export const renderObject = (obj: Record<string, any>, level = 0) => {
+    if (!obj) return null;
+
+    return (
+        <ul style={{ marginLeft: `${level * 32}px` }}>
+            {Object.entries(obj).map(([key, value], index) => (
+                <li key={index}>
+                    <strong className="text-sky-500">{key}:</strong> {typeof value === "object" ? renderObject(value, level + 1) : value}
+                </li>
+            ))}
+        </ul>
+    );
+};

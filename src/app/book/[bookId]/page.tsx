@@ -27,10 +27,10 @@ const BookPage = async ({ params: { bookId } }: Props) => {
             suppressHydrationWarning
             className={cn("relative mx-auto mb-20 flex h-fit w-full max-w-screen-lg flex-col gap-6 p-6", isIOS && "mb-24")}
         >
-            <BackButton />
+            <BackButton className="sticky top-6" />
 
             <div className="relative flex w-full flex-col items-center gap-6">
-                <div className="relative aspect-book w-full sm:max-w-[20rem]">
+                <div className="relative aspect-book w-full max-w-[80vw] sm:max-w-[20rem]">
                     <BookCover key={book.id} book={book} />
                 </div>
 

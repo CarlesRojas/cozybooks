@@ -1,3 +1,4 @@
+import BackButton from "@/component/BackButton";
 import { cn } from "@/util";
 import { isIOS } from "react-device-detect";
 
@@ -10,7 +11,8 @@ const TermsAndConditions = () => {
                 isIOS && "mb-24",
             )}
         >
-            {/* TODO add back button */}
+            <BackButton className="sticky top-6 mb-6" />
+
             <h1>Terms &amp; Conditions</h1>
             <p>
                 These terms and conditions applies to the CozyBooks app (hereby referred to as &quot;Application&quot;) for mobile devices

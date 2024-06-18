@@ -1,3 +1,4 @@
+import BackButton from "@/component/BackButton";
 import { cn } from "@/util";
 import { isIOS } from "react-device-detect";
 
@@ -10,7 +11,8 @@ const PrivacyPolicy = () => {
                 isIOS && "mb-24",
             )}
         >
-            {/* TODO add back button */}
+            <BackButton className="sticky top-6 mb-6" />
+
             <h1>Privacy Policy</h1>
             <p>Last updated: June 17, 2024</p>
             <p>

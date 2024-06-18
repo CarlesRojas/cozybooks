@@ -4,7 +4,7 @@ import NotFound, { NotFoundType } from "@/component/NotFound";
 import ShowMore from "@/component/ShowMore";
 import { Button } from "@/component/ui/button";
 import { getBook } from "@/server/use/useBook";
-import { cn, renderObject } from "@/util";
+import { cn } from "@/util";
 import { convertHtmlToReact } from "@hedgedoc/html-to-react";
 import Link from "next/link";
 import { isIOS } from "react-device-detect";
@@ -27,7 +27,7 @@ const BookPage = async ({ params: { bookId } }: Props) => {
     return (
         <main
             suppressHydrationWarning
-            className={cn("relative mx-auto mb-20 flex h-fit w-full max-w-screen-lg flex-col gap-6 p-6", isIOS && "mb-24")}
+            className={cn("relative mx-auto mb-24 flex h-fit w-full max-w-screen-lg flex-col gap-6 p-6", isIOS && "mb-28")}
         >
             <BackButton className="sticky top-6" />
 
@@ -83,7 +83,7 @@ const BookPage = async ({ params: { bookId } }: Props) => {
                 )}
             </div>
 
-            {renderObject(book)}
+            {/* {renderObject(book)} */}
         </main>
     );
 };

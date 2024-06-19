@@ -19,6 +19,8 @@ const BookList = ({ title, books, totalItems, stickyClassName, pageState, pageSi
     const numberOfPages = Math.ceil((totalItems || 1) / pageSize);
     const currentPage = Math.max(Math.min(page, numberOfPages), 1);
 
+    // TODO add optional empty state via children prop to show if there are no books
+
     return (
         <section className="flex h-fit w-full flex-col gap-4 mouse:gap-6">
             <div className={cn("sticky top-0 z-30 bg-neutral-50 pb-2 dark:bg-neutral-950", stickyClassName)}>

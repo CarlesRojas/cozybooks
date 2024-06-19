@@ -28,7 +28,7 @@ export const getBookShelf = withToken(async ({ type, booksPerPage = 8, offset = 
 
 export const useBookShelf = ({ type, booksPerPage, offset }: Props) => {
     return useQuery({
-        queryKey: ["BookShelf", type, booksPerPage, offset],
+        queryKey: ["bookShelf", type, booksPerPage, offset],
         queryFn: () => getBookShelf({ type, booksPerPage, offset }),
     });
 };

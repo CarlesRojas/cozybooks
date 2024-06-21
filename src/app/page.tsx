@@ -45,10 +45,13 @@ const Reading = () => {
                         stickyClassName="top-0 pt-6"
                         pageSize={PAGE_SIZE}
                         noBooksChildren={
-                            <div className="flex flex-col gap-2">
-                                <p className="text-neutral-500 dark:text-neutral-400">
-                                    This is a little empty. You can start by searching for books.
+                            <div className="flex flex-col gap-4">
+                                <p className="font-medium tracking-wide opacity-80">
+                                    {toReadBooks.data && toReadBooks.data.items.length
+                                        ? "This is a little empty. Select on any of the books below and click 'Start Reading'."
+                                        : "This is a little empty. You can start by searching for books."}
                                 </p>
+
                                 <Button variant="glass" asChild>
                                     <Link href={Route.SEARCH}>
                                         <LuBook className="icon mr-3" />

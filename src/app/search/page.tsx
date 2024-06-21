@@ -73,7 +73,7 @@ const Search = () => {
                         stickyClassName="top-[5rem]"
                         pageSize={PAGE_SIZE}
                         isLoading={searchedBooks.isPlaceholderData}
-                        noBooksChildren={<p className="text-neutral-500 dark:text-neutral-400">No results found</p>}
+                        noBooksChildren={<p className="font-medium tracking-wide opacity-80">No results found</p>}
                     />
                 )}
 

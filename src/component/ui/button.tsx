@@ -19,9 +19,9 @@ const buttonVariants = cva(
                 link: "font-semibold text-neutral-900 underline-offset-4 mouse:hover:underline dark:text-neutral-50",
             },
             size: {
-                default: "h-12 px-5 py-3",
+                default: "h-12 px-5 py-3 w-fit",
                 small: "h-9 px-4",
-                icon: "h-12 w-12",
+                icon: "h-12 w-12 min-w-12 min-h-12",
                 ghost: "h-fit w-fit",
                 pagination: "h-8 w-8",
             },

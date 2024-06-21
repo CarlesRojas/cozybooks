@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const addToWantToRead = withToken(async ({ bookId, token }: Props & TokenProps) => {
-    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${BookShelfType.TO_READ}/addVolume`, GOOGLE_BOOKS_URL);
+    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${BookShelfType.TO_READ}/addVolume`);
     const params = new URLSearchParams({
         access_token: token,
         volumeId: bookId,
@@ -35,8 +35,7 @@ export const useAddToWantToRead = () => {
         onError: (err, { bookId }, context) => {
             context && queryClient.setQueryData(["bookStatus", bookId], context.previousData);
         },
-        onSettled: (data, erro, { bookId }) => {
-            queryClient.invalidateQueries({ queryKey: ["bookStatus", bookId] });
+        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["bookShelf", BookShelfType.TO_READ] });
         },
     });

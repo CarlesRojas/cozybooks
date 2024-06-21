@@ -29,8 +29,7 @@ export const useFinishBook = () => {
         onError: (err, { bookId }, context) => {
             context && queryClient.setQueryData(["bookStatus", bookId], context.previousData);
         },
-        onSettled: (data, erro, { bookId }) => {
-            queryClient.invalidateQueries({ queryKey: ["bookStatus", bookId] });
+        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["bookShelf", BookShelfType.TO_READ] });
         },
     });

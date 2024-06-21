@@ -20,7 +20,7 @@ const isBookInReadingList = async (bookId: string, token: string) => {
         volumeId: bookId,
         volumePosition: "0",
     });
-    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${BookShelfType.READING_NOW}/moveVolume`, GOOGLE_BOOKS_URL);
+    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${BookShelfType.READING_NOW}/moveVolume`);
     url.search = params.toString();
 
     try {
@@ -39,7 +39,7 @@ const isBookInWantToReadList = async (bookId: string, token: string) => {
         volumeId: bookId,
         volumePosition: "0",
     });
-    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${BookShelfType.TO_READ}/moveVolume`, GOOGLE_BOOKS_URL);
+    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${BookShelfType.TO_READ}/moveVolume`);
     url.search = params.toString();
 
     try {
@@ -63,5 +63,6 @@ export const useBookStatus = ({ bookId }: Props) => {
     return useQuery({
         queryKey: ["bookStatus", bookId],
         queryFn: () => getBookStatus({ bookId }),
+        staleTime: 1000 * 60 * 60 * 24, // 24 hours
     });
 };

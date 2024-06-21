@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const getBook = withToken(async ({ bookId, token }: Props & TokenProps) => {
-    const url = new URL(`${GOOGLE_BOOKS_URL}/volumes/${bookId}`, GOOGLE_BOOKS_URL);
+    const url = new URL(`${GOOGLE_BOOKS_URL}/volumes/${bookId}`);
     const params = new URLSearchParams({
         access_token: token,
         projection: "full",

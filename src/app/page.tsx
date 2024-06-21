@@ -9,6 +9,7 @@ import { Route } from "@/type/Route";
 import { cn } from "@/util";
 import Link from "next/link";
 import { isIOS } from "react-device-detect";
+import { LuBook } from "react-icons/lu";
 import { z } from "zod";
 
 const PAGE_SIZE = 8;
@@ -35,7 +36,7 @@ const Reading = () => {
             className={cn("relative mb-20 flex h-fit min-h-[calc(100vh_-_5rem)] w-full flex-col gap-5 pb-6", isIOS && "mb-24")}
         >
             <div className="flex h-fit w-full grow flex-col gap-8">
-                {readingBooks.data && readingBooks.data.items.length > 0 && (
+                {readingBooks.data && (
                     <BookList
                         title="Reading"
                         books={readingBooks.data.items}
@@ -43,6 +44,19 @@ const Reading = () => {
                         totalItems={readingBooks.data.totalItems}
                         stickyClassName="top-0 pt-6"
                         pageSize={PAGE_SIZE}
+                        noBooksChildren={
+                            <div className="flex flex-col gap-2">
+                                <p className="text-neutral-500 dark:text-neutral-400">
+                                    This is a little empty. You can start by searching for books.
+                                </p>
+                                <Button variant="glass" asChild>
+                                    <Link href={Route.SEARCH}>
+                                        <LuBook className="icon mr-3" />
+                                        <p>Search for books</p>
+                                    </Link>
+                                </Button>
+                            </div>
+                        }
                     />
                 )}
 

@@ -6,7 +6,7 @@ import axios from "axios";
 import { z } from "zod";
 
 export const getBookShelves = withToken(async ({ token }: TokenProps) => {
-    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves`, GOOGLE_BOOKS_URL);
+    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves`);
     const params = new URLSearchParams({
         access_token: token,
     });

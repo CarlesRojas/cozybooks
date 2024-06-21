@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const addToReading = withToken(async ({ bookId, token }: Props & TokenProps) => {
-    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${BookShelfType.READING_NOW}/addVolume`, GOOGLE_BOOKS_URL);
+    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${BookShelfType.READING_NOW}/addVolume`);
     const params = new URLSearchParams({
         access_token: token,
         volumeId: bookId,
@@ -22,7 +22,8 @@ export const addToReading = withToken(async ({ bookId, token }: Props & TokenPro
 });
 
 export const startReading = withToken(async ({ bookId }: Props & TokenProps) => {
-    await Promise.all([removeToWantToRead({ bookId }), addToReading({ bookId })]);
+    await removeToWantToRead({ bookId });
+    await addToReading({ bookId });
 });
 
 export const useStartReading = () => {
@@ -40,8 +41,7 @@ export const useStartReading = () => {
         onError: (err, { bookId }, context) => {
             context && queryClient.setQueryData(["bookStatus", bookId], context.previousData);
         },
-        onSettled: (data, erro, { bookId }) => {
-            queryClient.invalidateQueries({ queryKey: ["bookStatus", bookId] });
+        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["bookShelf", BookShelfType.TO_READ] });
             queryClient.invalidateQueries({ queryKey: ["bookShelf", BookShelfType.READING_NOW] });
         },

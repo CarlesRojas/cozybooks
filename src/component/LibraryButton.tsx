@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/component/ui/button";
-import { useAddToWantToRead } from "@/server/use/useAddToWantToRead";
+import { useAddToWantToRead } from "@/server/use/status/useAddToWantToRead";
+import { useFinishBook } from "@/server/use/status/useFinishBook";
+import { useRemoveFromWantToRead } from "@/server/use/status/useRemoveFromWantToRead";
+import { useStartReading } from "@/server/use/status/useStartReading";
+import { useStopReading } from "@/server/use/status/useStopReading";
 import { BookStatus, useBookStatus } from "@/server/use/useBookStatus";
-import { useFinishBook } from "@/server/use/useFinishBook";
-import { useRemoveFromWantToRead } from "@/server/use/useRemoveFromWantToRead";
-import { useStartReading } from "@/server/use/useStartReading";
-import { useStopReading } from "@/server/use/useStopReading";
 import { ReactNode } from "react";
 import { LuBookMarked, LuBookOpen, LuLoader, LuPlus, LuX } from "react-icons/lu";
 

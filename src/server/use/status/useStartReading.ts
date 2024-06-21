@@ -1,6 +1,6 @@
 import { GOOGLE_BOOKS_URL } from "@/const";
+import { removeToWantToRead } from "@/server/use/status/useRemoveFromWantToRead";
 import { BookStatus } from "@/server/use/useBookStatus";
-import { removeToWantToRead } from "@/server/use/useRemoveFromWantToRead";
 import { BookShelfType } from "@/type/BookShelf";
 import { TokenProps, withToken } from "@/util";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

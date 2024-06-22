@@ -15,6 +15,7 @@ export const parseGoogleBook = (googleBook: any) => {
     return BookSchema.parse(rawBook) as Book;
 };
 
+// TODO Use api key instead of token so this can happen statically server side
 export const getBook = withToken(async ({ bookId, token }: Props & TokenProps) => {
     const url = new URL(`${GOOGLE_BOOKS_URL}/volumes/${bookId}`);
     const params = new URLSearchParams({

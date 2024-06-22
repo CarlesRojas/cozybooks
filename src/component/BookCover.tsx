@@ -43,7 +43,10 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
 
     return container(
         <>
-            <div className="skeleton absolute inset-0 -z-20 h-full w-full rounded-xl"></div>
+            <div
+                className="skeleton absolute inset-0 -z-20 h-full w-full rounded-xl"
+                style={{ viewTransitionName: `bookCover-bg-${book.id}` }}
+            />
 
             {src && (
                 <Image
@@ -53,6 +56,7 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
                         href &&
                             "opacity-0 group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-60 dark:group-focus:opacity-60",
                     )}
+                    style={{ viewTransitionName: `bookCover-blur-${book.id}` }}
                     width={200}
                     height={200 * 1.5}
                     src={src}
@@ -67,6 +71,7 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
                         "h-full w-full select-none rounded-xl border border-neutral-500/10 object-cover object-center transition-transform",
                         href && "mouse:group-hover:scale-[1.02] mouse:group-focus:scale-[1.02]",
                     )}
+                    style={{ viewTransitionName: `bookCover-${book.id}` }}
                     width={maxWidth ?? 400}
                     height={(maxWidth ?? 400) * 1.5}
                     src={src}

@@ -2,8 +2,8 @@
 
 import { Book } from "@/type/Book";
 import { cn, getBiggestBookImage } from "@/util";
+import { Link } from "next-view-transitions";
 import Image from "next/image";
-import Link from "next/link";
 import { AnchorHTMLAttributes, ReactNode, forwardRef, useMemo, useRef, useState } from "react";
 
 export interface Props extends AnchorHTMLAttributes<HTMLAnchorElement> {

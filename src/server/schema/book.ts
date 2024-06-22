@@ -1,4 +1,4 @@
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, real, text, timestamp } from "drizzle-orm/pg-core";
 
 export const book = pgTable("book", {
     id: text("index").primaryKey(),
@@ -11,7 +11,7 @@ export const book = pgTable("book", {
     pageCount: integer("pageCount"),
     categories: text("categories").array(),
     mainCategory: text("mainCategory"),
-    averageRating: integer("averageRating"),
+    averageRating: real("averageRating"),
     ratingsCount: integer("ratingsCount"),
     language: text("language"),
     previewLink: text("previewLink"),

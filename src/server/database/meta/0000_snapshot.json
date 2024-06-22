@@ -1,5 +1,5 @@
 {
-  "id": "e260f576-1dee-4da9-ac05-a7f9771a4c6f",
+  "id": "aa6544c0-e9c0-4b7c-8d4a-755db10738c5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -64,7 +64,7 @@
         },
         "averageRating": {
           "name": "averageRating",
-          "type": "integer",
+          "type": "real",
           "primaryKey": false,
           "notNull": false
         },

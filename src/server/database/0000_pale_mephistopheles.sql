@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS "book" (
 	"pageCount" integer,
 	"categories" text[],
 	"mainCategory" text,
-	"averageRating" integer,
+	"averageRating" real,
 	"ratingsCount" integer,
 	"language" text,
 	"previewLink" text,

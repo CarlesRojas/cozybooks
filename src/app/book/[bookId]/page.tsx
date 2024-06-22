@@ -55,7 +55,7 @@ const BookPage = async ({ params: { bookId } }: Props) => {
 
                 {/* TODO show rating */}
                 <div className="relative my-4 w-full">
-                    <LibraryButton bookId={bookId} />
+                    <LibraryButton book={book} />
                 </div>
 
                 {description && (

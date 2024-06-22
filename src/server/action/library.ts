@@ -1,14 +1,12 @@
 "use server";
 
-import { toDomainBook } from "@/server/action/book";
-import { InferResultType, db } from "@/server/database";
+import { db } from "@/server/database";
 import { library } from "@/server/schema";
-import { VolumesResult, VolumesResultSchema } from "@/type/Book";
-import { LibraryBook, LibraryBookSchema, LibraryType } from "@/type/Library";
+import { BookSchema, VolumesResult, VolumesResultSchema } from "@/type/Book";
+import { LibraryType } from "@/type/Library";
 import { and, count, eq } from "drizzle-orm";
 
 type InsertLibraryBook = typeof library.$inferInsert;
-type SelectLibraryBook = InferResultType<"library", { book: true }>;
 
 export const addBookToLibrary = async (libraryBook: InsertLibraryBook) => {
     await db.insert(library).values(libraryBook);
@@ -50,10 +48,6 @@ export const getLibraryBooks = async ({ userId, type, maxResults, startIndex }: 
 
     return VolumesResultSchema.parse({
         totalItems: numberOfBooks,
-        items: results.map((libraryBook) => toDomainBook(libraryBook.book)),
+        items: results.map((libraryBook) => BookSchema.parse(libraryBook.book)),
     }) as VolumesResult;
-};
-
-const toDomainLibraryBook = (libraryBook: SelectLibraryBook) => {
-    return LibraryBookSchema.parse(libraryBook) as LibraryBook;
 };

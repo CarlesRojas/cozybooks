@@ -1,6 +1,6 @@
 import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
-export const book = pgTable("spell", {
+export const book = pgTable("book", {
     id: text("index").primaryKey(),
 
     title: text("title"),

@@ -10,7 +10,7 @@
         "ts": "tsc --noEmit --incremental",
         "pretty": "prettier --write '**/*.{ts,tsx}'",
         "db:generate": "drizzle-kit generate",
-        "db:migrate": "ts-node -r dotenv/config -P ./tsconfig.json ./src/server/database/migration/applyMigrations.ts",
+        "db:migrate": "ts-node -r dotenv/config -P ./tsconfig.json ./src/server/database/applyMigrations.ts",
         "db:studio": "drizzle-kit studio"
     },
     "dependencies": {

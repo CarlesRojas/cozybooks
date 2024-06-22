@@ -2,6 +2,7 @@
 
 import BookList from "@/component/BookList";
 import { Button } from "@/component/ui/button";
+import { PAGE_SIZE } from "@/const";
 import { useUrlState } from "@/hook/useUrlState";
 import { useLibraryBooks } from "@/server/use/useLibraryBooks";
 import { LibraryType } from "@/type/Library";
@@ -11,8 +12,6 @@ import Link from "next/link";
 import { isIOS } from "react-device-detect";
 import { LuBook } from "react-icons/lu";
 import { z } from "zod";
-
-const PAGE_SIZE = 8;
 
 const Reading = () => {
     const readingPageState = useUrlState("reading-page", 1, z.coerce.number());

@@ -1,8 +1,9 @@
+import { PAGE_SIZE } from "@/const";
 import { addBook } from "@/server/action/book";
 import { addBookToLibrary } from "@/server/action/library";
 import { BookStatus } from "@/server/use/useBookStatus";
 import { getClientSide } from "@/server/use/useUser";
-import { Book } from "@/type/Book";
+import { Book, VolumesResult } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -31,10 +32,24 @@ export const useAddToWantToRead = () => {
             const previousData: BookStatus | undefined = queryClient.getQueryData(["bookStatus", book.id]);
             queryClient.setQueryData(["bookStatus", book.id], BookStatus.WANT_TO_READ);
 
-            return { previousData };
+            const previousToReadData: VolumesResult | undefined = queryClient.getQueryData([
+                "libraryBooks",
+                LibraryType.TO_READ,
+                PAGE_SIZE,
+                0,
+            ]);
+            if (previousToReadData) {
+                const newItems = previousToReadData.items;
+                newItems.unshift(book);
+                if (newItems.length > PAGE_SIZE) newItems.pop();
+                queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ, PAGE_SIZE, 0], { ...previousToReadData, items: newItems });
+            }
+
+            return { previousData, previousToReadData };
         },
         onError: (err, { book }, context) => {
             context && queryClient.setQueryData(["bookStatus", book.id], context.previousData);
+            context && queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ, PAGE_SIZE, 0], context.previousToReadData);
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ], refetchType: "all" });

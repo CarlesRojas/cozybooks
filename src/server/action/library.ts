@@ -43,7 +43,7 @@ export const getLibraryBooks = async ({ userId, type, maxResults, startIndex }: 
         with: { book: true },
         orderBy: (library, { desc }) => desc(library.createdAt),
         limit: maxResults,
-        offset: startIndex * maxResults,
+        offset: startIndex,
     });
 
     return VolumesResultSchema.parse({

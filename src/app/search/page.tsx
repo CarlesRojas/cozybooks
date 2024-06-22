@@ -2,6 +2,7 @@
 
 import BookList from "@/component/BookList";
 import { Input } from "@/component/ui/input";
+import { PAGE_SIZE } from "@/const";
 import { useUrlState } from "@/hook/useUrlState";
 import { useBookShelf } from "@/server/use/useBookShelf";
 import { useSearchedBooks } from "@/server/use/useSearchedBooks";
@@ -11,8 +12,6 @@ import { useEffect, useState } from "react";
 import { isIOS } from "react-device-detect";
 import { LuLoader, LuSearch } from "react-icons/lu";
 import { z } from "zod";
-
-const PAGE_SIZE = 8;
 
 const Search = () => {
     const searchPageState = useUrlState("search-page", 1, z.coerce.number());

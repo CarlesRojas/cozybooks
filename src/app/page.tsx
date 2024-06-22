@@ -3,8 +3,8 @@
 import BookList from "@/component/BookList";
 import { Button } from "@/component/ui/button";
 import { useUrlState } from "@/hook/useUrlState";
-import { useBookShelf } from "@/server/use/useBookShelf";
-import { BookShelfType } from "@/type/BookShelf";
+import { useLibraryBooks } from "@/server/use/useLibraryBooks";
+import { LibraryType } from "@/type/Library";
 import { Route } from "@/type/Route";
 import { cn } from "@/util";
 import Link from "next/link";
@@ -18,16 +18,16 @@ const Reading = () => {
     const readingPageState = useUrlState("reading-page", 1, z.coerce.number());
     const toReadPageState = useUrlState("to-read-page", 1, z.coerce.number());
 
-    const readingBooks = useBookShelf({
-        type: BookShelfType.READING_NOW,
-        booksPerPage: PAGE_SIZE,
-        offset: (readingPageState[0] - 1) * PAGE_SIZE,
+    const readingBooks = useLibraryBooks({
+        type: LibraryType.READING,
+        maxResults: PAGE_SIZE,
+        startIndex: (readingPageState[0] - 1) * PAGE_SIZE,
     });
 
-    const toReadBooks = useBookShelf({
-        type: BookShelfType.TO_READ,
-        booksPerPage: PAGE_SIZE,
-        offset: (toReadPageState[0] - 1) * PAGE_SIZE,
+    const toReadBooks = useLibraryBooks({
+        type: LibraryType.TO_READ,
+        maxResults: PAGE_SIZE,
+        startIndex: (toReadPageState[0] - 1) * PAGE_SIZE,
     });
 
     return (

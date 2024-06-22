@@ -1,7 +1,7 @@
 import { GOOGLE_BOOKS_URL } from "@/const";
 import { Book, BookSchema } from "@/type/Book";
 import { TokenProps, withToken } from "@/util";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 interface Props {
@@ -18,7 +18,14 @@ export const getBook = withToken(async ({ bookId, token }: Props & TokenProps) =
 
     try {
         const response = await axios.get(url.toString());
-        return BookSchema.parse(response.data) as Book;
+
+        const rawBook = { id: response.data.id };
+        if (response.data.volumeInfo) Object.assign(rawBook, response.data.volumeInfo);
+        if (response.data.volumeInfo?.imageLinks) Object.assign(rawBook, response.data.volumeInfo.imageLinks);
+
+        console.log(rawBook);
+
+        return BookSchema.parse(rawBook) as Book;
     } catch (error) {
         return undefined;
     }
@@ -28,5 +35,16 @@ export const useBook = ({ bookId }: Props) => {
     return useQuery({
         queryKey: ["book", bookId],
         queryFn: () => getBook({ bookId }),
+        staleTime: Infinity,
+    });
+};
+
+export const useBooks = (bookIds: string[]) => {
+    return useQueries({
+        queries: bookIds?.map((bookId) => ({
+            queryKey: ["book", bookId],
+            queryFn: () => getBook({ bookId }),
+            staleTime: Infinity,
+        })),
     });
 };

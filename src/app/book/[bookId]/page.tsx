@@ -19,9 +19,7 @@ const BookPage = async ({ params: { bookId } }: Props) => {
     const book = await getBook({ bookId });
     if (!book) return <NotFound type={NotFoundType.BOOK} />;
 
-    const {
-        volumeInfo: { title, authors, description, pageCount, previewLink, categories },
-    } = book;
+    const { title, authors, description, pageCount, previewLink, categories } = book;
 
     const categorySet = new Set(categories?.flatMap((category) => category.split("/").map((category) => category.trim())) ?? []);
 

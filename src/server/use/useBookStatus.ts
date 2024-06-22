@@ -1,11 +1,11 @@
-import { GOOGLE_BOOKS_URL } from "@/const";
-import { BookShelfType } from "@/type/BookShelf";
-import { TokenProps, withToken } from "@/util";
+import { isBookInLibrary } from "@/server/action/library";
+import { getClientSide } from "@/server/use/useUser";
+import { LibraryType } from "@/type/Library";
 import { useQuery } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
 
 interface Props {
     bookId: string;
+    userId?: number;
 }
 
 export enum BookStatus {
@@ -14,50 +14,15 @@ export enum BookStatus {
     WANT_TO_READ = "WANT_TO_READ",
 }
 
-const isBookInReadingList = async (bookId: string, token: string) => {
-    const params = new URLSearchParams({
-        access_token: token,
-        volumeId: bookId,
-        volumePosition: "0",
-    });
-    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${BookShelfType.READING_NOW}/moveVolume`);
-    url.search = params.toString();
+export const getBookStatus = async ({ bookId }: Props) => {
+    const user = await getClientSide();
+    if (!user) return BookStatus.NONE;
 
-    try {
-        await axios.post(url.toString());
-        return true;
-    } catch (err) {
-        const error = err as AxiosError;
-        if (error.response?.status && error.response.status >= 500) return true;
-        return false;
-    }
-};
-
-const isBookInWantToReadList = async (bookId: string, token: string) => {
-    const params = new URLSearchParams({
-        access_token: token,
-        volumeId: bookId,
-        volumePosition: "0",
-    });
-    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${BookShelfType.TO_READ}/moveVolume`);
-    url.search = params.toString();
-
-    try {
-        await axios.post(url.toString());
-        return true;
-    } catch (err) {
-        const error = err as AxiosError;
-        if (error.response?.status && error.response.status >= 500) return true;
-        return false;
-    }
-};
-
-export const getBookStatus = withToken(async ({ bookId, token }: Props & TokenProps) => {
-    if (await isBookInReadingList(bookId, token)) return BookStatus.READING_NOW;
-    if (await isBookInWantToReadList(bookId, token)) return BookStatus.WANT_TO_READ;
+    if (await isBookInLibrary({ bookId, userId: user.id, type: LibraryType.READING })) return BookStatus.READING_NOW;
+    if (await isBookInLibrary({ bookId, userId: user.id, type: LibraryType.TO_READ })) return BookStatus.WANT_TO_READ;
 
     return BookStatus.NONE;
-});
+};
 
 export const useBookStatus = ({ bookId }: Props) => {
     return useQuery({

@@ -1,30 +1,24 @@
-import { GOOGLE_BOOKS_URL } from "@/const";
+import { removeBookFromLibrary } from "@/server/action/library";
 import { addToWantToRead } from "@/server/use/status/useAddToWantToRead";
 import { BookStatus } from "@/server/use/useBookStatus";
-import { BookShelfType } from "@/type/BookShelf";
-import { TokenProps, withToken } from "@/util";
+import { getClientSide } from "@/server/use/useUser";
+import { LibraryType } from "@/type/Library";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 
 interface Props {
     bookId: string;
 }
 
-export const removeFromReading = withToken(async ({ bookId, token }: Props & TokenProps) => {
-    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${BookShelfType.READING_NOW}/removeVolume`);
-    const params = new URLSearchParams({
-        access_token: token,
-        volumeId: bookId,
-    });
-    url.search = params.toString();
+export const removeFromReading = async ({ bookId }: Props) => {
+    const user = await getClientSide();
+    if (!user) return;
 
-    await axios.post(url.toString());
-});
+    await removeBookFromLibrary({ bookId, userId: user.id, type: LibraryType.READING });
+};
 
-export const stopReading = withToken(async ({ bookId, token }: Props & TokenProps) => {
-    await removeFromReading({ bookId });
-    await addToWantToRead({ bookId });
-});
+const stopReading = async (props: Props) => {
+    await Promise.all([removeFromReading(props), addToWantToRead(props)]);
+};
 
 export const useStopReading = () => {
     const queryClient = useQueryClient();
@@ -42,8 +36,8 @@ export const useStopReading = () => {
             context && queryClient.setQueryData(["bookStatus", bookId], context.previousData);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["bookShelf", BookShelfType.TO_READ] });
-            queryClient.invalidateQueries({ queryKey: ["bookShelf", BookShelfType.READING_NOW] });
+            queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ], refetchType: "all" });
+            queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.READING], refetchType: "all" });
         },
     });
 };

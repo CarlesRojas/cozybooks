@@ -1,26 +1,9 @@
 import { coercedArray } from "@/util";
 import { z } from "zod";
 
-export const BookImageLinksSchema = z.object({
-    smallThumbnail: z.string().optional(),
-    thumbnail: z.string().optional(),
-    small: z.string().optional(),
-    medium: z.string().optional(),
-    large: z.string().optional(),
-    extraLarge: z.string().optional(),
-});
+export const BookSchema = z.object({
+    id: z.string(),
 
-export type BookImageLinks = z.infer<typeof BookImageLinksSchema>;
-
-export const UserInfoSchema = z.object({
-    review: z.object({
-        // TODO Get user review
-    }),
-});
-
-export type UserInfo = z.infer<typeof UserInfoSchema>;
-
-export const VolumeInfoSchema = z.object({
     title: z.string(),
     authors: z.array(z.string()).optional(),
     publisher: z.string().optional(),
@@ -33,15 +16,13 @@ export const VolumeInfoSchema = z.object({
     ratingsCount: z.number().optional(),
     language: z.string().optional(),
     previewLink: z.string().optional(),
-    imageLinks: BookImageLinksSchema.optional(),
-    userInfo: UserInfoSchema.optional(),
-});
 
-export type VolumeInfo = z.infer<typeof VolumeInfoSchema>;
-
-export const BookSchema = z.object({
-    id: z.string(),
-    volumeInfo: VolumeInfoSchema,
+    smallThumbnail: z.string().optional(),
+    thumbnail: z.string().optional(),
+    small: z.string().optional(),
+    medium: z.string().optional(),
+    large: z.string().optional(),
+    extraLarge: z.string().optional(),
 });
 
 export type Book = z.infer<typeof BookSchema>;

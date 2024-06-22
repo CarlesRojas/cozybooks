@@ -1,24 +1,19 @@
-import { GOOGLE_BOOKS_URL } from "@/const";
+import { addBookToLibrary } from "@/server/action/library";
 import { BookStatus } from "@/server/use/useBookStatus";
-import { BookShelfType } from "@/type/BookShelf";
-import { TokenProps, withToken } from "@/util";
+import { getClientSide } from "@/server/use/useUser";
+import { LibraryType } from "@/type/Library";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 
 interface Props {
     bookId: string;
 }
 
-export const addToWantToRead = withToken(async ({ bookId, token }: Props & TokenProps) => {
-    const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${BookShelfType.TO_READ}/addVolume`);
-    const params = new URLSearchParams({
-        access_token: token,
-        volumeId: bookId,
-    });
-    url.search = params.toString();
+export const addToWantToRead = async ({ bookId }: Props) => {
+    const user = await getClientSide();
+    if (!user) return;
 
-    await axios.post(url.toString());
-});
+    await addBookToLibrary({ bookId, userId: user.id, type: LibraryType.TO_READ });
+};
 
 export const useAddToWantToRead = () => {
     const queryClient = useQueryClient();
@@ -36,7 +31,7 @@ export const useAddToWantToRead = () => {
             context && queryClient.setQueryData(["bookStatus", bookId], context.previousData);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["bookShelf", BookShelfType.TO_READ] });
+            queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ], refetchType: "all" });
         },
     });
 };

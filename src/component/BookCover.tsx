@@ -12,7 +12,7 @@ export interface Props extends AnchorHTMLAttributes<HTMLAnchorElement> {
 }
 
 const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, className, ...props }, ref) => {
-    const biggestImage = useRef(book.volumeInfo.imageLinks && getBiggestBookImage(book.volumeInfo.imageLinks));
+    const biggestImage = useRef(book && getBiggestBookImage(book));
 
     const scaledImage = useMemo(() => {
         // TODO Get missing image
@@ -56,7 +56,7 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
                     width={200}
                     height={200 * 1.5}
                     src={src}
-                    alt={book.volumeInfo.title}
+                    alt={book.title}
                     onError={() => setSrc(biggestImage.current)}
                 />
             )}
@@ -70,7 +70,7 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
                     width={maxWidth ?? 400}
                     height={(maxWidth ?? 400) * 1.5}
                     src={src}
-                    alt={book.volumeInfo.title}
+                    alt={book.title}
                     onError={() => setSrc(biggestImage.current)}
                 />
             )}

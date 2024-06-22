@@ -2,7 +2,7 @@ import { getUserFromSession } from "@/server/action/user";
 import { useQuery } from "@tanstack/react-query";
 import { getSession } from "next-auth/react";
 
-const getClientSide = async () => {
+export const getClientSide = async () => {
     const session = await getSession();
     return getUserFromSession(session);
 };

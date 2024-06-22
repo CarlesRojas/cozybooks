@@ -1,7 +1,6 @@
 import { REFRESH_TOKEN_ERROR } from "@/const";
 import { getServerUser } from "@/server/use/useServerUser";
-import { BookImageLinks } from "@/type/Book";
-import { BookShelf, BookShelfType } from "@/type/BookShelf";
+import { Book } from "@/type/Book";
 import { Route } from "@/type/Route";
 import { clsx, type ClassValue } from "clsx";
 import { signOut } from "next-auth/react";
@@ -28,30 +27,26 @@ export const cn = (...inputs: ClassValue[]) => {
 
 export const filteredArray = (s: z.ZodTypeAny) => z.array(z.any()).transform((as) => as.filter((a) => s.safeParse(a).success));
 
-export const getBiggestBookImage = (imageLinks: BookImageLinks) => {
-    if (imageLinks.extraLarge) return imageLinks.extraLarge;
-    if (imageLinks.large) return imageLinks.large;
-    if (imageLinks.medium) return imageLinks.medium;
-    if (imageLinks.small) return imageLinks.small;
-    if (imageLinks.thumbnail) return imageLinks.thumbnail;
-    if (imageLinks.smallThumbnail) return imageLinks.smallThumbnail;
+export const getBiggestBookImage = (book: Book) => {
+    if (book.extraLarge) return book.extraLarge;
+    if (book.large) return book.large;
+    if (book.medium) return book.medium;
+    if (book.small) return book.small;
+    if (book.thumbnail) return book.thumbnail;
+    if (book.smallThumbnail) return book.smallThumbnail;
 
     return undefined;
 };
 
-export const getSmallestBookImage = (imageLinks: BookImageLinks) => {
-    if (imageLinks.smallThumbnail) return imageLinks.smallThumbnail;
-    if (imageLinks.thumbnail) return imageLinks.thumbnail;
-    if (imageLinks.small) return imageLinks.small;
-    if (imageLinks.medium) return imageLinks.medium;
-    if (imageLinks.large) return imageLinks.large;
-    if (imageLinks.extraLarge) return imageLinks.extraLarge;
+export const getSmallestBookImage = (book: Book) => {
+    if (book.smallThumbnail) return book.smallThumbnail;
+    if (book.thumbnail) return book.thumbnail;
+    if (book.small) return book.small;
+    if (book.medium) return book.medium;
+    if (book.large) return book.large;
+    if (book.extraLarge) return book.extraLarge;
 
     return undefined;
-};
-
-export const getBookShelfOfType = (type: BookShelfType, bookShelves: BookShelf[]) => {
-    return bookShelves.find((bookShelf) => bookShelf.id === type);
 };
 
 export const coercedArray = <T extends z.ZodTypeAny>(arg: T) => {

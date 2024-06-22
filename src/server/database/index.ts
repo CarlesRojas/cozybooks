@@ -2,8 +2,6 @@
 import { env } from "@/env";
 import * as schema from "@/server/schema/index";
 import type { BuildQueryResult, DBQueryConfig, ExtractTablesWithRelations } from "drizzle-orm";
-import { SQL, sql } from "drizzle-orm";
-import { AnyPgColumn } from "drizzle-orm/pg-core";
 import { PostgresJsDatabase, drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
@@ -22,10 +20,6 @@ else {
 export { db };
 
 // Helpers
-
-export const lower = (email: AnyPgColumn): SQL => {
-    return sql`lower(${email})`;
-};
 
 type Schema = typeof schema;
 type TSchema = ExtractTablesWithRelations<Schema>;

@@ -1,9 +1,8 @@
 import { GOOGLE_BOOKS_URL } from "@/const";
-import { BookStatus } from "@/server/use/useBookStatus";
 import { VolumesResult, VolumesResultSchema } from "@/type/Book";
 import { BookShelfType } from "@/type/BookShelf";
 import { TokenProps, withToken } from "@/util";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 interface Props {
@@ -28,20 +27,8 @@ export const getBookShelf = withToken(async ({ type, booksPerPage = 8, offset = 
 });
 
 export const useBookShelf = ({ type, booksPerPage, offset }: Props) => {
-    const queryClient = useQueryClient();
-
     return useQuery({
         queryKey: ["bookShelf", type, booksPerPage, offset],
-        queryFn: async () => {
-            const volumes = await getBookShelf({ type, booksPerPage, offset });
-
-            if (type === BookShelfType.READING_NOW)
-                volumes.items.map((volume) => queryClient.setQueryData(["bookStatus", volume.id], BookStatus.READING_NOW));
-
-            if (type === BookShelfType.TO_READ)
-                volumes.items.map((volume) => queryClient.setQueryData(["bookStatus", volume.id], BookStatus.WANT_TO_READ));
-
-            return volumes;
-        },
+        queryFn: () => getBookShelf({ type, booksPerPage, offset }),
     });
 };

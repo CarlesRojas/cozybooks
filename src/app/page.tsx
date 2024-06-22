@@ -10,7 +10,7 @@ import { Route } from "@/type/Route";
 import { cn } from "@/util";
 import Link from "next/link";
 import { isIOS } from "react-device-detect";
-import { LuBook } from "react-icons/lu";
+import { LuBook, LuLoader } from "react-icons/lu";
 import { z } from "zod";
 
 const Reading = () => {
@@ -34,6 +34,12 @@ const Reading = () => {
             suppressHydrationWarning
             className={cn("relative mb-20 flex h-fit min-h-[calc(100vh_-_5rem)] w-full flex-col gap-5 pb-6", isIOS && "mb-24")}
         >
+            {readingBooks.isPending && (
+                <div className="flex w-full grow items-center justify-center px-6 transition-all">
+                    <LuLoader className="size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50 duration-2000" />
+                </div>
+            )}
+
             <div className="flex h-fit w-full grow flex-col gap-8">
                 {readingBooks.data && (
                     <BookList

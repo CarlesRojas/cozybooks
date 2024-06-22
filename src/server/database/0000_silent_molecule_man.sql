@@ -21,24 +21,24 @@ CREATE TABLE IF NOT EXISTS "book" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "finished" (
-    "id" serial PRIMARY KEY NOT NULL,
-    "userId" integer NOT NULL,
-    "bookId" text NOT NULL,
-    "timestamp" timestamp NOT NULL
+	"id" serial PRIMARY KEY NOT NULL,
+	"userId" integer NOT NULL,
+	"bookId" text NOT NULL,
+	"timestamp" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "library" (
-    "userId" integer NOT NULL,
-    "bookId" text NOT NULL,
-    "type" text NOT NULL,
-    "createdAt" timestamp DEFAULT now(),
-    CONSTRAINT "library_userId_type_bookId_pk" PRIMARY KEY ("userId", "type", "bookId")
+	"userId" integer NOT NULL,
+	"bookId" text NOT NULL,
+	"type" text NOT NULL,
+	"createdAt" timestamp DEFAULT now(),
+	CONSTRAINT "library_userId_type_bookId_pk" PRIMARY KEY("userId","type","bookId")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
-    "id" serial PRIMARY KEY NOT NULL,
-    "email" text NOT NULL,
-    "name" text NOT NULL
+	"id" serial PRIMARY KEY NOT NULL,
+	"email" text NOT NULL,
+	"name" text NOT NULL
 );
 --> statement-breakpoint
 DO $$ BEGIN

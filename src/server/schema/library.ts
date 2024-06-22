@@ -21,7 +21,7 @@ export const library = pgTable(
 );
 
 export const libraryRelations = relations(library, ({ one }) => ({
-    character: one(user, {
+    user: one(user, {
         fields: [library.userId],
         references: [user.id],
     }),

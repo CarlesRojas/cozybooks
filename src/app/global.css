@@ -25,11 +25,11 @@
 }
 
 html {
-    @apply relative min-h-screen w-full text-[14px] antialiased mouse:text-[16px];
+    @apply relative min-h-dvh w-full text-[14px] antialiased mouse:text-[16px];
 }
 
 body {
-    @apply relative min-h-screen w-full;
+    @apply relative min-h-dvh w-full;
 }
 
 img,

@@ -1,11 +1,11 @@
 export enum Route {
-    READING = "/",
+    READING = "/reading",
     FINISHED = "/finished",
     SEARCH = "/search",
 
     BOOK = "/book",
 
-    AUTH_SIGN_IN = "/auth/signin",
+    AUTH_SIGN_IN = "/",
     AUTH_ERROR = "/auth/error",
 
     PRIVACY_POLICY = "/legal/privacy-policy",

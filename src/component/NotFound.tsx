@@ -20,7 +20,7 @@ const NotFound = ({ type }: Props) => {
     };
 
     return (
-        <div className="relative h-screen w-full justify-center">
+        <div className="relative h-full w-full justify-center">
             <div className="relative m-auto mb-32 flex h-full w-full max-w-screen-lg flex-col items-center justify-center gap-2 p-3">
                 {icon[type]}
                 <p className="mb-2 text-lg font-medium tracking-wide">{message[type]}</p>

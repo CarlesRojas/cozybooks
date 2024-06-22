@@ -9,7 +9,7 @@ interface Props {
 
 const Welcome = async ({ isError }: Props) => {
     return (
-        <main suppressHydrationWarning className={cn("relative flex h-screen w-full flex-col items-center p-4", isIOS && "mb-4")}>
+        <main suppressHydrationWarning className={cn("relative flex h-dvh w-full flex-col items-center px-4 py-16", isIOS && "mb-4")}>
             <section className="relative flex w-full grow flex-col items-center justify-center gap-3">
                 <Image src="/logo512.png" alt="CozyBooks" width={256} height={256} className="mb-8 size-28 rounded-3xl" />
 

@@ -54,7 +54,7 @@ const authOptions: NextAuthConfig = {
     ],
     secret: env.NEXTAUTH_SECRET,
     pages: {
-        signIn: "/auth/signin",
+        signIn: "/",
         signOut: "/",
         error: "/auth/error",
     },

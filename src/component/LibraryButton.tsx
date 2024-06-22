@@ -31,37 +31,16 @@ const LibraryButton = ({ book }: Props) => {
         finishBook.isPending ||
         stopReading.isPending;
 
+    const isError =
+        addToWantToRead.isError || removeFromWantToRead.isError || startReading.isError || finishBook.isError || stopReading.isError;
+
     const container = (children: ReactNode) => (
         <div className="flex w-full flex-col items-center justify-center gap-4">
             <div className="flex w-full flex-wrap items-center justify-center gap-3">{children}</div>
 
-            {addToWantToRead.isError && (
+            {isError && (
                 <p className="max-w-[30rem] text-pretty text-center text-sm font-semibold tracking-wide text-red-500">
-                    There was an error while adding this book to your library
-                </p>
-            )}
-
-            {removeFromWantToRead.isError && (
-                <p className="max-w-[30rem] text-pretty text-center text-sm font-semibold tracking-wide text-red-500">
-                    There was an error while removing this book from your library
-                </p>
-            )}
-
-            {startReading.isError && (
-                <p className="max-w-[30rem] text-pretty text-center text-sm font-semibold tracking-wide text-red-500">
-                    There was an error while adding this book to your reading list
-                </p>
-            )}
-
-            {stopReading.isError && (
-                <p className="max-w-[30rem] text-pretty text-center text-sm font-semibold tracking-wide text-red-500">
-                    There was an error while removing this book from your reading list
-                </p>
-            )}
-
-            {finishBook.isError && (
-                <p className="max-w-[30rem] text-pretty text-center text-sm font-semibold tracking-wide text-red-500">
-                    There was an error while finishing this book
+                    There was an error.
                 </p>
             )}
         </div>
@@ -78,7 +57,7 @@ const LibraryButton = ({ book }: Props) => {
         [BookStatus.NONE]: (
             <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book })}>
                 {addToWantToRead.isPending ? <LuLoader className="icon animate-spin" /> : <LuPlus className="icon mr-3" />}
-                <p>Add to your library</p>
+                <p>I want to read this</p>
             </Button>
         ),
 
@@ -91,7 +70,7 @@ const LibraryButton = ({ book }: Props) => {
 
                 <Button disabled={isLoading} variant="glass" onClick={() => removeFromWantToRead.mutate({ book })}>
                     {removeFromWantToRead.isPending ? <LuLoader className="icon animate-spin" /> : <LuX className="icon mr-3" />}
-                    <p>Remove from your library</p>
+                    <p>I no longer want to read this</p>
                 </Button>
             </>
         ),

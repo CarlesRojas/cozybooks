@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 
 interface Props {
     bookId: string;
-    userId?: number;
 }
 
 export enum BookStatus {

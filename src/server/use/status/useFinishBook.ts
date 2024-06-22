@@ -1,4 +1,5 @@
 import { PAGE_SIZE } from "@/const";
+import { addFinished } from "@/server/action/finished";
 import { addBookToLibrary } from "@/server/action/library";
 import { removeFromReading } from "@/server/use/status/useStopReading";
 import { BookStatus } from "@/server/use/useBookStatus";
@@ -15,13 +16,15 @@ export const addToFinished = async ({ book }: Props) => {
     const user = await getClientSide();
     if (!user) return;
 
-    await addBookToLibrary({ bookId: book.id, userId: user.id, type: LibraryType.FINISHED });
+    await Promise.all([
+        addBookToLibrary({ bookId: book.id, userId: user.id, type: LibraryType.FINISHED }),
+        addFinished({ bookId: book.id, userId: user.id, timestamp: new Date() }),
+    ]);
 };
 
 export const finishBook = async (props: Props) => {
     await removeFromReading(props);
     await addToFinished(props);
-    // TODO save finished timestamp
 };
 
 export const useFinishBook = () => {

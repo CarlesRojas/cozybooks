@@ -1,5 +1,6 @@
 import BackButton from "@/component/BackButton";
 import BookCover from "@/component/BookCover";
+import FinishedOn from "@/component/FinishedOn";
 import LibraryButton from "@/component/LibraryButton";
 import NotFound, { NotFoundType } from "@/component/NotFound";
 import ShowMore from "@/component/ShowMore";
@@ -47,19 +48,21 @@ const BookPage = async ({ params: { bookId } }: Props) => {
                         {authors &&
                             authors.length > 0 &&
                             authors.map((author) => (
-                                <p key={author} className="text-sm font-medium leading-snug tracking-wide opacity-80">
+                                <p key={author} className="text-sm font-medium leading-snug tracking-wide opacity-60">
                                     {author}
                                 </p>
                             ))}
                     </div>
 
-                    {pageCount && <p className="text-sm font-medium leading-snug tracking-wide opacity-50">{pageCount} pages</p>}
+                    {pageCount && <p className="text-sm font-medium leading-snug tracking-wide opacity-60">{pageCount} pages</p>}
                 </div>
 
                 {/* TODO show rating */}
                 <div className="relative my-4 w-full">
                     <LibraryButton book={book} />
                 </div>
+
+                <FinishedOn book={book} />
 
                 {description && (
                     <div className="prose prose-neutral flex w-fit flex-col items-center rounded-3xl bg-neutral-150 px-4 pb-5 pt-1 dark:prose-invert dark:bg-neutral-850 sm:px-6 sm:pb-6 sm:pt-2">
@@ -71,7 +74,7 @@ const BookPage = async ({ params: { bookId } }: Props) => {
 
                 <div className="mb-8 mt-12 flex w-full flex-wrap justify-center gap-x-4 gap-y-2">
                     {Array.from(categorySet).map((category) => (
-                        <p key={category} className="text-sm font-medium leading-snug tracking-wide opacity-50">
+                        <p key={category} className="text-sm font-medium leading-snug tracking-wide opacity-60">
                             {category}
                         </p>
                     ))}

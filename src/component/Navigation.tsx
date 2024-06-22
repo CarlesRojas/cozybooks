@@ -17,9 +17,9 @@ const Navigation = () => {
 
     const routes = [Route.READING, Route.FINISHED, Route.SEARCH];
     const routeTitle: Partial<Record<Route, ReactElement>> = {
-        [Route.READING]: <p className="z-50 transition-colors">Reading</p>,
-        [Route.FINISHED]: <p className="z-50 transition-colors">Finished</p>,
-        [Route.SEARCH]: <LuSearch className="icon z-50 min-w-10 transition-colors" />,
+        [Route.READING]: <p className="z-40 transition-colors">Reading</p>,
+        [Route.FINISHED]: <p className="z-40 transition-colors">Finished</p>,
+        [Route.SEARCH]: <LuSearch className="icon z-40 min-w-10 transition-colors" />,
     };
 
     if (user.isLoading || user.isError || !user.data) return null;
@@ -28,7 +28,7 @@ const Navigation = () => {
         <>
             <motion.nav
                 className={cn(
-                    "fixed inset-x-0 bottom-0 z-50 mx-auto flex h-20 max-w-screen-lg items-center justify-evenly",
+                    "fixed inset-x-0 bottom-0 z-40 mx-auto flex h-20 max-w-screen-lg items-center justify-evenly",
                     isIOS && "bottom-4",
                 )}
                 initial={{ opacity: 0, y: 100 }}
@@ -52,7 +52,7 @@ const Navigation = () => {
                             <Link href={route}>
                                 {route === currentRoute && (
                                     <motion.div
-                                        className="pointer-events-none absolute inset-1 z-40 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"
+                                        className="pointer-events-none absolute inset-1 z-30 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"
                                         layoutId="activeSection"
                                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                     />

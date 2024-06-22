@@ -11,7 +11,7 @@ const Welcome = async ({ isError }: Props) => {
     return (
         <main suppressHydrationWarning className={cn("relative flex h-screen w-full flex-col items-center p-4", isIOS && "mb-4")}>
             <section className="relative flex w-full grow flex-col items-center justify-center gap-3">
-                <Image src="/icon.png" alt="CozyBooks" width={256} height={256} className="mb-8 size-28 rounded-3xl" />
+                <Image src="/logo512.png" alt="CozyBooks" width={256} height={256} className="mb-8 size-28 rounded-3xl" />
 
                 <h1 className="mx-auto max-w-64 text-pretty text-center text-4xl font-bold leading-tight tracking-wide">
                     Welcome to CozyBooks

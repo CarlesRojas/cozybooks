@@ -32,13 +32,13 @@ interface Props {
 
 export const Combobox = ({ value, setValue, options, text, placeholder, showInput, showDropdownIcon, triggerClassName }: Props) => {
     const [open, setOpen] = useState(false);
-    const isDesktop = useMediaQuery("(min-width: 768px)");
+    const isMouse = useMediaQuery("(hover: hover)");
 
-    if (isDesktop) {
+    if (isMouse) {
         return (
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
-                    <Button variant={"glass"} className={cn("justify-start", triggerClassName)}>
+                    <Button variant="input" className={cn("justify-start", triggerClassName)}>
                         {value ? value.trigger ?? value.label : placeholder ?? text.select}
 
                         {showDropdownIcon && <LuChevronDown className="ml-3 h-4 w-4 stroke-[3]" />}
@@ -55,7 +55,7 @@ export const Combobox = ({ value, setValue, options, text, placeholder, showInpu
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button variant={"glass"} className={cn("justify-start", triggerClassName)}>
+                <Button variant="input" className={cn("justify-start", triggerClassName)}>
                     {value ? value.trigger ?? value.label : placeholder ?? text.select}
 
                     {showDropdownIcon && <LuChevronDown className="ml-3 h-4 w-4 stroke-[3]" />}

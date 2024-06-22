@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/component/ui/button";
+import { useFinishedDates } from "@/server/use/finished/useFinishedDates";
 import { useAddToWantToRead } from "@/server/use/status/useAddToWantToRead";
 import { useFinishBook } from "@/server/use/status/useFinishBook";
 import { useRemoveFromWantToRead } from "@/server/use/status/useRemoveFromWantToRead";
@@ -17,6 +18,7 @@ interface Props {
 
 const LibraryButton = ({ book }: Props) => {
     const bookStatus = useBookStatus({ bookId: book.id });
+    const finishedDates = useFinishedDates({ bookId: book.id });
 
     const addToWantToRead = useAddToWantToRead();
     const removeFromWantToRead = useRemoveFromWantToRead();
@@ -46,7 +48,7 @@ const LibraryButton = ({ book }: Props) => {
         </div>
     );
 
-    if (!bookStatus.data)
+    if (!bookStatus.data || !finishedDates.data)
         return container(
             <Button disabled>
                 <LuLoader className="icon animate-spin" />
@@ -57,7 +59,7 @@ const LibraryButton = ({ book }: Props) => {
         [BookStatus.NONE]: (
             <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book })}>
                 {addToWantToRead.isPending ? <LuLoader className="icon animate-spin" /> : <LuPlus className="icon mr-3" />}
-                <p>I want to read this</p>
+                <p>{finishedDates.data.length > 0 ? "I want to read this again" : "I want to read this"}</p>
             </Button>
         ),
 
@@ -70,7 +72,7 @@ const LibraryButton = ({ book }: Props) => {
 
                 <Button disabled={isLoading} variant="glass" onClick={() => removeFromWantToRead.mutate({ book })}>
                     {removeFromWantToRead.isPending ? <LuLoader className="icon animate-spin" /> : <LuX className="icon mr-3" />}
-                    <p>I no longer want to read this</p>
+                    <p>{finishedDates.data.length > 0 ? "I no longer want to read this again" : "I no longer want to read this"}</p>
                 </Button>
             </>
         ),

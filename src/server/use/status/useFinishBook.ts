@@ -5,6 +5,7 @@ import { removeFromReading } from "@/server/use/status/useStopReading";
 import { BookStatus } from "@/server/use/useBookStatus";
 import { getClientSide } from "@/server/use/useUser";
 import { Book, VolumesResult } from "@/type/Book";
+import { Finished } from "@/type/Finished";
 import { LibraryType } from "@/type/Library";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -64,16 +65,33 @@ export const useFinishBook = () => {
                 queryClient.setQueryData(["libraryBooks", LibraryType.READING, PAGE_SIZE, 0], { ...previousReadingData, items: newItems });
             }
 
-            return { previousData, previousFinishedData, previousReadingData };
+            const previousFinishedDatesData: Finished[] | undefined = queryClient.getQueryData(["finishedDates", book.id]);
+            if (previousFinishedDatesData) {
+                const newData: Finished[] = [
+                    ...previousFinishedDatesData,
+                    {
+                        id: -1,
+                        userId: -1,
+                        bookId: book.id,
+                        timestamp: new Date(),
+                    },
+                ].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+
+                queryClient.setQueryData(["finishedDates", book.id], newData);
+            }
+
+            return { previousData, previousFinishedData, previousReadingData, previousFinishedDatesData };
         },
         onError: (err, { book }, context) => {
             context && queryClient.setQueryData(["bookStatus", book.id], context.previousData);
             context && queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED, PAGE_SIZE, 0], context.previousFinishedData);
             context && queryClient.setQueryData(["libraryBooks", LibraryType.READING, PAGE_SIZE, 0], context.previousReadingData);
+            context && queryClient.setQueryData(["finishedDates", book.id], context.previousFinishedDatesData);
         },
-        onSettled: () => {
+        onSettled: (data, err, { book }) => {
             queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.READING], refetchType: "all" });
             queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED], refetchType: "all" });
+            queryClient.invalidateQueries({ queryKey: ["finishedDates", book.id], refetchType: "all" });
         },
     });
 };

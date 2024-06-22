@@ -18,9 +18,14 @@ export const updateFinished = async (updateFinished: WithRequired<InsertFinished
     await db.update(finished).set(updateFinished).where(eq(finished.id, updateFinished.id));
 };
 
+export const deleteFinished = async (id: number) => {
+    await db.delete(finished).where(eq(finished.id, id));
+};
+
 export const getFinished = async (userId: number, bookId: string) => {
     const result = await db.query.finished.findMany({
         where: (finished, { eq, and }) => and(eq(finished.userId, userId), eq(finished.bookId, bookId)),
+        orderBy: (finished, { asc }) => asc(finished.timestamp),
     });
 
     return !!result ? result.map((elem) => toDomainFinished(elem)) : null;

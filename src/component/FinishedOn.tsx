@@ -3,29 +3,56 @@
 import { Button } from "@/component/ui/button";
 import { Combobox, ComboboxItem } from "@/component/ui/combobox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
+import { useDeleteFinishedDate } from "@/server/use/finished/useDeleteFinishedDate";
 import { useFinishedDates } from "@/server/use/finished/useFinishedDates";
+import { useUpdateFinishedDate } from "@/server/use/finished/useUpdateFinishedDate";
+import { useRemoveBookFromFinished } from "@/server/use/status/useRemoveBookFromFinished";
 import { Book } from "@/type/Book";
-import { LuCheck, LuTrash2 } from "react-icons/lu";
+import { useState } from "react";
+import { LuCheck, LuTrash2, LuX } from "react-icons/lu";
 
 interface Props {
     book: Book;
 }
 
+const months: Record<number, string> = {
+    0: "January",
+    1: "February",
+    2: "March",
+    3: "April",
+    4: "May",
+    5: "June",
+    6: "July",
+    7: "August",
+    8: "September",
+    9: "October",
+    10: "November",
+    11: "December",
+};
+
 const FinishedOn = ({ book }: Props) => {
     const finishedDates = useFinishedDates({ bookId: book.id });
+    const removeBookFromFinished = useRemoveBookFromFinished();
 
-    console.log(finishedDates.data);
-    console.log(finishedDates.error?.message);
-    if (!finishedDates.data) return null;
+    const updateFinishedDate = useUpdateFinishedDate();
+    const deleteFinishedDate = useDeleteFinishedDate();
+
+    const [selectedYear, setSelectedYear] = useState<string>();
+    const [selectedMonth, setSelectedMonth] = useState<string>();
+
+    const [editPopoverOpen, setEditPopoverOpen] = useState<number>();
+    const [deletePopoverOpen, setDeletePopoverOpen] = useState<number>();
+
+    if (!finishedDates.data || finishedDates.data.length === 0) return null;
 
     const currentYear = new Date().getFullYear();
+    const monthOptions: ComboboxItem[] = Array.from({ length: 12 }, (_, i) => ({
+        id: i.toString(),
+        label: months[i],
+    }));
     const yearOptions: ComboboxItem[] = Array.from({ length: 150 }, (_, i) => ({
         id: (currentYear - i).toString(),
         label: (currentYear - i).toString(),
-    }));
-    const monthOptions: ComboboxItem[] = Array.from({ length: 12 }, (_, i) => ({
-        id: (i + 1).toString(),
-        label: (i + 1).toString(),
     }));
 
     return (
@@ -34,54 +61,92 @@ const FinishedOn = ({ book }: Props) => {
 
             <div className="flex w-full flex-wrap items-center justify-center gap-3">
                 {finishedDates.data.map((finishedDate) => (
-                    <Popover key={finishedDate.id}>
-                        <PopoverTrigger>
-                            <Button variant="glass" size="small" asChild>
+                    <div key={finishedDate.id} className="relative flex rounded-xl bg-neutral-300/70 dark:bg-neutral-700/60">
+                        <Popover
+                            open={editPopoverOpen === finishedDate.id}
+                            onOpenChange={(open) => {
+                                open && setSelectedYear(finishedDate.timestamp.getFullYear().toString());
+                                open && setSelectedMonth(finishedDate.timestamp.getMonth().toString());
+                                setEditPopoverOpen(open ? finishedDate.id : undefined);
+                            }}
+                        >
+                            <PopoverTrigger className="focus-scale h-full rounded-xl p-2 mouse:hover:bg-neutral-400/20 mouse:hover:dark:bg-neutral-500/30">
                                 <p className="text-sm font-semibold tracking-wide">
                                     {finishedDate.timestamp.toLocaleDateString("en", {
                                         year: "numeric",
                                         month: "long",
                                     })}
                                 </p>
-                            </Button>
-                        </PopoverTrigger>
+                            </PopoverTrigger>
 
-                        <PopoverContent className="flex w-full flex-col gap-4">
-                            {/* <div className="flex w-full flex-row gap-2">
-                                <Button size="icon" variant="glass" onClick={() => console.log("prev")}>
-                                    <LuChevronLeft className="icon" />
-                                </Button>
+                            <PopoverContent className="flex w-96 flex-col gap-4">
+                                <div className="grid w-full grid-cols-2 gap-4">
+                                    <Combobox
+                                        value={selectedMonth ? { id: selectedMonth, label: months[parseInt(selectedMonth)] } : null}
+                                        setValue={(value) => setSelectedMonth(value ? value.id : undefined)}
+                                        options={monthOptions}
+                                        text={{ filter: "Filter...", select: "Select...", noResults: "No results" }}
+                                        showDropdownIcon
+                                        triggerClassName="w-full flex justify-center"
+                                    />
 
-                                <Input type="number" className="grow text-center" />
+                                    <Combobox
+                                        value={selectedYear ? { id: selectedYear, label: selectedYear } : null}
+                                        setValue={(value) => setSelectedYear(value ? value.id : undefined)}
+                                        options={yearOptions}
+                                        text={{ filter: "Filter...", select: "Select...", noResults: "No results" }}
+                                        showDropdownIcon
+                                        triggerClassName="w-full flex justify-center"
+                                    />
+                                </div>
 
-                                <Button size="icon" variant="glass" onClick={() => console.log("next")}>
-                                    <LuChevronRight className="icon" />
-                                </Button>
-                            </div> */}
+                                <div className="flex w-full justify-center">
+                                    <Button
+                                        disabled={
+                                            selectedYear === finishedDate.timestamp.getFullYear().toString() &&
+                                            selectedMonth === finishedDate.timestamp.getMonth().toString()
+                                        }
+                                        onClick={() => {
+                                            if (selectedYear === undefined || selectedMonth === undefined) return;
+                                            const newTimestamp = new Date();
+                                            newTimestamp.setFullYear(parseInt(selectedYear));
+                                            newTimestamp.setMonth(parseInt(selectedMonth));
+                                            updateFinishedDate.mutate({ id: finishedDate.id, bookId: book.id, timestamp: newTimestamp });
+                                            setEditPopoverOpen(undefined);
+                                        }}
+                                    >
+                                        <LuCheck className="icon mr-3" />
+                                        <p>Update</p>
+                                    </Button>
+                                </div>
+                            </PopoverContent>
+                        </Popover>
 
-                            <Combobox
-                                value={yearOptions.find(({ id }) => id === finishedDate.timestamp.getFullYear().toString()) ?? null}
-                                setValue={(value) => console.log("newYear: ", value)}
-                                options={yearOptions}
-                                text={{ filter: "Filter...", select: "Select...", noResults: "No results" }}
-                                // triggerClassName="h-fit p-0"
-                                showDropdownIcon
-                                showInput
-                            />
+                        <Popover
+                            open={deletePopoverOpen === finishedDate.id}
+                            onOpenChange={(open) => setDeletePopoverOpen(open ? finishedDate.id : undefined)}
+                        >
+                            <PopoverTrigger className="focus-scale h-full rounded-xl p-2 mouse:hover:bg-neutral-400/20 mouse:hover:dark:bg-neutral-500/30">
+                                <LuX className="icon opacity-80" />
+                            </PopoverTrigger>
 
-                            <div className="flex flex-wrap gap-2">
-                                <Button variant="glass" className="grow" onClick={() => console.log("delete")}>
+                            <PopoverContent className="flex w-full flex-col items-center gap-4">
+                                <p className="font-medium">Do you want to delete this entry?</p>
+
+                                <Button
+                                    variant="destructive"
+                                    onClick={() => {
+                                        deleteFinishedDate.mutate({ id: finishedDate.id, bookId: book.id });
+                                        if (finishedDates.data!.length === 1) removeBookFromFinished.mutate({ book });
+                                        setDeletePopoverOpen(undefined);
+                                    }}
+                                >
                                     <LuTrash2 className="icon mr-3 stroke-2" />
                                     <p>Delete</p>
                                 </Button>
-
-                                <Button className="grow" onClick={() => console.log("update")}>
-                                    <LuCheck className="icon mr-3" />
-                                    <p>Update</p>
-                                </Button>
-                            </div>
-                        </PopoverContent>
-                    </Popover>
+                            </PopoverContent>
+                        </Popover>
+                    </div>
                 ))}
             </div>
         </div>

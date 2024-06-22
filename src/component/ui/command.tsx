@@ -13,7 +13,7 @@ const Command = React.forwardRef<React.ElementRef<typeof CommandPrimitive>, Reac
         <CommandPrimitive
             ref={ref}
             className={cn(
-                "flex h-full w-full flex-col overflow-hidden rounded-md bg-white text-neutral-950 dark:bg-neutral-950 dark:text-neutral-50",
+                "flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white text-neutral-950 dark:bg-neutral-950 dark:text-neutral-50",
                 className,
             )}
             {...props}
@@ -40,12 +40,12 @@ const CommandInput = React.forwardRef<
     React.ElementRef<typeof CommandPrimitive.Input>,
     React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
-    <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+    <div className="flex items-center border-b border-stone-300 px-3 dark:border-stone-700" cmdk-input-wrapper="">
         <LuSearch className="mr-2 h-4 w-4 shrink-0 opacity-50" />
         <CommandPrimitive.Input
             ref={ref}
             className={cn(
-                "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-neutral-500 disabled:cursor-not-allowed disabled:opacity-50 dark:placeholder:text-neutral-400",
+                "flex h-11 w-full rounded-2xl bg-transparent py-3 text-sm font-medium outline-none placeholder:text-neutral-500 disabled:cursor-not-allowed disabled:opacity-50 dark:placeholder:text-neutral-400",
                 className,
             )}
             {...props}
@@ -102,7 +102,7 @@ const CommandItem = React.forwardRef<
     <CommandPrimitive.Item
         ref={ref}
         className={cn(
-            "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-neutral-100 data-[selected=true]:text-neutral-900 data-[disabled=true]:opacity-50 dark:data-[selected=true]:bg-neutral-800 dark:data-[selected=true]:text-neutral-50",
+            "text-md relative flex cursor-default select-none items-center rounded-lg px-3 py-2 font-medium outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-neutral-100 data-[selected=true]:text-neutral-900 data-[disabled=true]:opacity-50 dark:data-[selected=true]:bg-neutral-800 dark:data-[selected=true]:text-neutral-50",
             className,
         )}
         {...props}

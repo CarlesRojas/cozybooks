@@ -15,6 +15,7 @@ const montserrat = Montserrat({ subsets: ["latin"] });
 export const metadata: Metadata = {
     title: "CozyBooks",
     description: "The best way to keep track of all the books you have and enjoy all the ones you want to read.",
+    manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {

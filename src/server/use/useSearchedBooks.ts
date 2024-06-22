@@ -1,7 +1,6 @@
 import { GOOGLE_BOOKS_URL } from "@/const";
-import { parseGoogleBook } from "@/server/use/useBook";
 import { VolumesResult, VolumesResultSchema } from "@/type/Book";
-import { TokenProps, withToken } from "@/util";
+import { TokenProps, parseGoogleBook, withToken } from "@/util";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 

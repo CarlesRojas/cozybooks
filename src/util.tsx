@@ -1,6 +1,6 @@
 import { REFRESH_TOKEN_ERROR } from "@/const";
 import { getServerUser } from "@/server/use/useServerUser";
-import { Book } from "@/type/Book";
+import { Book, BookSchema } from "@/type/Book";
 import { Route } from "@/type/Route";
 import { clsx, type ClassValue } from "clsx";
 import { signOut } from "next-auth/react";
@@ -49,13 +49,6 @@ export const getSmallestBookImage = (book: Book) => {
     return undefined;
 };
 
-export const coercedArray = <T extends z.ZodTypeAny>(arg: T) => {
-    return z
-        .array(arg)
-        .optional()
-        .transform((val) => val ?? []);
-};
-
 export const renderObject = (obj: Record<string, any>, level = 0) => {
     if (!obj) return null;
 
@@ -68,4 +61,11 @@ export const renderObject = (obj: Record<string, any>, level = 0) => {
             ))}
         </ul>
     );
+};
+
+export const parseGoogleBook = (googleBook: any) => {
+    const rawBook = { id: googleBook.id };
+    if (googleBook.volumeInfo) Object.assign(rawBook, googleBook.volumeInfo);
+    if (googleBook.volumeInfo?.imageLinks) Object.assign(rawBook, googleBook.volumeInfo.imageLinks);
+    return BookSchema.parse(rawBook) as Book;
 };

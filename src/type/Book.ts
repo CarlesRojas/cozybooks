@@ -1,4 +1,3 @@
-import { coercedArray } from "@/util";
 import { z } from "zod";
 
 export const BookSchema = z.object({
@@ -26,6 +25,13 @@ export const BookSchema = z.object({
 });
 
 export type Book = z.infer<typeof BookSchema>;
+
+export const coercedArray = <T extends z.ZodTypeAny>(arg: T) => {
+    return z
+        .array(arg)
+        .optional()
+        .transform((val) => val ?? []);
+};
 
 export const VolumesResultSchema = z.object({
     totalItems: z.number(),

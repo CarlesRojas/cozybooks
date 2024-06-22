@@ -1,5 +1,6 @@
 "use client";
 
+import Settings from "@/component/Settings";
 import { Button } from "@/component/ui/button";
 import { useRoute } from "@/hook/useRoute";
 import { useUser } from "@/server/use/useUser";
@@ -9,7 +10,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ReactElement } from "react";
 import { isIOS } from "react-device-detect";
-import { LuArrowDownUp, LuSearch, LuUser2 } from "react-icons/lu";
+import { LuArrowDownUp, LuSearch } from "react-icons/lu";
 
 const Navigation = () => {
     const currentRoute = useRoute();
@@ -64,9 +65,7 @@ const Navigation = () => {
                     ))}
                 </div>
 
-                <Button size="icon" variant="glass">
-                    <LuUser2 className="icon" />
-                </Button>
+                <Settings user={user.data} />
             </motion.nav>
         </>
     );

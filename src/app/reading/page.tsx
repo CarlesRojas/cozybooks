@@ -80,7 +80,7 @@ const Reading = () => {
                 )}
             </div>
 
-            <div className="flex w-full flex-wrap justify-center gap-x-4">
+            <div className="mt-16 flex w-full flex-wrap justify-center gap-x-4">
                 <Button className="text-sm opacity-40" variant="link" asChild>
                     <Link href={Route.PRIVACY_POLICY}>Privacy Policy</Link>
                 </Button>

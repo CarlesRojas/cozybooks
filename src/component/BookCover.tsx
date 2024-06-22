@@ -33,6 +33,7 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
                 className={cn("group relative aspect-book w-full focus-visible:outline-none mouse:cursor-pointer", className)}
                 ref={ref}
                 href={href}
+                scroll={true}
                 {...props}
             >
                 {children}

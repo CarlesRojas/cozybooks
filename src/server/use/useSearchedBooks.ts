@@ -1,4 +1,5 @@
 import { GOOGLE_BOOKS_URL } from "@/const";
+import { parseGoogleBook } from "@/server/use/useBook";
 import { VolumesResult, VolumesResultSchema } from "@/type/Book";
 import { TokenProps, withToken } from "@/util";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
@@ -27,7 +28,10 @@ export const searchBooks = withToken(async ({ query, booksPerPage = 8, offset = 
 
     const response = await axios.get(url.toString());
 
-    return VolumesResultSchema.parse(response.data) as VolumesResult;
+    return VolumesResultSchema.parse({
+        totalItems: response.data.totalItems,
+        items: response.data.items.map((item: any) => parseGoogleBook(item)),
+    }) as VolumesResult;
 });
 
 export const useSearchedBooks = ({ query, booksPerPage, offset }: Props) => {

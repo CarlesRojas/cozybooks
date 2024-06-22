@@ -3,6 +3,7 @@
 import { toDomainBook } from "@/server/action/book";
 import { InferResultType, db } from "@/server/database";
 import { library } from "@/server/schema";
+import { VolumesResult, VolumesResultSchema } from "@/type/Book";
 import { LibraryBook, LibraryBookSchema, LibraryType } from "@/type/Library";
 import { and, count, eq } from "drizzle-orm";
 
@@ -31,7 +32,7 @@ interface GetLibraryProps {
     startIndex: number;
 }
 
-export const getLibraryBooks = async ({ userId, type, maxResults, startIndex }: GetLibraryProps) => {
+export const getLibraryBooks = async ({ userId, type, maxResults, startIndex }: GetLibraryProps): Promise<VolumesResult> => {
     const numberOfBooks = (
         await db
             .select({ value: count() })
@@ -47,10 +48,10 @@ export const getLibraryBooks = async ({ userId, type, maxResults, startIndex }: 
         offset: startIndex * maxResults,
     });
 
-    return {
+    return VolumesResultSchema.parse({
         totalItems: numberOfBooks,
         items: results.map((libraryBook) => toDomainBook(libraryBook.book)),
-    };
+    }) as VolumesResult;
 };
 
 const toDomainLibraryBook = (libraryBook: SelectLibraryBook) => {

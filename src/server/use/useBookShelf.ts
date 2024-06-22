@@ -1,4 +1,5 @@
 import { GOOGLE_BOOKS_URL } from "@/const";
+import { parseGoogleBook } from "@/server/use/useBook";
 import { VolumesResult, VolumesResultSchema } from "@/type/Book";
 import { BookShelfType } from "@/type/BookShelf";
 import { TokenProps, withToken } from "@/util";
@@ -23,7 +24,10 @@ export const getBookShelf = withToken(async ({ type, booksPerPage = 8, offset = 
 
     const response = await axios.get(url.toString());
 
-    return VolumesResultSchema.parse(response.data) as VolumesResult;
+    return VolumesResultSchema.parse({
+        totalItems: response.data.totalItems,
+        items: response.data.items.map((item: any) => parseGoogleBook(item)),
+    }) as VolumesResult;
 });
 
 export const useBookShelf = ({ type, booksPerPage, offset }: Props) => {

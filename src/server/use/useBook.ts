@@ -8,6 +8,13 @@ interface Props {
     bookId: string;
 }
 
+export const parseGoogleBook = (googleBook: any) => {
+    const rawBook = { id: googleBook.id };
+    if (googleBook.volumeInfo) Object.assign(rawBook, googleBook.volumeInfo);
+    if (googleBook.volumeInfo?.imageLinks) Object.assign(rawBook, googleBook.volumeInfo.imageLinks);
+    return BookSchema.parse(rawBook) as Book;
+};
+
 export const getBook = withToken(async ({ bookId, token }: Props & TokenProps) => {
     const url = new URL(`${GOOGLE_BOOKS_URL}/volumes/${bookId}`);
     const params = new URLSearchParams({
@@ -18,14 +25,7 @@ export const getBook = withToken(async ({ bookId, token }: Props & TokenProps) =
 
     try {
         const response = await axios.get(url.toString());
-
-        const rawBook = { id: response.data.id };
-        if (response.data.volumeInfo) Object.assign(rawBook, response.data.volumeInfo);
-        if (response.data.volumeInfo?.imageLinks) Object.assign(rawBook, response.data.volumeInfo.imageLinks);
-
-        console.log(rawBook);
-
-        return BookSchema.parse(rawBook) as Book;
+        return parseGoogleBook(response.data);
     } catch (error) {
         return undefined;
     }

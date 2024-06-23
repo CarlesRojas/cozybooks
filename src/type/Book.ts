@@ -1,3 +1,4 @@
+import { FinishedSchema } from "@/type/Finished";
 import { z } from "zod";
 
 export const BookSchema = z.object({
@@ -23,10 +24,7 @@ export const BookSchema = z.object({
     large: z.string().optional().nullable(),
     extraLarge: z.string().optional().nullable(),
 
-    finished: z
-        .array(z.object({ timestamp: z.date() }))
-        .optional()
-        .nullable(),
+    finished: z.array(FinishedSchema).optional().nullable(),
     rating: z
         .array(z.object({ rating: z.number().nullable() }))
         .optional()

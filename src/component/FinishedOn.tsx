@@ -33,8 +33,8 @@ const months: Record<number, string> = {
 
 const FinishedOn = ({ book }: Props) => {
     const finishedDates = useFinishedDates({ bookId: book.id });
-    const removeBookFromFinished = useRemoveBookFromFinished();
 
+    const removeBookFromFinished = useRemoveBookFromFinished();
     const updateFinishedDate = useUpdateFinishedDate();
     const deleteFinishedDate = useDeleteFinishedDate();
     const createFinishedDate = useCreateFinishedDate();

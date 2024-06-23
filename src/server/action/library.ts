@@ -43,8 +43,8 @@ export const getLibraryBooks = async ({ userId, type, maxResults, startIndex }: 
         with: {
             book: {
                 with: {
-                    finished: { where: (finished, { eq }) => eq(finished.userId, userId), columns: { timestamp: true } },
-                    rating: { where: (rating, { eq }) => eq(rating.userId, userId), columns: { rating: true } },
+                    finished: { where: (finished, { eq }) => eq(finished.userId, userId) },
+                    rating: { where: (rating, { eq }) => eq(rating.userId, userId) },
                 },
             },
         },
@@ -52,8 +52,6 @@ export const getLibraryBooks = async ({ userId, type, maxResults, startIndex }: 
         limit: maxResults,
         offset: startIndex,
     });
-
-    console.log(JSON.stringify(results, null, 2));
 
     return VolumesResultSchema.parse({
         totalItems: numberOfBooks,

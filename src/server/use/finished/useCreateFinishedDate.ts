@@ -1,6 +1,8 @@
 import { addFinished } from "@/server/action/finished";
 import { getClientSide } from "@/server/use/useUser";
+import { VolumesResult } from "@/type/Book";
 import { Finished } from "@/type/Finished";
+import { LibraryType } from "@/type/Library";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
@@ -31,15 +33,27 @@ export const useCreateFinishedDate = () => {
                 queryClient.setQueryData(["finishedDates", bookId], newData);
             }
 
-            // TODO optimistic update for finished date inside book
+            await queryClient.cancelQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
+            const previousFinishedData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.FINISHED]);
+            if (previousFinishedData) {
+                const newItems = previousFinishedData.items.map((item) => {
+                    if (item.id !== bookId) return item;
+                    const finished = item.finished ?? [];
+                    finished.push({ id: -1, userId: -1, bookId, timestamp });
+                    return { ...item, finished };
+                });
+                queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], { ...previousFinishedData, items: newItems });
+            }
 
-            return { previousData };
+            return { previousData, previousFinishedData };
         },
         onError: (err, { bookId }, context) => {
             context && queryClient.setQueryData(["finishedDates", bookId], context.previousData);
+            context && queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], context.previousFinishedData);
         },
         onSettled: (data, err, { bookId }) => {
             queryClient.invalidateQueries({ queryKey: ["finishedDates", bookId], refetchType: "all" });
+            queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
         },
     });
 };

@@ -35,6 +35,8 @@ const Navigation = () => {
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
             >
+                {/* <div className="pointer-events-none absolute inset-0 -bottom-10 -top-10 bg-gradient-to-t from-black/20 to-black/0 dark:from-black/50" /> */}
+
                 <Button size="icon" variant="glass">
                     <LuArrowDownUp className="icon" />
                 </Button>

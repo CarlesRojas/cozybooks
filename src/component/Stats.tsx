@@ -31,7 +31,9 @@ const Stats = ({ books, stickyClassName }: Props) => {
             <p className="text-center text-sm font-semibold leading-tight tracking-wide text-white opacity-80 sm:text-base md:text-lg">
                 {title}
             </p>
+
             <p className="text-center text-4xl font-bold leading-tight tracking-wide text-white sm:text-6xl">{value}</p>
+
             <p className="text-center text-sm font-semibold leading-tight tracking-wide text-white opacity-80 sm:text-base md:text-lg">
                 {subtitle}
             </p>
@@ -47,24 +49,22 @@ const Stats = ({ books, stickyClassName }: Props) => {
             </div>
 
             <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-3 px-6 sm:gap-4">
-                <div className="relative flex flex-wrap gap-2">
-                    <Button variant={statType === StatType.BOOKS ? "default" : "glass"} onClick={() => setStatType(StatType.BOOKS)}>
-                        <p className="text-lg font-bold tracking-wide">Books</p>
-                    </Button>
-
-                    <Button variant={statType === StatType.PAGES ? "default" : "glass"} onClick={() => setStatType(StatType.PAGES)}>
-                        <p className="text-lg font-bold tracking-wide">Pages</p>
-                    </Button>
-                </div>
-
                 <div className="grid w-full max-w-screen-sm auto-rows-min grid-cols-3 grid-rows-2 gap-3 sm:gap-4">
                     {tile("Read", 345, "books in total", "from-blue-900/70 to-blue-400/90")}
                     {tile("Finished", 13, "books this year", "from-red-900/70 to-red-400/90")}
                     {tile("Average", 18, "books per year", "from-green-900/70 to-green-400/90")}
 
                     <div className="relative col-span-3 row-span-1 rounded-2xl bg-gradient-to-t from-purple-900/70 to-purple-400/90 p-3 sm:rounded-3xl">
-                        {/* TODO show yearly books */}
+                        {/* TODO show yearly books / pages */}
                     </div>
+                </div>
+
+                <div className="relative flex flex-wrap gap-2">
+                    <Button variant="glass" onClick={() => setStatType(statType === StatType.BOOKS ? StatType.PAGES : StatType.BOOKS)}>
+                        <p className="text-lg font-bold tracking-wide">
+                            {statType === StatType.BOOKS ? "View page stats" : "View book stats"}
+                        </p>
+                    </Button>
                 </div>
             </div>
         </section>

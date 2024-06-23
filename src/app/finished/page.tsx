@@ -3,6 +3,7 @@
 import BookList from "@/component/BookList";
 import { Star } from "@/component/Rating";
 import { Sort } from "@/component/SortMenu";
+import Stats from "@/component/Stats";
 import { useUrlState } from "@/hook/useUrlState";
 import { useLibraryBooks } from "@/server/use/useLibraryBooks";
 import { Book } from "@/type/Book";
@@ -77,8 +78,6 @@ const Finished = () => {
         </div>
     );
 
-    // TODO add stats
-
     return (
         <main
             suppressHydrationWarning
@@ -91,6 +90,8 @@ const Finished = () => {
             )}
 
             <div className="flex h-fit w-full grow flex-col gap-6 py-4">
+                {finishedBooks.data && <Stats books={finishedBooks.data.items} stickyClassName="top-0 pt-3" />}
+
                 {groups.map(({ key, books }) => (
                     <BookList
                         key={key}

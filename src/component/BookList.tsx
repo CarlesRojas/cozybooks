@@ -52,7 +52,7 @@ const BookList = (props: Props) => {
             )}
 
             {books.length > 0 && (
-                <div className="mx-auto grid w-full max-w-screen-lg grid-cols-2 grid-rows-1 gap-6 px-6 sm:grid-cols-3 md:grid-cols-4">
+                <div className="mx-auto grid w-full max-w-screen-lg grid-cols-2 grid-rows-1 gap-4 px-6 sm:grid-cols-3 md:grid-cols-4">
                     {books.map((book) => (
                         <BookCover key={book.id} book={book} href={`${Route.BOOK}/${book.id}`} maxWidth={300} />
                     ))}

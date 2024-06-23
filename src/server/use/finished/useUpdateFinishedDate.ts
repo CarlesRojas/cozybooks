@@ -36,6 +36,8 @@ export const useUpdateFinishedDate = () => {
                 queryClient.setQueryData(["finishedDates", bookId], newData);
             }
 
+            // TODO optimistic update for finished date inside book
+
             return { previousData };
         },
         onError: (err, { bookId }, context) => {

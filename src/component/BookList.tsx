@@ -42,7 +42,7 @@ const BookList = (props: Props) => {
                             {title}
                         </h2>
                     ) : (
-                        title
+                        <div className="mx-auto max-w-screen-lg px-6">{title}</div>
                     )}
                 </div>
             )}

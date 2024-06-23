@@ -151,15 +151,19 @@ interface StarProps {
     onFocus?: (newRating: number) => void;
     rating: number;
     isLoading?: boolean;
+    disabled?: boolean;
 }
 
-const Star = ({ left, full, onClick, onFocus, rating, isLoading }: StarProps) => {
+export const Star = ({ left, full, onClick, onFocus, rating, isLoading, disabled }: StarProps) => {
     return (
         <button
-            className="relative h-10 w-5 overflow-hidden focus-visible:outline-none mouse:h-8 mouse:w-4"
+            className={cn(
+                "pointer-events-none relative h-10 w-5 overflow-hidden focus-visible:outline-none mouse:h-8 mouse:w-4",
+                onClick && "pointer-events-auto",
+            )}
             onClick={() => onClick?.(rating)}
             onFocus={() => onFocus?.(rating)}
-            disabled={!!isLoading}
+            disabled={!!isLoading || !!disabled}
             aria-label={`Rate this game with ${rating} stars`}
         >
             <LuStar

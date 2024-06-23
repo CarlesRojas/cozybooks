@@ -1,6 +1,7 @@
 "use client";
 
 import BookList from "@/component/BookList";
+import { Star } from "@/component/Rating";
 import { Sort } from "@/component/SortMenu";
 import { useUrlState } from "@/hook/useUrlState";
 import { useLibraryBooks } from "@/server/use/useLibraryBooks";
@@ -18,7 +19,7 @@ interface Group {
 }
 
 const Finished = () => {
-    const [sort] = useUrlState("sort", Sort.BOOK, z.nativeEnum(Sort));
+    const [sort] = useUrlState("sort", Sort.DATE, z.nativeEnum(Sort));
     const finishedBooks = useLibraryBooks({ type: LibraryType.FINISHED });
 
     const sortedBooks = useMemo(
@@ -50,7 +51,6 @@ const Finished = () => {
         const result: Group[] = [];
         sortedBooks.forEach((book) => {
             const keyMap: Record<Sort, string> = {
-                // Check if the first letter is alphabetic
                 [Sort.BOOK]: book.title.length > 0 && /^[a-zA-Z]/.test(book.title[0]) ? book.title[0].toUpperCase() : "#",
                 [Sort.DATE]:
                     book.finished
@@ -69,8 +69,16 @@ const Finished = () => {
         return result;
     }, [sort, sortedBooks]);
 
-    // TODO each title could be a menu with links
+    const ratingTitle = (rating: number) => (
+        <div className="relative flex w-fit items-center justify-center">
+            {Array.from({ length: 10 }, (_, i) => (
+                <Star key={i} left={i % 2 === 0} full={i < rating} rating={i + 1} disabled />
+            ))}
+        </div>
+    );
+
     // TODO add stats
+
     return (
         <main
             suppressHydrationWarning
@@ -86,7 +94,7 @@ const Finished = () => {
                 {groups.map(({ key, books }) => (
                     <BookList
                         key={key}
-                        title={sort === Sort.RATING ? key : key}
+                        title={sort === Sort.RATING ? (key === "Unrated" ? key : ratingTitle(parseInt(key))) : key}
                         books={books}
                         showPagination={false}
                         stickyClassName="top-0 pt-3"

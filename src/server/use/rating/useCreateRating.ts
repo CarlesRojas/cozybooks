@@ -24,6 +24,9 @@ export const useCreateRating = () => {
             await queryClient.cancelQueries({ queryKey: ["rating", bookId] });
             const previousData: number | undefined = queryClient.getQueryData(["rating", bookId]);
             queryClient.setQueryData(["rating", bookId], rating);
+
+            // TODO optimistic update for rating inside book
+
             return { previousData };
         },
 

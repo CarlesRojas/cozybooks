@@ -21,7 +21,7 @@ export const useRemoveBookFromFinished = () => {
     return useMutation({
         mutationFn: removeFromFinished,
         onMutate: async ({ book }) => {
-            // TODO optimistic update
+            // TODO optimistic update for finished library list
         },
         onError: (err, { book }, context) => {},
         onSettled: () => {},

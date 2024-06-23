@@ -24,7 +24,7 @@ export enum Sort {
 }
 
 const SortMenu = ({ className }: Props) => {
-    const [sort, setSort] = useUrlState("sort", Sort.BOOK, z.nativeEnum(Sort));
+    const [sort, setSort] = useUrlState("sort", Sort.DATE, z.nativeEnum(Sort));
 
     return (
         <DropdownMenu modal={true}>

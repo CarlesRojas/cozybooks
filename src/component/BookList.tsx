@@ -6,27 +6,38 @@ import { Route } from "@/type/Route";
 import { cn } from "@/util";
 import { ReactNode } from "react";
 
-interface Props {
+interface BaseProps {
     title: string;
     books: Book[];
-    totalItems: number;
-    pageState: ReturnType<typeof useUrlState<number>>;
     stickyClassName?: string;
-    pageSize: number;
     isLoading?: boolean;
     noBooksChildren?: ReactNode;
 }
 
-const BookList = ({ title, books, totalItems, stickyClassName, pageState, pageSize, isLoading, noBooksChildren }: Props) => {
-    const [page, setPage] = pageState;
-    const numberOfPages = Math.ceil((totalItems || 1) / pageSize);
-    const currentPage = Math.max(Math.min(page, numberOfPages), 1);
+interface PaginationProps {
+    showPagination: true;
+    totalItems: number;
+    pageState: ReturnType<typeof useUrlState<number>>;
+    pageSize: number;
+}
+
+interface NoPaginationProps {
+    showPagination: false;
+}
+
+type Props = BaseProps & (PaginationProps | NoPaginationProps);
+
+const BookList = (props: Props) => {
+    const { title, books, showPagination, stickyClassName, isLoading, noBooksChildren } = props;
+
+    const numberOfPages = showPagination ? Math.ceil((props.totalItems || 1) / props.pageSize) : 1;
+    const currentPage = showPagination ? Math.max(Math.min(props.pageState[0], numberOfPages), 1) : 1;
 
     return (
         <section className="flex h-fit w-full flex-col gap-4 mouse:gap-6">
             {(books.length > 0 || !isLoading) && (
                 <div className={cn("sticky top-0 z-30 bg-neutral-50 pb-2 dark:bg-neutral-950", stickyClassName)}>
-                    <h2 className="h2 mx-auto max-w-screen-lg px-6">{title}</h2>
+                    <h2 className="mx-auto max-w-screen-lg px-6 text-2xl font-bold text-neutral-950/90 dark:text-neutral-50/90">{title}</h2>
                 </div>
             )}
 
@@ -42,12 +53,12 @@ const BookList = ({ title, books, totalItems, stickyClassName, pageState, pageSi
                 </div>
             )}
 
-            {numberOfPages > 1 && (
+            {showPagination && numberOfPages > 1 && (
                 <div className="mx-auto w-full max-w-screen-lg px-6">
                     <Pagination
                         numberOfPages={Math.min(numberOfPages, 5)}
                         currentPage={currentPage - 1}
-                        onPageChange={(page) => setPage(page + 1, true)}
+                        onPageChange={(page) => props.pageState[1](page + 1, true)}
                     />
                 </div>
             )}

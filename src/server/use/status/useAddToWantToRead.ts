@@ -1,4 +1,3 @@
-import { PAGE_SIZE } from "@/const";
 import { addBook } from "@/server/action/book";
 import { addBookToLibrary } from "@/server/action/library";
 import { BookStatus } from "@/server/use/useBookStatus";
@@ -32,24 +31,18 @@ export const useAddToWantToRead = () => {
             const previousData: BookStatus | undefined = queryClient.getQueryData(["bookStatus", book.id]);
             queryClient.setQueryData(["bookStatus", book.id], BookStatus.WANT_TO_READ);
 
-            const previousToReadData: VolumesResult | undefined = queryClient.getQueryData([
-                "libraryBooks",
-                LibraryType.TO_READ,
-                PAGE_SIZE,
-                0,
-            ]);
+            const previousToReadData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.TO_READ]);
             if (previousToReadData) {
                 const newItems = previousToReadData.items;
                 newItems.unshift(book);
-                if (newItems.length > PAGE_SIZE) newItems.pop();
-                queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ, PAGE_SIZE, 0], { ...previousToReadData, items: newItems });
+                queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ], { ...previousToReadData, items: newItems });
             }
 
             return { previousData, previousToReadData };
         },
         onError: (err, { book }, context) => {
             context && queryClient.setQueryData(["bookStatus", book.id], context.previousData);
-            context && queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ, PAGE_SIZE, 0], context.previousToReadData);
+            context && queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ], context.previousToReadData);
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ], refetchType: "all" });

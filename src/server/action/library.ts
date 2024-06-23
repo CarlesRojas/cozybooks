@@ -26,8 +26,8 @@ export const isBookInLibrary = async ({ bookId, type, userId }: InsertLibraryBoo
 interface GetLibraryProps {
     userId: number;
     type: LibraryType;
-    maxResults: number;
-    startIndex: number;
+    maxResults?: number;
+    startIndex?: number;
 }
 
 export const getLibraryBooks = async ({ userId, type, maxResults, startIndex }: GetLibraryProps): Promise<VolumesResult> => {
@@ -40,11 +40,20 @@ export const getLibraryBooks = async ({ userId, type, maxResults, startIndex }: 
 
     const results = await db.query.library.findMany({
         where: (library, { and, eq }) => and(eq(library.type, type), eq(library.userId, userId)),
-        with: { book: true },
+        with: {
+            book: {
+                with: {
+                    finished: { where: (finished, { eq }) => eq(finished.userId, userId), columns: { timestamp: true } },
+                    rating: { where: (rating, { eq }) => eq(rating.userId, userId), columns: { rating: true } },
+                },
+            },
+        },
         orderBy: (library, { desc }) => desc(library.createdAt),
         limit: maxResults,
         offset: startIndex,
     });
+
+    console.log(JSON.stringify(results, null, 2));
 
     return VolumesResultSchema.parse({
         totalItems: numberOfBooks,

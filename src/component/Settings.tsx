@@ -50,7 +50,7 @@ const Settings = ({ user }: Props) => {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
 
-                <DropdownMenuRadioGroup value={theme} onValueChange={(value) => setTheme(value)}>
+                <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
                     <DropdownMenuRadioItem value="dark">Dark theme</DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value="light">Light theme</DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value="system">System theme</DropdownMenuRadioItem>

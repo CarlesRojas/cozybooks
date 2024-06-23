@@ -1,3 +1,5 @@
+import { finished, rating } from "@/server/schema";
+import { relations } from "drizzle-orm";
 import { integer, pgTable, real, text, timestamp } from "drizzle-orm/pg-core";
 
 export const book = pgTable("book", {
@@ -23,3 +25,8 @@ export const book = pgTable("book", {
     large: text("large"),
     extraLarge: text("extraLarge"),
 });
+
+export const bookRelations = relations(book, ({ many }) => ({
+    finished: many(finished),
+    rating: many(rating),
+}));

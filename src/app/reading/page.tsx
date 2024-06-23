@@ -2,8 +2,6 @@
 
 import BookList from "@/component/BookList";
 import { Button } from "@/component/ui/button";
-import { PAGE_SIZE } from "@/const";
-import { useUrlState } from "@/hook/useUrlState";
 import { useLibraryBooks } from "@/server/use/useLibraryBooks";
 import { LibraryType } from "@/type/Library";
 import { Route } from "@/type/Route";
@@ -11,23 +9,10 @@ import { cn } from "@/util";
 import Link from "next/link";
 import { isIOS } from "react-device-detect";
 import { LuBook, LuLoader } from "react-icons/lu";
-import { z } from "zod";
 
 const Reading = () => {
-    const readingPageState = useUrlState("reading-page", 1, z.coerce.number());
-    const toReadPageState = useUrlState("to-read-page", 1, z.coerce.number());
-
-    const readingBooks = useLibraryBooks({
-        type: LibraryType.READING,
-        maxResults: PAGE_SIZE,
-        startIndex: (readingPageState[0] - 1) * PAGE_SIZE,
-    });
-
-    const toReadBooks = useLibraryBooks({
-        type: LibraryType.TO_READ,
-        maxResults: PAGE_SIZE,
-        startIndex: (toReadPageState[0] - 1) * PAGE_SIZE,
-    });
+    const readingBooks = useLibraryBooks({ type: LibraryType.READING });
+    const toReadBooks = useLibraryBooks({ type: LibraryType.TO_READ });
 
     return (
         <main
@@ -45,10 +30,8 @@ const Reading = () => {
                     <BookList
                         title="Reading"
                         books={readingBooks.data.items}
-                        pageState={readingPageState}
-                        totalItems={readingBooks.data.totalItems}
+                        showPagination={false}
                         stickyClassName="top-0 pt-6"
-                        pageSize={PAGE_SIZE}
                         noBooksChildren={
                             <div className="flex flex-col gap-4">
                                 <p className="font-medium tracking-wide opacity-80">
@@ -69,14 +52,7 @@ const Reading = () => {
                 )}
 
                 {toReadBooks.data && toReadBooks.data.items.length > 0 && (
-                    <BookList
-                        title="Want to read"
-                        books={toReadBooks.data.items}
-                        pageState={toReadPageState}
-                        totalItems={toReadBooks.data.totalItems}
-                        stickyClassName="top-0 pt-6"
-                        pageSize={PAGE_SIZE}
-                    />
+                    <BookList title="Want to read" books={toReadBooks.data.items} showPagination={false} stickyClassName="top-0 pt-6" />
                 )}
             </div>
 

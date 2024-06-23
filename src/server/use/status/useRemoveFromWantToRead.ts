@@ -1,4 +1,3 @@
-import { PAGE_SIZE } from "@/const";
 import { removeBookFromLibrary } from "@/server/action/library";
 import { BookStatus } from "@/server/use/useBookStatus";
 import { getClientSide } from "@/server/use/useUser";
@@ -27,22 +26,17 @@ export const useRemoveFromWantToRead = () => {
             const previousData: BookStatus | undefined = queryClient.getQueryData(["bookStatus", book.id]);
             queryClient.setQueryData(["bookStatus", book.id], BookStatus.NONE);
 
-            const previousToReadData: VolumesResult | undefined = queryClient.getQueryData([
-                "libraryBooks",
-                LibraryType.TO_READ,
-                PAGE_SIZE,
-                0,
-            ]);
+            const previousToReadData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.TO_READ]);
             if (previousToReadData) {
                 const newItems = previousToReadData.items.filter((item) => item.id !== book.id);
-                queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ, PAGE_SIZE, 0], { ...previousToReadData, items: newItems });
+                queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ], { ...previousToReadData, items: newItems });
             }
 
             return { previousData, previousToReadData };
         },
         onError: (err, { book }, context) => {
             context && queryClient.setQueryData(["bookStatus", book.id], context.previousData);
-            context && queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ, PAGE_SIZE, 0], context.previousToReadData);
+            context && queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ], context.previousToReadData);
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ], refetchType: "all" });

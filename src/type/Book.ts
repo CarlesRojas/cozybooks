@@ -22,6 +22,15 @@ export const BookSchema = z.object({
     medium: z.string().optional().nullable(),
     large: z.string().optional().nullable(),
     extraLarge: z.string().optional().nullable(),
+
+    finished: z
+        .array(z.object({ timestamp: z.date() }))
+        .optional()
+        .nullable(),
+    rating: z
+        .array(z.object({ rating: z.number().nullable() }))
+        .optional()
+        .nullable(),
 });
 
 export type Book = z.infer<typeof BookSchema>;

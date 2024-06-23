@@ -1,6 +1,7 @@
 "use client";
 
 import Settings from "@/component/Settings";
+import SortMenu from "@/component/SortMenu";
 import { Button } from "@/component/ui/button";
 import { useRoute } from "@/hook/useRoute";
 import { useUser } from "@/server/use/useUser";
@@ -10,7 +11,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ReactElement } from "react";
 import { isIOS } from "react-device-detect";
-import { LuArrowDownUp, LuSearch } from "react-icons/lu";
+import { LuSearch } from "react-icons/lu";
 
 const Navigation = () => {
     const currentRoute = useRoute();
@@ -22,6 +23,8 @@ const Navigation = () => {
         [Route.FINISHED]: <p className="z-40 transition-colors">Finished</p>,
         [Route.SEARCH]: <LuSearch className="icon z-40 min-w-10 transition-colors" />,
     };
+
+    const showSortButton = currentRoute === Route.FINISHED;
 
     if (user.isLoading || user.isError || !user.data) return null;
 
@@ -37,9 +40,7 @@ const Navigation = () => {
             >
                 {/* <div className="pointer-events-none absolute inset-0 -bottom-10 -top-10 bg-gradient-to-t from-black/20 to-black/0 dark:from-black/50" /> */}
 
-                <Button size="icon" variant="glass">
-                    <LuArrowDownUp className="icon" />
-                </Button>
+                <SortMenu className={cn(!showSortButton && "pointer-events-none opacity-0")} />
 
                 <div className="flex h-fit items-center rounded-full bg-neutral-300/70 backdrop-blur-md dark:bg-neutral-700/60">
                     {routes.map((route) => (

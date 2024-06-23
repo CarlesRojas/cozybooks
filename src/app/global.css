@@ -11,10 +11,6 @@
         @apply mouse:transition-transform mouse:focus-visible:z-10 mouse:focus-visible:scale-110 mouse:focus-visible:outline-none;
     }
 
-    .h2 {
-        @apply text-3xl font-bold text-neutral-950/90 dark:text-neutral-50/90;
-    }
-
     .skeleton {
         @apply animate-pulse !border-neutral-300 !bg-neutral-200 !text-transparent dark:!border-neutral-700 dark:!bg-neutral-900;
     }

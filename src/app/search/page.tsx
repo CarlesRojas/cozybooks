@@ -1,6 +1,7 @@
 "use client";
 
 import BookList from "@/component/BookList";
+import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
 import { PAGE_SIZE } from "@/const";
 import { useUrlState } from "@/hook/useUrlState";
@@ -10,7 +11,7 @@ import { BookShelfType } from "@/type/BookShelf";
 import { cn } from "@/util";
 import { useEffect, useState } from "react";
 import { isIOS } from "react-device-detect";
-import { LuLoader, LuSearch } from "react-icons/lu";
+import { LuArrowRight, LuLoader, LuSearch } from "react-icons/lu";
 import { z } from "zod";
 
 const Search = () => {
@@ -42,7 +43,6 @@ const Search = () => {
                         placeholder="Search"
                         type="text"
                         autoComplete="off"
-                        autoFocus
                         value={internalQuery}
                         onChange={(event) => setInternalQuery(event.target.value)}
                         icon={
@@ -50,6 +50,10 @@ const Search = () => {
                         }
                         onClear={internalQuery.length > 0 ? () => setQuery("") : undefined}
                     />
+
+                    <Button size="icon" variant="input" className="ml-3" type="submit" disabled={internalQuery.length === 0}>
+                        <LuArrowRight className="icon" />
+                    </Button>
                 </form>
             </section>
 
@@ -67,6 +71,7 @@ const Search = () => {
                     <BookList
                         title="Results"
                         books={searchedBooks.data.items}
+                        showPagination
                         pageState={searchPageState}
                         totalItems={searchedBooks.data.totalItems}
                         stickyClassName="top-[5rem]"
@@ -80,6 +85,7 @@ const Search = () => {
                     <BookList
                         title="Recommended for you"
                         books={recommendedBooks.data.items}
+                        showPagination
                         pageState={recommendedPageState}
                         totalItems={recommendedBooks.data.totalItems}
                         stickyClassName="top-[5rem]"

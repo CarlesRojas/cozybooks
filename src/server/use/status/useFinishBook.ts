@@ -1,4 +1,3 @@
-import { PAGE_SIZE } from "@/const";
 import { addFinished } from "@/server/action/finished";
 import { addBookToLibrary, isBookInLibrary } from "@/server/action/library";
 import { removeFromReading } from "@/server/use/status/useStopReading";
@@ -38,31 +37,20 @@ export const useFinishBook = () => {
             const previousData: BookStatus | undefined = queryClient.getQueryData(["bookStatus", book.id]);
             queryClient.setQueryData(["bookStatus", book.id], BookStatus.NONE);
 
-            const previousFinishedData: VolumesResult | undefined = queryClient.getQueryData([
-                "libraryBooks",
-                LibraryType.FINISHED,
-                PAGE_SIZE,
-                0,
-            ]);
+            const previousFinishedData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.FINISHED]);
             if (previousFinishedData) {
                 const newItems = previousFinishedData.items;
                 newItems.unshift(book);
-                if (newItems.length > PAGE_SIZE) newItems.pop();
-                queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED, PAGE_SIZE, 0], {
+                queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], {
                     ...previousFinishedData,
                     items: newItems,
                 });
             }
 
-            const previousReadingData: VolumesResult | undefined = queryClient.getQueryData([
-                "libraryBooks",
-                LibraryType.READING,
-                PAGE_SIZE,
-                0,
-            ]);
+            const previousReadingData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.READING]);
             if (previousReadingData) {
                 const newItems = previousReadingData.items.filter((item) => item.id !== book.id);
-                queryClient.setQueryData(["libraryBooks", LibraryType.READING, PAGE_SIZE, 0], { ...previousReadingData, items: newItems });
+                queryClient.setQueryData(["libraryBooks", LibraryType.READING], { ...previousReadingData, items: newItems });
             }
 
             const previousFinishedDatesData: Finished[] | undefined = queryClient.getQueryData(["finishedDates", book.id]);
@@ -84,8 +72,8 @@ export const useFinishBook = () => {
         },
         onError: (err, { book }, context) => {
             context && queryClient.setQueryData(["bookStatus", book.id], context.previousData);
-            context && queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED, PAGE_SIZE, 0], context.previousFinishedData);
-            context && queryClient.setQueryData(["libraryBooks", LibraryType.READING, PAGE_SIZE, 0], context.previousReadingData);
+            context && queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], context.previousFinishedData);
+            context && queryClient.setQueryData(["libraryBooks", LibraryType.READING], context.previousReadingData);
             context && queryClient.setQueryData(["finishedDates", book.id], context.previousFinishedDatesData);
         },
         onSettled: (data, err, { book }) => {

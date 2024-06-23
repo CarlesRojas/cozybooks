@@ -25,13 +25,13 @@ const Reading = () => {
                 </div>
             )}
 
-            <div className="flex h-fit w-full grow flex-col gap-8">
+            <div className="flex h-fit w-full grow flex-col gap-6 py-4">
                 {readingBooks.data && (
                     <BookList
                         title="Reading"
                         books={readingBooks.data.items}
                         showPagination={false}
-                        stickyClassName="top-0 pt-6"
+                        stickyClassName="top-0 pt-3"
                         noBooksChildren={
                             <div className="flex flex-col gap-4">
                                 <p className="font-medium tracking-wide opacity-80">
@@ -52,7 +52,7 @@ const Reading = () => {
                 )}
 
                 {toReadBooks.data && toReadBooks.data.items.length > 0 && (
-                    <BookList title="Want to read" books={toReadBooks.data.items} showPagination={false} stickyClassName="top-0 pt-6" />
+                    <BookList title="Want to read" books={toReadBooks.data.items} showPagination={false} stickyClassName="top-0 pt-3" />
                 )}
             </div>
 

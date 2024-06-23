@@ -4,10 +4,10 @@ import { useUrlState } from "@/hook/useUrlState";
 import { Book } from "@/type/Book";
 import { Route } from "@/type/Route";
 import { cn } from "@/util";
-import { ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 
 interface BaseProps {
-    title: string;
+    title: string | ReactElement;
     books: Book[];
     stickyClassName?: string;
     isLoading?: boolean;
@@ -34,10 +34,16 @@ const BookList = (props: Props) => {
     const currentPage = showPagination ? Math.max(Math.min(props.pageState[0], numberOfPages), 1) : 1;
 
     return (
-        <section className="flex h-fit w-full flex-col gap-4 mouse:gap-6">
+        <section className="flex h-fit w-full flex-col gap-4">
             {(books.length > 0 || !isLoading) && (
                 <div className={cn("sticky top-0 z-30 bg-neutral-50 pb-2 dark:bg-neutral-950", stickyClassName)}>
-                    <h2 className="mx-auto max-w-screen-lg px-6 text-2xl font-bold text-neutral-950/90 dark:text-neutral-50/90">{title}</h2>
+                    {typeof title === "string" ? (
+                        <h2 className="mx-auto max-w-screen-lg px-6 text-2xl font-bold leading-5 text-neutral-950/90 dark:text-neutral-50/90">
+                            {title}
+                        </h2>
+                    ) : (
+                        title
+                    )}
                 </div>
             )}
 

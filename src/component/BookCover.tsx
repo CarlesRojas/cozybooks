@@ -52,7 +52,7 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
             {src && (
                 <Image
                     className={cn(
-                        "absolute inset-0 -z-10 h-full w-full select-none object-cover object-center blur-md transition-opacity",
+                        "absolute inset-0 -z-10 h-full w-full select-none object-cover object-center blur-[8px] transition-opacity",
                         !href && "opacity-100 dark:opacity-40",
                         href &&
                             "opacity-0 mouse:group-hover:opacity-100 mouse:group-focus:opacity-100 mouse:dark:group-hover:opacity-60 mouse:dark:group-focus:opacity-60",
@@ -84,7 +84,7 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
             {!src && (
                 <div
                     className={cn(
-                        "absolute inset-0 -z-10 h-full w-full select-none bg-neutral-200 object-cover object-center blur-md transition-opacity dark:bg-neutral-800",
+                        "absolute inset-0 -z-10 h-full w-full select-none bg-neutral-200 object-cover object-center blur-[8px] transition-opacity dark:bg-neutral-800",
                         !href && "opacity-100 dark:opacity-100",
                         href &&
                             "opacity-0 mouse:group-hover:opacity-100 mouse:group-focus:opacity-100 mouse:dark:group-hover:opacity-100 mouse:dark:group-focus:opacity-100",

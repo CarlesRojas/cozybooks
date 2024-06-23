@@ -74,7 +74,7 @@ const Search = () => {
                         showPagination
                         pageState={searchPageState}
                         totalItems={searchedBooks.data.totalItems}
-                        stickyClassName="top-[5rem]"
+                        stickyClassName="top-[5rem] pt-2"
                         pageSize={PAGE_SIZE}
                         isLoading={searchedBooks.isPlaceholderData}
                         noBooksChildren={<p className="font-medium tracking-wide opacity-80">No results found</p>}
@@ -88,7 +88,7 @@ const Search = () => {
                         showPagination
                         pageState={recommendedPageState}
                         totalItems={recommendedBooks.data.totalItems}
-                        stickyClassName="top-[5rem]"
+                        stickyClassName="top-[5rem] pt-2"
                         pageSize={PAGE_SIZE}
                         isLoading={recommendedBooks.isLoading || recommendedBooks.isPending}
                     />

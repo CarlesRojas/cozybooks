@@ -110,7 +110,7 @@ const FinishedOn = ({ book }: Props) => {
         <div className="flex w-full flex-col items-center justify-center gap-3">
             <p className="font-medium tracking-wide opacity-60">You finished this book on:</p>
 
-            <div className="flex w-full flex-wrap items-center justify-center gap-2">
+            <div className="flex w-full flex-wrap items-center justify-center gap-3">
                 {finishedDates.data.map((finishedDate) => (
                     <Popover
                         key={finishedDate.id}

@@ -1,9 +1,9 @@
 import { book, user } from "@/server/schema";
 import { relations } from "drizzle-orm";
-import { integer, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
 
-export const library = pgTable(
-    "library",
+export const rating = pgTable(
+    "rating",
     {
         userId: integer("userId")
             .references(() => user.id, { onDelete: "cascade" })
@@ -11,22 +11,21 @@ export const library = pgTable(
         bookId: text("bookId")
             .references(() => book.id, { onDelete: "cascade" })
             .notNull(),
-        type: text("type").notNull(),
-        createdAt: timestamp("createdAt").defaultNow(),
+        rating: integer("rating").notNull(),
     },
     (table) => ({
-        pk: primaryKey({ columns: [table.userId, table.type, table.bookId] }),
+        pk: primaryKey({ columns: [table.userId, table.bookId] }),
     }),
 );
 
-export const libraryRelations = relations(library, ({ one }) => ({
+export const ratingRelations = relations(rating, ({ one }) => ({
     user: one(user, {
-        fields: [library.userId],
+        fields: [rating.userId],
         references: [user.id],
     }),
 
     book: one(book, {
-        fields: [library.bookId],
+        fields: [rating.bookId],
         references: [book.id],
     }),
 }));

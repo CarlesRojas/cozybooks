@@ -3,6 +3,7 @@ import BookCover from "@/component/BookCover";
 import FinishedOn from "@/component/FinishedOn";
 import LibraryButton from "@/component/LibraryButton";
 import NotFound, { NotFoundType } from "@/component/NotFound";
+import Rating from "@/component/Rating";
 import ShowMore from "@/component/ShowMore";
 import { Button } from "@/component/ui/button";
 import { getGoogleBook } from "@/server/action/book";
@@ -34,8 +35,8 @@ const BookPage = async ({ params: { bookId } }: Props) => {
         >
             <BackButton className="sticky top-6" />
 
-            <div className="relative flex w-full flex-col items-center gap-6">
-                <div className="relative aspect-book w-full max-w-[80vw] sm:max-w-[20rem]">
+            <div className="relative flex w-full flex-col items-center gap-6 sm:gap-8">
+                <div className="relative aspect-book w-full max-w-[75vw] sm:max-w-[20rem]">
                     <BookCover key={book.id} book={book} />
                 </div>
 
@@ -44,7 +45,7 @@ const BookPage = async ({ params: { bookId } }: Props) => {
                         {title}
                     </h1>
 
-                    <div className="flex w-full flex-wrap justify-center gap-x-2">
+                    <div className="flex w-full flex-wrap justify-center gap-x-4 gap-y-2">
                         {authors &&
                             authors.length > 0 &&
                             authors.map((author) => (
@@ -57,10 +58,9 @@ const BookPage = async ({ params: { bookId } }: Props) => {
                     {pageCount && <p className="text-sm font-medium leading-snug tracking-wide opacity-60">{pageCount} pages</p>}
                 </div>
 
-                {/* TODO show rating */}
-                <div className="relative my-4 w-full">
-                    <LibraryButton book={book} />
-                </div>
+                <Rating book={book} tooltipSide="top" />
+
+                <LibraryButton book={book} />
 
                 <FinishedOn book={book} />
 

@@ -24,8 +24,6 @@ interface Props {
 const Settings = ({ user }: Props) => {
     const { setTheme, theme } = useTheme();
 
-    console.log(user.image);
-
     return (
         <DropdownMenu modal={true}>
             <Button size="icon" variant="glass" asChild>

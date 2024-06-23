@@ -32,6 +32,7 @@ export const useStartReading = () => {
             const previousData: BookStatus | undefined = queryClient.getQueryData(["bookStatus", book.id]);
             queryClient.setQueryData(["bookStatus", book.id], BookStatus.READING_NOW);
 
+            await queryClient.cancelQueries({ queryKey: ["libraryBooks", LibraryType.READING] });
             const previousReadingData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.READING]);
             if (previousReadingData) {
                 const newItems = previousReadingData.items;
@@ -39,6 +40,7 @@ export const useStartReading = () => {
                 queryClient.setQueryData(["libraryBooks", LibraryType.READING], { ...previousReadingData, items: newItems });
             }
 
+            await queryClient.cancelQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ] });
             const previousToReadData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.TO_READ]);
             if (previousToReadData) {
                 const newItems = previousToReadData.items.filter((item) => item.id !== book.id);

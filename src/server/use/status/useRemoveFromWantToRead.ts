@@ -26,6 +26,7 @@ export const useRemoveFromWantToRead = () => {
             const previousData: BookStatus | undefined = queryClient.getQueryData(["bookStatus", book.id]);
             queryClient.setQueryData(["bookStatus", book.id], BookStatus.NONE);
 
+            await queryClient.cancelQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ] });
             const previousToReadData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.TO_READ]);
             if (previousToReadData) {
                 const newItems = previousToReadData.items.filter((item) => item.id !== book.id);

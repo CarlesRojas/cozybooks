@@ -1,6 +1,6 @@
 import { removeBookFromLibrary } from "@/server/action/library";
 import { getClientSide } from "@/server/use/useUser";
-import { Book } from "@/type/Book";
+import { Book, VolumesResult } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -21,9 +21,20 @@ export const useRemoveBookFromFinished = () => {
     return useMutation({
         mutationFn: removeFromFinished,
         onMutate: async ({ book }) => {
-            // TODO optimistic update for finished library list
+            await queryClient.cancelQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
+            const previousFinishedData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.FINISHED]);
+            if (previousFinishedData) {
+                const newItems = previousFinishedData.items.filter((item) => item.id !== book.id);
+                queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], { ...previousFinishedData, items: newItems });
+            }
+
+            return { previousFinishedData };
         },
-        onError: (err, { book }, context) => {},
-        onSettled: () => {},
+        onError: (err, { book }, context) => {
+            context && queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], context.previousFinishedData);
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED], refetchType: "all" });
+        },
     });
 };

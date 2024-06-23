@@ -31,6 +31,7 @@ export const useAddToWantToRead = () => {
             const previousData: BookStatus | undefined = queryClient.getQueryData(["bookStatus", book.id]);
             queryClient.setQueryData(["bookStatus", book.id], BookStatus.WANT_TO_READ);
 
+            await queryClient.cancelQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ] });
             const previousToReadData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.TO_READ]);
             if (previousToReadData) {
                 const newItems = previousToReadData.items;

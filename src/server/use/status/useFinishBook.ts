@@ -37,6 +37,7 @@ export const useFinishBook = () => {
             const previousData: BookStatus | undefined = queryClient.getQueryData(["bookStatus", book.id]);
             queryClient.setQueryData(["bookStatus", book.id], BookStatus.NONE);
 
+            await queryClient.cancelQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
             const previousFinishedData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.FINISHED]);
             if (previousFinishedData) {
                 const newItems = previousFinishedData.items;
@@ -47,12 +48,14 @@ export const useFinishBook = () => {
                 });
             }
 
+            await queryClient.cancelQueries({ queryKey: ["libraryBooks", LibraryType.READING] });
             const previousReadingData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.READING]);
             if (previousReadingData) {
                 const newItems = previousReadingData.items.filter((item) => item.id !== book.id);
                 queryClient.setQueryData(["libraryBooks", LibraryType.READING], { ...previousReadingData, items: newItems });
             }
 
+            await queryClient.cancelQueries({ queryKey: ["finishedDates", book.id] });
             const previousFinishedDatesData: Finished[] | undefined = queryClient.getQueryData(["finishedDates", book.id]);
             if (previousFinishedDatesData) {
                 const newData: Finished[] = [

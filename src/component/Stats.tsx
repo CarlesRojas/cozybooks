@@ -23,6 +23,12 @@ enum StatType {
 const AVERAGE_YEARS = 5;
 const DEFAULT_PAGES_PER_BOOK = 250;
 
+interface Group {
+    year: number;
+    books: number;
+    pages: number;
+}
+
 const Stats = ({ books, stickyClassName }: Props) => {
     const [statType, setStatType] = useUrlState("stat", StatType.BOOKS, z.nativeEnum(StatType));
 
@@ -85,6 +91,30 @@ const Stats = ({ books, stickyClassName }: Props) => {
         [books],
     );
 
+    const groups: Group[] = useMemo(() => {
+        const result: Group[] = [];
+        books.forEach((book) => {
+            book.finished?.forEach((finished) => {
+                const year = finished.timestamp.getFullYear();
+                const yearIndex = result.findIndex((group) => group.year === year);
+
+                if (yearIndex === -1) result.push({ year, books: 1, pages: book.pageCount ?? DEFAULT_PAGES_PER_BOOK });
+                else
+                    result[yearIndex] = {
+                        ...result[yearIndex],
+                        books: result[yearIndex].books + 1,
+                        pages: result[yearIndex].pages + (book.pageCount ?? DEFAULT_PAGES_PER_BOOK),
+                    };
+            });
+        });
+
+        return result;
+    }, [books]);
+
+    const sortedGroups = useMemo(() => groups.sort((a, b) => b.year - a.year), [groups]);
+    const maxBooksPerYear = useMemo(() => sortedGroups.reduce((acc, group) => Math.max(acc, group.books), 0), [sortedGroups]);
+    const maxPagesPerYear = useMemo(() => sortedGroups.reduce((acc, group) => Math.max(acc, group.pages), 0), [sortedGroups]);
+
     const tile = (title: string, value: number, subtitle?: string, className?: string) => (
         <div
             className={cn(
@@ -98,7 +128,7 @@ const Stats = ({ books, stickyClassName }: Props) => {
 
             <p className="text-center text-4xl font-bold leading-tight tracking-wide text-white sm:text-6xl">{formatter.format(value)}</p>
 
-            <p className="text-center text-sm font-semibold leading-tight tracking-wide text-white opacity-80 sm:text-base md:text-lg">
+            <p className="text-pretty text-center text-sm font-semibold leading-tight tracking-wide text-white opacity-80 sm:text-base md:text-lg">
                 {subtitle}
             </p>
         </div>
@@ -113,7 +143,7 @@ const Stats = ({ books, stickyClassName }: Props) => {
             </div>
 
             <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-3 px-6 sm:gap-4">
-                <div className="grid w-full max-w-screen-sm auto-rows-min grid-cols-3 grid-rows-2 gap-3 sm:gap-4">
+                <div className="grid w-full max-w-screen-sm auto-rows-min grid-cols-3 grid-rows-2 gap-2 sm:gap-4">
                     {tile(
                         "Read",
                         statType === StatType.BOOKS ? totalBooks : totalPages,
@@ -135,8 +165,39 @@ const Stats = ({ books, stickyClassName }: Props) => {
                         "from-green-900/80 to-green-400",
                     )}
 
-                    <div className="relative col-span-3 row-span-1 rounded-2xl bg-gradient-to-t from-purple-900/80 to-purple-400 p-3 sm:rounded-3xl">
-                        {/* TODO show yearly books / pages */}
+                    <div className="relative col-span-3 row-span-1 overflow-x-auto overflow-y-hidden rounded-2xl bg-gradient-to-t from-purple-900/80 to-purple-400 p-3 sm:rounded-3xl sm:p-4">
+                        <div className="flex h-full w-fit flex-row gap-3">
+                            <div className="items-left mr-16 flex h-full w-fit flex-col justify-end">
+                                <p className="min-w-fit text-nowrap text-lg font-semibold leading-tight text-white sm:text-xl md:text-2xl">
+                                    {statType === StatType.BOOKS ? "Books" : "Pages"}
+                                </p>
+
+                                <p className="min-w-fit text-nowrap text-2xl font-semibold leading-tight text-white opacity-60 sm:text-xl md:text-2xl">
+                                    Per Year
+                                </p>
+                            </div>
+
+                            {sortedGroups.map((group) => (
+                                <div key={group.year} className="flex h-full w-fit flex-col items-center gap-2">
+                                    <p className="text-center text-sm font-semibold leading-tight tracking-wide text-white opacity-80">
+                                        {formatter.format(statType === StatType.BOOKS ? group.books : group.pages)}
+                                    </p>
+
+                                    <div className="relative flex w-2 grow items-end">
+                                        <div
+                                            className="w-full rounded-sm bg-white"
+                                            style={{
+                                                height: `${(100 * (statType === StatType.BOOKS ? group.books : group.pages)) / (statType === StatType.BOOKS ? maxBooksPerYear : maxPagesPerYear)}%`,
+                                            }}
+                                        />
+                                    </div>
+
+                                    <p className="text-center text-sm font-semibold leading-tight tracking-wide text-white opacity-80">
+                                        {group.year}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 

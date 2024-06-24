@@ -40,7 +40,7 @@ export const useFinishBook = () => {
             await queryClient.cancelQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
             const previousFinishedData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.FINISHED]);
             if (previousFinishedData) {
-                const newItems = previousFinishedData.items;
+                const newItems = [...previousFinishedData.items];
                 newItems.unshift(book);
                 queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], {
                     ...previousFinishedData,

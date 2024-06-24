@@ -1,4 +1,6 @@
-import { deleteFinished } from "@/server/action/finished";
+import { deleteFinished, getFinished } from "@/server/action/finished";
+import { removeBookFromLibrary } from "@/server/action/library";
+import { getClientSide } from "@/server/use/useUser";
 import { VolumesResult } from "@/type/Book";
 import { Finished } from "@/type/Finished";
 import { LibraryType } from "@/type/Library";
@@ -9,8 +11,14 @@ interface Props {
     id: number;
 }
 
-export const deleteFinishedDate = async ({ id }: Props) => {
+export const deleteFinishedDate = async ({ id, bookId }: Props) => {
     await deleteFinished(id);
+
+    const user = await getClientSide();
+    if (!user) return;
+
+    const finished = await getFinished(user.id, bookId);
+    if (!finished || finished.length === 0) await removeBookFromLibrary({ bookId, userId: user.id, type: LibraryType.FINISHED });
 };
 
 export const useDeleteFinishedDate = () => {

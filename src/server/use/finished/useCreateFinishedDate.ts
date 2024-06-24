@@ -12,7 +12,7 @@ interface Props {
 
 export const createFinishedDate = async ({ bookId, timestamp }: Props) => {
     const user = await getClientSide();
-    if (!user) return [];
+    if (!user) return;
 
     await addFinished({ bookId, userId: user.id, timestamp });
 };

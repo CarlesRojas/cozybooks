@@ -3,7 +3,7 @@
     "name": "CozyBooks",
     "short_name": "CozyBooks",
     "description": "The best way to keep track of all the books you have and enjoy all the ones you want to read.",
-    "full-description": "The best way to keep track of all the books you have and enjoy all the ones you want to read.",
+    "full-description": "CozyBooks is the best way to keep track of all the books you have and enjoy all the ones you want to read! Whether you’re an avid reader or a casual book lover, CozyBooks is designed to enhance your reading experience and keep your collection organized. - Manage Your Library: Easily catalog your entire book collection with just a few taps. Add new books, update details, and organize them into custom categories for effortless management. - Detailed Book Information: Access comprehensive details about each book in your library, including author, genre, publication date, summaries, and more. Keep all the information you need at your fingertips. - Track Stats and Finished Books: Monitor your reading progress with detailed statistics. Keep track of books you've finished, current reads, and future reads. Set reading goals and watch your library grow! - Search an Extensive Library: Quickly find any book in your collection or discover new additions with our powerful search feature. Browse through an extensive library of titles to find your next read. - Light/Dark Mode: Enjoy a user-friendly interface with the option to switch between light and dark modes. Customize your reading experience to suit your preference and reduce eye strain. Download CozyBooks now and take your book library management to the next level!",
     "icons": [
         {
             "src": "favicon.ico",
@@ -49,7 +49,7 @@
             "description": "View your characters",
             "icons": [
                 {
-                    "src": "character.png",
+                    "src": "shortcut/finished.png",
                     "type": "image/png",
                     "sizes": "96x96"
                 }
@@ -61,7 +61,7 @@
             "description": "View your characters",
             "icons": [
                 {
-                    "src": "character.png",
+                    "src": "shortcut/search.png",
                     "type": "image/png",
                     "sizes": "96x96"
                 }

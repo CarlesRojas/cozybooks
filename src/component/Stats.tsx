@@ -118,7 +118,7 @@ const Stats = ({ books, stickyClassName }: Props) => {
     const tile = (title: string, value: number, subtitle?: string, className?: string) => (
         <div
             className={cn(
-                "flex aspect-square flex-col items-center justify-around rounded-2xl bg-gradient-to-t p-3 sm:rounded-3xl",
+                "flex aspect-square flex-col items-center justify-around rounded-2xl bg-gradient-to-t p-4 sm:rounded-3xl",
                 className,
             )}
         >
@@ -143,7 +143,7 @@ const Stats = ({ books, stickyClassName }: Props) => {
             </div>
 
             <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-3 px-6 sm:gap-4">
-                <div className="grid w-full max-w-screen-sm auto-rows-min grid-cols-3 grid-rows-2 gap-2 sm:gap-4">
+                <div className="grid w-full max-w-screen-sm auto-rows-min grid-cols-3 grid-rows-2 gap-3 sm:gap-4">
                     {tile(
                         "Read",
                         statType === StatType.BOOKS ? totalBooks : totalPages,
@@ -165,14 +165,14 @@ const Stats = ({ books, stickyClassName }: Props) => {
                         "from-green-900/80 to-green-400",
                     )}
 
-                    <div className="relative col-span-3 row-span-1 overflow-x-auto overflow-y-hidden rounded-2xl bg-gradient-to-t from-purple-900/80 to-purple-400 p-3 sm:rounded-3xl sm:p-4">
+                    <div className="relative col-span-3 row-span-1 overflow-x-auto overflow-y-hidden rounded-2xl bg-gradient-to-t from-purple-900/80 to-purple-400 p-4 sm:rounded-3xl">
                         <div className="flex h-full w-fit flex-row gap-3">
-                            <div className="items-left mr-16 flex h-full w-fit flex-col justify-end">
-                                <p className="min-w-fit text-nowrap text-lg font-semibold leading-tight text-white sm:text-xl md:text-2xl">
+                            <div className="items-left mr-10 flex h-full w-fit flex-col justify-end">
+                                <p className="min-w-fit text-nowrap text-xl font-semibold leading-tight text-white sm:text-2xl md:text-2xl">
                                     {statType === StatType.BOOKS ? "Books" : "Pages"}
                                 </p>
 
-                                <p className="min-w-fit text-nowrap text-2xl font-semibold leading-tight text-white opacity-60 sm:text-xl md:text-2xl">
+                                <p className="min-w-fit text-nowrap text-xl font-semibold leading-tight text-white opacity-60 sm:text-2xl md:text-2xl">
                                     Per Year
                                 </p>
                             </div>

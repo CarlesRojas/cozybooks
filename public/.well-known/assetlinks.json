@@ -1,0 +1,10 @@
+[
+    {
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "app.cozybooks.pinya",
+            "sha256_cert_fingerprints": ["C2:58:54:B3:A7:31:A4:C8:39:BB:F8:16:8D:1A:F6:57:52:5B:39:09:98:F2:0D:79:33:55:EF:CD:5C:FB:C6:9E"]
+        }
+    }
+]

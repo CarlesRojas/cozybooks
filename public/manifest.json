@@ -68,6 +68,43 @@
             ]
         }
     ],
+    "screenshots": [
+        {
+            "src": "screenshot/screenshot1.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Manage your library"
+        },
+        {
+            "src": "screenshot/screenshot2.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Detailed book information"
+        },
+        {
+            "src": "screenshot/screenshot3.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Stats about your finished books"
+        },
+        {
+            "src": "screenshot/screenshot4.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Search an extensive library"
+        },
+        {
+            "src": "screenshot/screenshot5.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Light / Dark modes"
+        }
+    ],
     "prefer_related_applications": false,
     "categories": ["entertainment", "lifestyle", "productivity", "utilities"],
     "iarc_rating_id": "0b524ca6-a9b7-41db-a44f-e568429c99ab"

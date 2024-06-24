@@ -33,7 +33,7 @@ const Settings = ({ user }: Props) => {
             </Button>
 
             <DropdownMenuContent className="mx-2 my-3">
-                <DropdownMenuLabel className="flex items-center gap-2">
+                <DropdownMenuLabel className="flex items-center gap-4">
                     <Avatar>
                         <AvatarImage src={user.image} />
                         <AvatarFallback className="uppercase">{user.name[0]}</AvatarFallback>

@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.7",
+    "@formatjs/intl-numberformat": "^8.10.3",
     "@hedgedoc/html-to-react": "^2.1.1",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",

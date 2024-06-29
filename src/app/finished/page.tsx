@@ -23,7 +23,6 @@ const Finished = () => {
     const [sort] = useUrlState("sort", Sort.DATE, z.nativeEnum(Sort));
     const finishedBooks = useLibraryBooks({ type: LibraryType.FINISHED });
 
-    console.log(finishedBooks);
     const sortedBooks = useMemo(
         () =>
             finishedBooks.data?.items.sort((a, b) => {

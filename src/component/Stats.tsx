@@ -4,8 +4,7 @@ import { Button } from "@/component/ui/button";
 import { useUrlState } from "@/hook/useUrlState";
 import { Book } from "@/type/Book";
 import { cn } from "@/util";
-import "@formatjs/intl-numberformat/locale-data/en";
-import "@formatjs/intl-numberformat/polyfill";
+import millify from "millify";
 import { useMemo } from "react";
 import { LuBookOpen, LuGalleryHorizontalEnd } from "react-icons/lu";
 import { z } from "zod";
@@ -31,8 +30,6 @@ interface Group {
 
 const Stats = ({ books, stickyClassName }: Props) => {
     const [statType, setStatType] = useUrlState("stat", StatType.BOOKS, z.nativeEnum(StatType));
-
-    let formatter = Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
 
     const totalBooks = useMemo(() => books.reduce((acc, book) => acc + (book.finished?.length ?? 1), 0), [books]);
     const totalPages = useMemo(
@@ -118,7 +115,7 @@ const Stats = ({ books, stickyClassName }: Props) => {
     const tile = (title: string, value: number, subtitle?: string, className?: string) => (
         <div
             className={cn(
-                "flex aspect-square flex-col items-center justify-around rounded-2xl bg-gradient-to-t p-4 sm:rounded-3xl",
+                "flex aspect-square flex-col items-center justify-around rounded-2xl bg-gradient-to-t p-3 sm:rounded-3xl sm:p-4",
                 className,
             )}
         >
@@ -126,9 +123,9 @@ const Stats = ({ books, stickyClassName }: Props) => {
                 {title}
             </p>
 
-            <p className="text-center text-4xl font-bold leading-tight tracking-wide text-white sm:text-6xl">{formatter.format(value)}</p>
+            <p className="text-center text-4xl font-bold leading-tight tracking-wide text-white sm:text-6xl">{millify(value)}</p>
 
-            <p className="text-pretty text-center text-sm font-semibold leading-tight tracking-wide text-white opacity-80 sm:text-base md:text-lg">
+            <p className="text-balance text-center text-sm font-semibold leading-tight tracking-wide text-white opacity-80 sm:text-base md:text-lg">
                 {subtitle}
             </p>
         </div>
@@ -165,9 +162,9 @@ const Stats = ({ books, stickyClassName }: Props) => {
                         "from-green-900/80 to-green-400",
                     )}
 
-                    <div className="relative col-span-3 row-span-1 overflow-x-auto overflow-y-hidden rounded-2xl bg-gradient-to-t from-purple-900/80 to-purple-400 p-4 sm:rounded-3xl">
-                        <div className="flex h-full w-fit flex-row gap-3">
-                            <div className="items-left mr-10 flex h-full w-fit flex-col justify-end">
+                    <div className="relative col-span-3 row-span-1 overflow-x-auto overflow-y-hidden rounded-2xl bg-gradient-to-t from-purple-900/80 to-purple-400 p-3 sm:rounded-3xl sm:p-4">
+                        <div className="flex h-full w-fit flex-row gap-1.5">
+                            <div className="items-left mr-8 flex h-full w-fit flex-col justify-end">
                                 <p className="min-w-fit text-nowrap text-xl font-semibold leading-tight text-white sm:text-2xl md:text-2xl">
                                     {statType === StatType.BOOKS ? "Books" : "Pages"}
                                 </p>
@@ -178,21 +175,21 @@ const Stats = ({ books, stickyClassName }: Props) => {
                             </div>
 
                             {sortedGroups.map((group) => (
-                                <div key={group.year} className="flex h-full w-fit flex-col items-center gap-2">
-                                    <p className="text-center text-sm font-semibold leading-tight tracking-wide text-white opacity-80">
-                                        {formatter.format(statType === StatType.BOOKS ? group.books : group.pages)}
+                                <div key={group.year} className="flex h-full w-fit flex-col items-center gap-1">
+                                    <p className="text-center text-xs font-semibold leading-tight tracking-wide text-white opacity-80">
+                                        {millify(statType === StatType.BOOKS ? group.books : group.pages)}
                                     </p>
 
-                                    <div className="relative flex w-2 grow items-end">
+                                    <div className="relative flex w-2.5 grow items-end">
                                         <div
-                                            className="w-full rounded-sm bg-white"
+                                            className="w-full rounded-[3px] bg-white"
                                             style={{
                                                 height: `${(100 * (statType === StatType.BOOKS ? group.books : group.pages)) / (statType === StatType.BOOKS ? maxBooksPerYear : maxPagesPerYear)}%`,
                                             }}
                                         />
                                     </div>
 
-                                    <p className="text-center text-sm font-semibold leading-tight tracking-wide text-white opacity-80">
+                                    <p className="text-center text-xs font-semibold leading-tight tracking-wide text-white opacity-80">
                                         {group.year}
                                     </p>
                                 </div>

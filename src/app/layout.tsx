@@ -34,7 +34,6 @@ const RootLayout = async ({ children }: Readonly<Props>) => (
         <html lang="en" suppressHydrationWarning>
             <head>
                 <Script src="https://flackr.github.io/scroll-timeline/dist/scroll-timeline.js" />
-                <Script src="https://polyfill-fastly.io/v3/polyfill.min.js?features=Intl.getCanonicalLocales,Intl.Locale,Intl.PluralRules,Intl.NumberFormat,Intl.NumberFormat.~locale.en,Intl.PluralRules.~locale.en" />
             </head>
 
             <QueryProvider>

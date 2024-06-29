@@ -55,12 +55,6 @@ const Reading = () => {
                     <BookList title="Want to read" books={toReadBooks.data.items} showPagination={false} stickyClassName="top-0 pt-3" />
                 )}
             </div>
-
-            <div className="mt-16 flex w-full flex-wrap justify-center gap-x-4">
-                <Button className="text-sm opacity-40" variant="link" asChild>
-                    <Link href={Route.PRIVACY_POLICY}>Privacy Policy</Link>
-                </Button>
-            </div>
         </main>
     );
 };

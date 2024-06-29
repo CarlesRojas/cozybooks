@@ -5,7 +5,7 @@ import SortMenu from "@/component/SortMenu";
 import { Button } from "@/component/ui/button";
 import { useRoute } from "@/hook/useRoute";
 import { useUser } from "@/server/use/useUser";
-import { Route } from "@/type/Route";
+import { NO_NAVBAR_ROUTES, Route } from "@/type/Route";
 import { cn } from "@/util";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -26,7 +26,7 @@ const Navigation = () => {
 
     const showSortButton = currentRoute === Route.FINISHED;
 
-    if (user.isLoading || user.isError || !user.data) return null;
+    if (NO_NAVBAR_ROUTES.includes(currentRoute) || user.isLoading || user.isError || !user.data) return null;
 
     return (
         <>

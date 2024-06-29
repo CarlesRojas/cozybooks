@@ -6,7 +6,7 @@ import NotFound, { NotFoundType } from "@/component/NotFound";
 import Rating from "@/component/Rating";
 import ShowMore from "@/component/ShowMore";
 import { Button } from "@/component/ui/button";
-import { getGoogleBook } from "@/server/action/book";
+import { getBookWithGoogleFallback } from "@/server/action/book";
 import { cn } from "@/util";
 import { convertHtmlToReact } from "@hedgedoc/html-to-react";
 import Link from "next/link";
@@ -21,7 +21,7 @@ export const dynamic = "force-static";
 export const revalidate = 60 * 60 * 24 * 30; // 30 days
 
 const BookPage = async ({ params: { bookId } }: Props) => {
-    const book = await getGoogleBook(bookId);
+    const book = await getBookWithGoogleFallback(bookId);
     if (!book) return <NotFound type={NotFoundType.BOOK} />;
 
     const { title, authors, description, pageCount, previewLink, categories } = book;

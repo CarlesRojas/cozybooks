@@ -33,5 +33,6 @@ export const useBookShelf = ({ type, booksPerPage, offset }: Props) => {
     return useQuery({
         queryKey: ["bookShelf", type, booksPerPage, offset],
         queryFn: () => getBookShelf({ type, booksPerPage, offset }),
+        staleTime: 1000 * 60 * 60 * 24, // 24 hours
     });
 };

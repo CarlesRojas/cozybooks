@@ -45,6 +45,18 @@ export const getGoogleBook = async (bookId: string) => {
     }
 };
 
+export const getBookWithGoogleFallback = async (bookId: string) => {
+    const book = await getBook(bookId);
+    if (book) return book;
+
+    const googleBook = await getGoogleBook(bookId);
+    if (!googleBook) return undefined;
+
+    await addBook(googleBook);
+
+    return googleBook;
+};
+
 export const toDomainBook = (book: SelectBook) => {
     return BookSchema.parse(book) as Book;
 };

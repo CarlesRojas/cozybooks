@@ -39,7 +39,8 @@ export const useRemoveFromWantToRead = () => {
             context && queryClient.setQueryData(["bookStatus", book.id], context.previousData);
             context && queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ], context.previousToReadData);
         },
-        onSettled: () => {
+        onSettled: (data, err, { book }) => {
+            queryClient.invalidateQueries({ queryKey: ["bookStatus", book.id], refetchType: "all" });
             queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ], refetchType: "all" });
         },
     });

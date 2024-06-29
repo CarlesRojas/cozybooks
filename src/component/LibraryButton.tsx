@@ -58,7 +58,7 @@ const LibraryButton = ({ book }: Props) => {
     const map: Record<BookStatus, ReactNode> = {
         [BookStatus.NONE]: (
             <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book })}>
-                {addToWantToRead.isPending ? <LuLoader className="icon animate-spin" /> : <LuPlus className="icon mr-3" />}
+                {addToWantToRead.isPending ? <LuLoader className="icon mr-3 animate-spin" /> : <LuPlus className="icon mr-3" />}
                 <p>{finishedDates.data.length > 0 ? "I want to read this again" : "I want to read this"}</p>
             </Button>
         ),
@@ -66,12 +66,12 @@ const LibraryButton = ({ book }: Props) => {
         [BookStatus.WANT_TO_READ]: (
             <>
                 <Button disabled={isLoading} onClick={() => startReading.mutate({ book })}>
-                    {startReading.isPending ? <LuLoader className="icon animate-spin" /> : <LuBookOpen className="icon mr-3" />}
+                    {startReading.isPending ? <LuLoader className="icon mr-3 animate-spin" /> : <LuBookOpen className="icon mr-3" />}
                     <p>Start reading</p>
                 </Button>
 
                 <Button disabled={isLoading} variant="glass" onClick={() => removeFromWantToRead.mutate({ book })}>
-                    {removeFromWantToRead.isPending ? <LuLoader className="icon animate-spin" /> : <LuX className="icon mr-3" />}
+                    {removeFromWantToRead.isPending ? <LuLoader className="icon mr-3 animate-spin" /> : <LuX className="icon mr-3" />}
                     <p>{finishedDates.data.length > 0 ? "I no longer want to read this again" : "I no longer want to read this"}</p>
                 </Button>
             </>
@@ -80,12 +80,12 @@ const LibraryButton = ({ book }: Props) => {
         [BookStatus.READING_NOW]: (
             <>
                 <Button disabled={isLoading} onClick={() => finishBook.mutate({ book })}>
-                    {finishBook.isPending ? <LuLoader className="icon animate-spin" /> : <LuBookMarked className="icon mr-3" />}
+                    {finishBook.isPending ? <LuLoader className="icon mr-3 animate-spin" /> : <LuBookMarked className="icon mr-3" />}
                     <p>Finish book</p>
                 </Button>
 
                 <Button disabled={isLoading} variant="glass" onClick={() => stopReading.mutate({ book })}>
-                    {stopReading.isPending ? <LuLoader className="icon animate-spin" /> : <LuX className="icon mr-3" />}
+                    {stopReading.isPending ? <LuLoader className="icon mr-3 animate-spin" /> : <LuX className="icon mr-3" />}
                     <p>Stop reading</p>
                 </Button>
             </>

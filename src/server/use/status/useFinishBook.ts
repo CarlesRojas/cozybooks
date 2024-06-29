@@ -60,12 +60,7 @@ export const useFinishBook = () => {
             if (previousFinishedDatesData) {
                 const newData: Finished[] = [
                     ...previousFinishedDatesData,
-                    {
-                        id: -1,
-                        userId: -1,
-                        bookId: book.id,
-                        timestamp: new Date(),
-                    },
+                    { id: -1, userId: -1, bookId: book.id, timestamp: new Date() },
                 ].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
                 queryClient.setQueryData(["finishedDates", book.id], newData);
@@ -80,6 +75,7 @@ export const useFinishBook = () => {
             context && queryClient.setQueryData(["finishedDates", book.id], context.previousFinishedDatesData);
         },
         onSettled: (data, err, { book }) => {
+            queryClient.invalidateQueries({ queryKey: ["bookStatus", book.id], refetchType: "all" });
             queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.READING], refetchType: "all" });
             queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED], refetchType: "all" });
             queryClient.invalidateQueries({ queryKey: ["finishedDates", book.id], refetchType: "all" });

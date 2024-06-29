@@ -27,10 +27,6 @@ const Welcome = async ({ isError }: Props) => {
                 </section>
 
                 <section className="relative flex h-fit w-full flex-col items-center justify-center gap-4 py-8 text-center">
-                    <p className="max-w-[30rem] text-pretty text-sm font-semibold tracking-wide opacity-40">
-                        CozyBooks builds on top of Google Books. Sign in with your Google account to get started.
-                    </p>
-
                     <SignInButton />
 
                     {isError && (
@@ -38,10 +34,15 @@ const Welcome = async ({ isError }: Props) => {
                             There was an error while signing in. Please try again.
                         </p>
                     )}
+
+                    <p className="max-w-[30rem] text-pretty text-sm font-semibold tracking-wide opacity-40">
+                        Sign in with your Google account to get started. We will only use your data (email, name, and book library) to
+                        provide you with the best experience. We do not sell or share your data with anyone.
+                    </p>
                 </section>
 
                 <div className="mt-16 flex w-full flex-wrap justify-center gap-x-4">
-                    <Button className="text-sm opacity-40" variant="link" asChild>
+                    <Button className="text-base opacity-60" variant="link" asChild>
                         <Link href={Route.PRIVACY_POLICY}>Privacy Policy</Link>
                     </Button>
                 </div>

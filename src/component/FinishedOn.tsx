@@ -39,7 +39,13 @@ const FinishedOn = ({ book }: Props) => {
     const deleteFinishedDate = useDeleteFinishedDate();
     const createFinishedDate = useCreateFinishedDate();
 
-    const isPending = updateFinishedDate.isPending || createFinishedDate.isPending || deleteFinishedDate.isPending;
+    const isPending =
+        finishedDates.isPending ||
+        finishedDates.isFetching ||
+        finishedDates.isLoading ||
+        updateFinishedDate.isPending ||
+        createFinishedDate.isPending ||
+        deleteFinishedDate.isPending;
 
     const [selectedYear, setSelectedYear] = useState<string>();
     const [selectedMonth, setSelectedMonth] = useState<string>();

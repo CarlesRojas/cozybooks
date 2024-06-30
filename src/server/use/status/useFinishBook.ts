@@ -78,7 +78,7 @@ export const useFinishBook = () => {
             queryClient.invalidateQueries({ queryKey: ["bookStatus", book.id], refetchType: "all" });
             queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.READING], refetchType: "all" });
             queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED], refetchType: "all" });
-            queryClient.invalidateQueries({ queryKey: ["finishedDates", book.id], refetchType: "all" });
+            // queryClient.invalidateQueries({ queryKey: ["finishedDates", book.id], refetchType: "all" });
         },
     });
 };

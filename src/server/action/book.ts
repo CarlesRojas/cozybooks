@@ -52,7 +52,9 @@ export const getBookWithGoogleFallback = async (bookId: string) => {
     const googleBook = await getGoogleBook(bookId);
     if (!googleBook) return undefined;
 
-    await addBook(googleBook);
+    try {
+        await addBook(googleBook);
+    } catch (error) {}
 
     return googleBook;
 };

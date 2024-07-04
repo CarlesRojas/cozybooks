@@ -3,7 +3,6 @@
 import { Book } from "@/type/Book";
 import { cn, getBiggestBookImage } from "@/util";
 import { Link } from "next-view-transitions";
-import Image from "next/image";
 import { AnchorHTMLAttributes, ReactNode, forwardRef, useMemo, useRef, useState } from "react";
 import { LuBook } from "react-icons/lu";
 
@@ -50,7 +49,7 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
             />
 
             {src && (
-                <Image
+                <img
                     className={cn(
                         "absolute inset-0 -z-10 h-full w-full select-none object-cover object-center blur-[8px] transition-opacity",
                         !href && "opacity-100 dark:opacity-40",
@@ -67,7 +66,7 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
             )}
 
             {src && (
-                <Image
+                <img
                     className={cn(
                         "h-full w-full select-none rounded-xl border border-neutral-500/10 object-cover object-center transition-transform",
                         href && "mouse:group-hover:scale-[1.02] mouse:group-focus:scale-[1.02]",

@@ -25,7 +25,7 @@ const Search = () => {
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setQuery(internalQuery);
+        setQuery(internalQuery, true, [{ key: "search-page", value: "1" }]);
     };
 
     const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE, offset: (searchPageState[0] - 1) * PAGE_SIZE });

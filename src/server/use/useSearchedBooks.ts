@@ -8,16 +8,15 @@ interface Props {
     query: string;
     booksPerPage?: number;
     offset?: number;
-    isAuthor?: boolean;
 }
 
-export const searchBooks = withToken(async ({ query, booksPerPage = 8, offset = 0, isAuthor = false, token }: Props & TokenProps) => {
+export const searchBooks = withToken(async ({ query, booksPerPage = 8, offset = 0, token }: Props & TokenProps) => {
     if (!query) return VolumesResultSchema.parse({ totalItems: 0, items: [] });
 
     const url = new URL(`${GOOGLE_BOOKS_URL}/volumes`);
     const params = new URLSearchParams({
         access_token: token,
-        q: isAuthor ? `inauthor:"${query}"` : `intitle:"${query}"`,
+        q: query.trim(),
         maxResults: booksPerPage.toString(),
         startIndex: offset.toString(),
         printType: "books",

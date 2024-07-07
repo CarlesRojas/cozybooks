@@ -20,7 +20,7 @@ const Welcome = async ({ isError }: Props) => {
                         Welcome to CozyBooks
                     </h1>
 
-                    <p className="max-w-[30rem] text-pretty text-center text-lg font-medium leading-snug tracking-wide">
+                    <p className="max-w-[30rem] text-pretty text-center text-lg font-medium leading-snug tracking-wide opacity-70">
                         The best way to keep track of all the books you have and enjoy all the ones you want to read.
                     </p>
                 </section>

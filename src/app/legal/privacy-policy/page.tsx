@@ -145,6 +145,17 @@ const PrivacyPolicy = () => {
                 We may also collect information that Your browser sends whenever You visit our Service or when You access the Service by or
                 through a mobile device.
             </p>
+            <h4 id="limited-use">Limited Use Policy Disclosure</h4>
+            <p>
+                {"CozyBooks' use and transfer to any other app of information received from Google APIs will adhere to "}
+                <a
+                    href="https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes"
+                    target="_blank"
+                >
+                    Google API Services User Data Policy
+                </a>
+                {", including the Limited Use requirements."}
+            </p>
             <h4>Tracking Technologies and Cookies</h4>
             <p>
                 We use Cookies and similar tracking technologies to track the activity on Our Service and store certain information.

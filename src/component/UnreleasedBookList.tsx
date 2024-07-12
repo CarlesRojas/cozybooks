@@ -23,7 +23,6 @@ const UnreleasedBookList = ({ stickyClassName, unreleasedBooks }: Props) => {
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(newBookName);
         addUnreleasedBook.mutate({ name: newBookName });
         setPopoverOpen(false);
     };

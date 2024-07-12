@@ -1,3 +1,5 @@
+"use client";
+
 import BookCover from "@/component/BookCover";
 import Pagination from "@/component/Pagination";
 import { useUrlState } from "@/hook/useUrlState";

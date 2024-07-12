@@ -23,7 +23,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, icon,
             </label>
 
             {onClear && (
-                <Button size="ghost" variant="ghost" onClick={onClear}>
+                <Button type="button" size="ghost" variant="ghost" onClick={onClear}>
                     <LuX className="icon" />
                 </Button>
             )}

@@ -15,6 +15,13 @@
       "when": 1719131301812,
       "tag": "0001_tricky_ultimatum",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1720788332667,
+      "tag": "0002_petite_millenium_guard",
+      "breakpoints": true
     }
   ]
 }

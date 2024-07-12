@@ -38,11 +38,11 @@ export const useAddUnreleasedBook = () => {
         },
 
         onError: (error, vars, context) => {
-            context && queryClient.setQueryData(["libraryBooks"], context.previousData);
+            context && queryClient.setQueryData(["unreleasedBooks"], context.previousData);
         },
 
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["libraryBooks"] });
+            queryClient.invalidateQueries({ queryKey: ["unreleasedBooks"] });
         },
     });
 };

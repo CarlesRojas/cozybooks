@@ -6,7 +6,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 export const rating = pgTable(
     "rating",
     {
-        userId: integer("userId")
+        userId: text("userId")
             .references(() => user.id, { onDelete: "cascade" })
             .notNull(),
         bookId: text("bookId")
@@ -18,15 +18,8 @@ export const rating = pgTable(
 );
 
 export const ratingRelations = relations(rating, ({ one }) => ({
-    user: one(user, {
-        fields: [rating.userId],
-        references: [user.id],
-    }),
-
-    book: one(book, {
-        fields: [rating.bookId],
-        references: [book.id],
-    }),
+    user: one(user, { fields: [rating.userId], references: [user.id] }),
+    book: one(book, { fields: [rating.bookId], references: [book.id] }),
 }));
 
 export const ratingInsertSchema = createInsertSchema(rating);

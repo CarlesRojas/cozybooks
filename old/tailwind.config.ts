@@ -26,7 +26,7 @@ const config: Config = {
                 "accordion-up": "accordion-up 0.2s ease-out",
             },
             screens: {
-                mouse: { raw: "(hover: hover)" },
+                 { raw: "(hover: hover)" },
             },
             colors: {
                 "neutral-150": "#F1F1F1",

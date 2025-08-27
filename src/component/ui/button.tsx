@@ -2,25 +2,23 @@ import { cn } from "@/lib/cn";
 import { Slot } from "@radix-ui/react-slot";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import type { ButtonHTMLAttributes } from "react";
-import { forwardRef } from "react";
+import type { ButtonHTMLAttributes, ComponentProps } from "react";
 
 const buttonVariants = cva(
-    "focus-scale inline-flex items-center justify-center text-base font-semibold whitespace-nowrap transition-colors outline-none disabled:pointer-events-none disabled:opacity-30",
+    "focus-scale inline-flex items-center justify-center whitespace-nowrap text-base font-semibold outline-none transition-colors disabled:pointer-events-none disabled:opacity-30",
     {
         variants: {
             variant: {
                 default:
-                    "mouse:hover:dark:bg-purple-500/70 mouse:hover:bg-purple-500/80 rounded-full bg-purple-500/100 text-neutral-50 dark:bg-purple-500/50",
+                    "rounded-full bg-purple-500/100 text-neutral-50 hover:bg-purple-500/80 dark:bg-purple-500/50 hover:dark:bg-purple-500/70",
                 navigation: "rounded-full text-neutral-600 dark:text-neutral-200",
-                glass: "mouse:hover:text-black mouse:hover:dark:text-white mouse:hover:bg-neutral-400/50 mouse:hover:dark:bg-neutral-500/50 rounded-full bg-neutral-300/70 text-neutral-600 backdrop-blur-md dark:bg-neutral-700/60 dark:text-neutral-200",
-                ghost: "mouse:text-neutral-500 mouse:dark:text-neutral-300 mouse:focus-visible:text-neutral-950 mouse:focus-visible:dark:text-neutral-50 mouse:hover:text-neutral-950 mouse:hover:dark:text-neutral-50 rounded-full bg-transparent text-neutral-950 dark:text-neutral-50",
-                pagination: "group mouse:focus-visible:scale-125",
-                paginationActive: "mouse:focus-visible:scale-125",
-                link: "mouse:hover:underline font-semibold text-neutral-900 underline-offset-4 dark:text-neutral-50",
-                input: "bg-neutral-150 dark:bg-neutral-850 mouse:hover:bg-neutral-200 mouse:hover:dark:bg-neutral-800 rounded-xl",
-                destructive:
-                    "mouse:hover:dark:bg-red-500/70 mouse:hover:bg-red-500/80 rounded-full bg-red-500/100 text-neutral-50 dark:bg-red-500/50",
+                glass: "rounded-full bg-neutral-300/70 text-neutral-600 backdrop-blur-md hover:bg-neutral-400/50 hover:text-black dark:bg-neutral-700/60 dark:text-neutral-200 hover:dark:bg-neutral-500/50 hover:dark:text-white",
+                ghost: "rounded-full bg-transparent text-neutral-500 hover:text-neutral-950 focus-visible:text-neutral-950 dark:text-neutral-300 hover:dark:text-neutral-50 focus-visible:dark:text-neutral-50",
+                pagination: "group focus-visible:scale-125",
+                paginationActive: "focus-visible:scale-125",
+                link: "font-semibold text-neutral-900 underline-offset-4 hover:underline dark:text-neutral-50",
+                input: "bg-neutral-150 dark:bg-neutral-850 rounded-xl hover:bg-neutral-200 hover:dark:bg-neutral-800",
+                destructive: "rounded-full bg-red-500/100 text-neutral-50 hover:bg-red-500/80 dark:bg-red-500/50 hover:dark:bg-red-500/70",
             },
             size: {
                 default: "h-12 w-fit px-5 py-3",
@@ -30,10 +28,7 @@ const buttonVariants = cva(
                 pagination: "h-8 w-8",
             },
         },
-        defaultVariants: {
-            variant: "default",
-            size: "default",
-        },
+        defaultVariants: { variant: "default", size: "default" },
     },
 );
 
@@ -41,10 +36,16 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, Va
     asChild?: boolean;
 }
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, asChild = false, ...props }, ref) => {
+const Button = ({
+    className,
+    variant,
+    size,
+    asChild = false,
+    ref,
+    ...props
+}: ComponentProps<"button"> & VariantProps<typeof buttonVariants> & { asChild?: boolean }) => {
     const Comp = asChild ? Slot : "button";
     return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
-});
-Button.displayName = "Button";
+};
 
 export { Button, buttonVariants };

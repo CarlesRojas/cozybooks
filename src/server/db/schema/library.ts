@@ -1,12 +1,12 @@
 import { book, user } from "@/server/db/schema";
 import { relations } from "drizzle-orm";
-import { integer, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const library = pgTable(
     "library",
     {
-        userId: integer("userId")
+        userId: text("userId")
             .references(() => user.id, { onDelete: "cascade" })
             .notNull(),
         bookId: text("bookId")
@@ -19,15 +19,8 @@ export const library = pgTable(
 );
 
 export const libraryRelations = relations(library, ({ one }) => ({
-    user: one(user, {
-        fields: [library.userId],
-        references: [user.id],
-    }),
-
-    book: one(book, {
-        fields: [library.bookId],
-        references: [book.id],
-    }),
+    user: one(user, { fields: [library.userId], references: [user.id] }),
+    book: one(book, { fields: [library.bookId], references: [book.id] }),
 }));
 
 export const libraryInsertSchema = createInsertSchema(library);

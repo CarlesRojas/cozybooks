@@ -1,3 +1,5 @@
+import { library } from "@/server/db/schema";
+import { relations } from "drizzle-orm";
 import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -9,6 +11,8 @@ export const user = pgTable("user", {
     createdAt: timestamp("created_at").notNull(),
     updatedAt: timestamp("updated_at").notNull(),
 });
+
+export const userRelations = relations(user, ({ many }) => ({ booksInLibrary: many(library) }));
 
 export const session = pgTable("session", {
     id: text("id").primaryKey(),

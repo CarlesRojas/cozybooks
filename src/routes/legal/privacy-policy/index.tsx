@@ -1,8 +1,11 @@
 import BackButton from "@/component/BackButton";
 import { cn } from "@/lib/cn";
+import { createFileRoute } from "@tanstack/react-router";
 import { isIOS } from "react-device-detect";
 
-const PrivacyPolicy = () => {
+export const Route = createFileRoute("/legal/privacy-policy/")({ component: PrivacyPolicy });
+
+function PrivacyPolicy() {
     return (
         <main
             suppressHydrationWarning
@@ -418,6 +421,6 @@ const PrivacyPolicy = () => {
             </ul>
         </main>
     );
-};
+}
 
 export default PrivacyPolicy;

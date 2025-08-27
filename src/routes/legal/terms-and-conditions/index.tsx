@@ -1,8 +1,11 @@
 import BackButton from "@/component/BackButton";
 import { cn } from "@/lib/cn";
+import { createFileRoute } from "@tanstack/react-router";
 import { isIOS } from "react-device-detect";
 
-const TermsAndConditions = () => {
+export const Route = createFileRoute("/legal/terms-and-conditions/")({ component: TermsAndConditions });
+
+function TermsAndConditions() {
     return (
         <main
             suppressHydrationWarning
@@ -100,6 +103,6 @@ const TermsAndConditions = () => {
             </p>
         </main>
     );
-};
+}
 
 export default TermsAndConditions;

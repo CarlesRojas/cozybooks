@@ -47,7 +47,7 @@ const Navigation = () => {
                             key={route}
                             variant="navigation"
                             className={cn(
-                                "group mouse:hover:text-black mouse:hover:dark:text-white relative",
+                                "group relative hover:text-black hover:dark:text-white",
                                 route === currentRoute && "!text-neutral-50",
                             )}
                         >

@@ -42,7 +42,7 @@ const Pagination = ({ numberOfPages, currentPage, onPageChange }: Props) => {
                     <PaginationLink key={page} onClick={() => onPageChange(page)} isActive={page === currentPage}>
                         <div
                             className={cn(
-                                "mouse:group-hover:bg-neutral-500/70 mouse:group-focus-visible:bg-neutral-500/70 size-[10px] min-h-[10px] min-w-[10px] rounded-full bg-neutral-500/30",
+                                "size-[10px] min-h-[10px] min-w-[10px] rounded-full bg-neutral-500/30 group-hover:bg-neutral-500/70 group-focus-visible:bg-neutral-500/70",
                                 page === currentPage && "bg-neutral-600 dark:bg-neutral-400",
                             )}
                         />

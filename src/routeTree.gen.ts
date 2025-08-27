@@ -11,14 +11,32 @@
 import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LegalTermsAndConditionsIndexRouteImport } from './routes/legal/terms-and-conditions/index'
+import { Route as LegalPrivacyPolicyIndexRouteImport } from './routes/legal/privacy-policy/index'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
 const rootServerRouteImport = createServerRootRoute()
 
+const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
+  id: '/_protected',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalTermsAndConditionsIndexRoute =
+  LegalTermsAndConditionsIndexRouteImport.update({
+    id: '/legal/terms-and-conditions/',
+    path: '/legal/terms-and-conditions/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LegalPrivacyPolicyIndexRoute = LegalPrivacyPolicyIndexRouteImport.update({
+  id: '/legal/privacy-policy/',
+  path: '/legal/privacy-policy/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
@@ -29,24 +47,39 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/legal/privacy-policy': typeof LegalPrivacyPolicyIndexRoute
+  '/legal/terms-and-conditions': typeof LegalTermsAndConditionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/legal/privacy-policy': typeof LegalPrivacyPolicyIndexRoute
+  '/legal/terms-and-conditions': typeof LegalTermsAndConditionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_protected': typeof ProtectedRouteRoute
+  '/legal/privacy-policy/': typeof LegalPrivacyPolicyIndexRoute
+  '/legal/terms-and-conditions/': typeof LegalTermsAndConditionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/legal/privacy-policy' | '/legal/terms-and-conditions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/legal/privacy-policy' | '/legal/terms-and-conditions'
+  id:
+    | '__root__'
+    | '/'
+    | '/_protected'
+    | '/legal/privacy-policy/'
+    | '/legal/terms-and-conditions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProtectedRouteRoute: typeof ProtectedRouteRoute
+  LegalPrivacyPolicyIndexRoute: typeof LegalPrivacyPolicyIndexRoute
+  LegalTermsAndConditionsIndexRoute: typeof LegalTermsAndConditionsIndexRoute
 }
 export interface FileServerRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatServerRoute
@@ -72,11 +105,32 @@ export interface RootServerRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof ProtectedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/terms-and-conditions/': {
+      id: '/legal/terms-and-conditions/'
+      path: '/legal/terms-and-conditions'
+      fullPath: '/legal/terms-and-conditions'
+      preLoaderRoute: typeof LegalTermsAndConditionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/privacy-policy/': {
+      id: '/legal/privacy-policy/'
+      path: '/legal/privacy-policy'
+      fullPath: '/legal/privacy-policy'
+      preLoaderRoute: typeof LegalPrivacyPolicyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -95,6 +149,9 @@ declare module '@tanstack/react-start/server' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProtectedRouteRoute: ProtectedRouteRoute,
+  LegalPrivacyPolicyIndexRoute: LegalPrivacyPolicyIndexRoute,
+  LegalTermsAndConditionsIndexRoute: LegalTermsAndConditionsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -25,11 +25,7 @@ const Rating = ({ book, tooltipSide = "top" }: Props) => {
     const deleteRating = useDeleteRating();
 
     const containerRef = useRef<HTMLDivElement>(null);
-    const [state, setState] = useState<State>({
-        rating: null,
-        interacting: false,
-        delete: false,
-    });
+    const [state, setState] = useState<State>({ rating: null, interacting: false, delete: false });
 
     useEffect(() => {
         currentRating.data && setState((prev) => ({ ...prev, rating: currentRating.data }));
@@ -122,16 +118,16 @@ const Rating = ({ book, tooltipSide = "top" }: Props) => {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="mouse:pointer-events-none mouse:opacity-0 mouse:group-hover:pointer-events-auto mouse:group-hover:opacity-100 absolute right-0 h-[unset] min-h-[unset] w-[unset] min-w-[unset] translate-x-full p-0 opacity-70 transition-opacity group-focus-within:opacity-70 focus-visible:opacity-100"
+                            className="pointer-events-none absolute right-0 h-[unset] min-h-[unset] w-[unset] min-w-[unset] translate-x-full p-0 opacity-0 opacity-70 transition-opacity focus-visible:opacity-100 group-focus-within:opacity-70 group-hover:pointer-events-auto group-hover:opacity-100"
                             onClick={onDeleteClick}
                         >
-                            <LuX className={cn("mouse:h-8 mouse:w-9 h-10 w-10 stroke-[3] px-2 py-1")} />
+                            <LuX className={cn("h-10 h-8 w-10 w-9 stroke-[3] px-2 py-1")} />
                         </Button>
                     )}
                 </div>
 
                 <TooltipContent
-                    className="mouse:min-h-9 mouse:min-w-9 flex min-h-11 min-w-11 flex-row items-center justify-center gap-2 transition-all"
+                    className="flex min-h-11 min-h-9 min-w-11 min-w-9 flex-row items-center justify-center gap-2 transition-all"
                     sideOffset={8}
                     side={tooltipSide}
                 >
@@ -156,7 +152,7 @@ export const Star = ({ left, full, onClick, onFocus, rating, isLoading, disabled
     return (
         <button
             className={cn(
-                "mouse:h-8 mouse:w-4 pointer-events-none relative h-10 w-5 overflow-hidden focus-visible:outline-none",
+                "pointer-events-none relative h-10 h-8 w-4 w-5 overflow-hidden focus-visible:outline-none",
                 onClick && "pointer-events-auto",
             )}
             onClick={() => onClick?.(rating)}
@@ -166,7 +162,7 @@ export const Star = ({ left, full, onClick, onFocus, rating, isLoading, disabled
         >
             <LuStar
                 className={cn(
-                    "mouse:h-8 mouse:w-8 absolute top-0 h-10 w-10 stroke-[1] p-1",
+                    "absolute top-0 h-10 h-8 w-10 w-8 stroke-[1] p-1",
                     full
                         ? "fill-purple-500 stroke-purple-400 text-purple-500"
                         : "fill-neutral-200 stroke-neutral-300 text-neutral-200 dark:fill-neutral-600 dark:stroke-neutral-500 dark:text-neutral-600",

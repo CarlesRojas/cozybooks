@@ -1,10 +1,9 @@
 import { Button } from "@/component/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
 import { useDeleteUnreleasedBook } from "@/server/old/use/unreleasedBook/useDeleteUnreleasedBook";
-import { Route } from "@/type/Route";
 import { UnreleasedBook } from "@/type/UnreleasedBook";
+import { useNavigate } from "@tanstack/react-router";
 import { LuBook, LuSearch, LuTrash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface Props {
@@ -13,7 +12,7 @@ interface Props {
 }
 
 const UnreleasedBookItem = ({ unreleasedBook, isLoading }: Props) => {
-    const { push } = useRouter();
+    const navigate = useNavigate({ from: "/search" });
 
     const { id, name } = unreleasedBook;
 
@@ -33,7 +32,7 @@ const UnreleasedBookItem = ({ unreleasedBook, isLoading }: Props) => {
                 <Button
                     variant="glass"
                     onClick={() => {
-                        push(`${Route.SEARCH}?query=${name}`);
+                        navigate({ to: `/search`, params: { query: name } });
                         setPopoverOpen(false);
                     }}
                 >

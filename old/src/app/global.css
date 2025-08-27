@@ -8,7 +8,7 @@
     }
 
     .focus-scale {
-        @apply mouse:transition-transform mouse:focus-visible:z-10 mouse:focus-visible:scale-110 mouse:focus-visible:outline-none;
+        @apply transition-transform focus-visible:z-10 focus-visible:scale-110 focus-visible:outline-none;
     }
 
     .skeleton {
@@ -21,7 +21,7 @@
 }
 
 html {
-    @apply relative min-h-dvh w-full text-[14px] antialiased mouse:text-[16px];
+    @apply relative min-h-dvh w-full text-[14px] text-[16px] antialiased;
 }
 
 body {

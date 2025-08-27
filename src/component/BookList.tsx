@@ -1,7 +1,8 @@
 import BookCover from "@/component/BookCover";
+import Pagination from "@/component/Pagination";
 import { cn } from "@/lib/cn";
 import { Book } from "@/type/Book";
-import { Route } from "@/type/Route";
+import { useNavigate } from "@tanstack/react-router";
 import { ReactElement, ReactNode } from "react";
 
 interface BaseProps {
@@ -15,8 +16,11 @@ interface BaseProps {
 interface PaginationProps {
     showPagination: true;
     totalItems: number;
-    pageState: number;
+    query: string;
+    searchPage: number;
+    recommendedPage: number;
     pageSize: number;
+    type: "search" | "recommendedBooks";
 }
 
 interface NoPaginationProps {
@@ -26,11 +30,13 @@ interface NoPaginationProps {
 type Props = BaseProps & (PaginationProps | NoPaginationProps);
 
 const BookList = (props: Props) => {
-    const { title, books, stickyClassName, isLoading, noBooksChildren } = props;
+    const navigate = useNavigate();
+    const { title, books, stickyClassName, isLoading, noBooksChildren, showPagination } = props;
 
-    // TODO: Add pagination
-    // const numberOfPages = showPagination ? Math.ceil((props.totalItems || 1) / props.pageSize) : 1;
-    // const currentPage = showPagination ? Math.max(Math.min(props.pageState[0], numberOfPages), 1) : 1;
+    const numberOfPages = showPagination ? Math.ceil((props.totalItems || 1) / props.pageSize) : 1;
+    const currentPage = showPagination
+        ? Math.max(Math.min(props.type === "search" ? props.searchPage : props.recommendedPage, numberOfPages), 1)
+        : 1;
 
     return (
         <section className="flex h-fit w-full flex-col gap-4">
@@ -53,20 +59,29 @@ const BookList = (props: Props) => {
             {books.length > 0 && (
                 <div className="mx-auto grid w-full max-w-screen-lg grid-cols-2 grid-rows-1 gap-4 px-6 sm:grid-cols-3 md:grid-cols-4">
                     {books.map((book) => (
-                        <BookCover key={book.id} book={book} to={`${Route.BOOK}/${book.id}`} maxWidth={300} />
+                        <BookCover key={book.id} book={book} linkToBook maxWidth={300} />
                     ))}
                 </div>
             )}
 
-            {/* {showPagination && numberOfPages > 1 && (
+            {showPagination && numberOfPages > 1 && (
                 <div className="mx-auto w-full max-w-screen-lg px-6">
                     <Pagination
                         numberOfPages={Math.min(numberOfPages, 5)}
                         currentPage={currentPage - 1}
-                        onPageChange={(page) => props.pageState[1](page + 1, true)}
+                        onPageChange={(page) =>
+                            navigate({
+                                to: "/search",
+                                search: {
+                                    query: props.query,
+                                    searchPage: props.type === "search" ? page + 1 : props.searchPage,
+                                    recommendedPage: props.type === "recommendedBooks" ? page + 1 : props.recommendedPage,
+                                },
+                            })
+                        }
                     />
                 </div>
-            )} */}
+            )}
         </section>
     );
 };

@@ -27,16 +27,6 @@ export const deleteRating = createServerFn({ method: "POST" })
         await db.delete(rating).where(and(eq(rating.bookId, ratingPk.bookId), eq(rating.userId, ratingPk.userId)));
     });
 
-export const existsRating = createServerFn({ method: "POST" })
-    .validator((rating: RatingPk) => ratingInsertSchema.parse(rating))
-    .handler(async ({ data: ratingPk }) => {
-        const result = await db.query.rating.findFirst({
-            where: (rating, { eq, and }) => and(eq(rating.bookId, ratingPk.bookId), eq(rating.userId, ratingPk.userId)),
-        });
-
-        return !!result;
-    });
-
 export const getRating = createServerFn({ method: "POST" })
     .validator((rating: RatingPk) => ratingInsertSchema.parse(rating))
     .handler(async ({ data: ratingPk }) => {

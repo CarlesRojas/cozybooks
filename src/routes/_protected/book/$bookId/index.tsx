@@ -7,21 +7,22 @@ import Rating from "@/component/Rating";
 import ShowMore from "@/component/ShowMore";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
-import { getBookWithGoogleFallback } from "@/server/old/repo/book";
+import { getBookWithGoogleFallback } from "@/server/repo/book";
 import { convertHtmlToReact } from "@hedgedoc/html-to-react";
-import Link from "next/link";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { isIOS } from "react-device-detect";
-import { FaGoogle } from "react-icons/fa6";
 
-interface Props {
-    params: { bookId: string };
-}
+export const Route = createFileRoute("/_protected/book/$bookId/")({
+    component: RouteComponent,
+    beforeLoad: async ({ params }) => {
+        const book = await getBookWithGoogleFallback({ data: params.bookId });
+        if (!book) return { book: null };
+        return { book };
+    },
+});
 
-export const dynamic = "force-static";
-export const revalidate = 60 * 60 * 24 * 30; // 30 days
-
-const BookPage = async ({ params: { bookId } }: Props) => {
-    const book = await getBookWithGoogleFallback(bookId);
+function RouteComponent() {
+    const { book, user, queryClient } = Route.useRouteContext();
     if (!book) return <NotFound type={NotFoundType.BOOK} />;
 
     const { title, authors, description, pageCount, previewLink, categories } = book;
@@ -33,7 +34,7 @@ const BookPage = async ({ params: { bookId } }: Props) => {
             suppressHydrationWarning
             className={cn("relative mx-auto mb-24 flex h-fit w-full max-w-screen-lg flex-col gap-6 p-6", isIOS && "mb-28")}
         >
-            <BackButton className="sticky top-6" />
+            <BackButton className="top-6" />
 
             <div className="relative flex w-full flex-col items-center gap-6 sm:gap-8">
                 <div className="aspect-book relative w-full max-w-[75vw] sm:max-w-[20rem]">
@@ -58,11 +59,11 @@ const BookPage = async ({ params: { bookId } }: Props) => {
                     {pageCount && <p className="text-sm leading-snug font-medium tracking-wide opacity-60">{pageCount} pages</p>}
                 </div>
 
-                <Rating book={book} tooltipSide="top" />
+                <Rating book={book} tooltipSide="top" userId={user!.id} queryClient={queryClient} />
 
-                <LibraryButton book={book} />
+                <LibraryButton book={book} userId={user!.id} queryClient={queryClient} />
 
-                <FinishedOn book={book} />
+                <FinishedOn book={book} userId={user!.id} queryClient={queryClient} />
 
                 {description && (
                     <div className="prose prose-neutral bg-neutral-150 dark:prose-invert dark:bg-neutral-850 flex w-fit flex-col items-center rounded-3xl px-4 pt-1 pb-5 sm:px-6 sm:pt-2 sm:pb-6">
@@ -81,9 +82,21 @@ const BookPage = async ({ params: { bookId } }: Props) => {
                 </div>
 
                 {previewLink && (
-                    <Button asChild variant="ghost">
-                        <Link href={previewLink} target="_blank" rel="noopener noreferrer">
-                            <FaGoogle className="icon mr-3" />
+                    <Button asChild variant="ghost" className="group">
+                        <Link to={previewLink} target="_blank" rel="noopener noreferrer">
+                            <div
+                                className="mr-3 mb-[2px] size-6 min-h-6 min-w-6 bg-neutral-500 transition-colors group-hover:bg-neutral-950 dark:bg-neutral-300 dark:group-hover:bg-neutral-50"
+                                style={{
+                                    maskImage: 'url("/google.png")',
+                                    maskSize: "contain",
+                                    maskRepeat: "no-repeat",
+                                    maskPosition: "center",
+                                    WebkitMaskImage: 'url("/google.png")',
+                                    WebkitMaskSize: "contain",
+                                    WebkitMaskRepeat: "no-repeat",
+                                    WebkitMaskPosition: "center",
+                                }}
+                            />
                             <p>View on Google Books</p>
                         </Link>
                     </Button>
@@ -93,6 +106,4 @@ const BookPage = async ({ params: { bookId } }: Props) => {
             {/* {renderObject(book)} */}
         </main>
     );
-};
-
-export default BookPage;
+}

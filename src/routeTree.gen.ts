@@ -18,7 +18,7 @@ import { Route as LegalPrivacyPolicyIndexRouteImport } from './routes/legal/priv
 import { Route as ProtectedSearchIndexRouteImport } from './routes/_protected/search/index'
 import { Route as ProtectedReadingIndexRouteImport } from './routes/_protected/reading/index'
 import { Route as ProtectedFinishedIndexRouteImport } from './routes/_protected/finished/index'
-import { Route as ProtectedBookBookIdIndexRouteImport } from './routes/_protected/book/[bookId]/index'
+import { Route as ProtectedBookBookIdIndexRouteImport } from './routes/_protected/book/$bookId/index'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
 const rootServerRouteImport = createServerRootRoute()
@@ -60,8 +60,8 @@ const ProtectedFinishedIndexRoute = ProtectedFinishedIndexRouteImport.update({
 } as any)
 const ProtectedBookBookIdIndexRoute =
   ProtectedBookBookIdIndexRouteImport.update({
-    id: '/book/bookId/',
-    path: '/book/bookId/',
+    id: '/book/$bookId/',
+    path: '/book/$bookId/',
     getParentRoute: () => ProtectedRouteRoute,
   } as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
@@ -77,7 +77,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof ProtectedSearchIndexRoute
   '/legal/privacy-policy': typeof LegalPrivacyPolicyIndexRoute
   '/legal/terms-and-conditions': typeof LegalTermsAndConditionsIndexRoute
-  '/book/bookId': typeof ProtectedBookBookIdIndexRoute
+  '/book/$bookId': typeof ProtectedBookBookIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,7 +86,7 @@ export interface FileRoutesByTo {
   '/search': typeof ProtectedSearchIndexRoute
   '/legal/privacy-policy': typeof LegalPrivacyPolicyIndexRoute
   '/legal/terms-and-conditions': typeof LegalTermsAndConditionsIndexRoute
-  '/book/bookId': typeof ProtectedBookBookIdIndexRoute
+  '/book/$bookId': typeof ProtectedBookBookIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,7 +97,7 @@ export interface FileRoutesById {
   '/_protected/search/': typeof ProtectedSearchIndexRoute
   '/legal/privacy-policy/': typeof LegalPrivacyPolicyIndexRoute
   '/legal/terms-and-conditions/': typeof LegalTermsAndConditionsIndexRoute
-  '/_protected/book/bookId/': typeof ProtectedBookBookIdIndexRoute
+  '/_protected/book/$bookId/': typeof ProtectedBookBookIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -108,7 +108,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/legal/privacy-policy'
     | '/legal/terms-and-conditions'
-    | '/book/bookId'
+    | '/book/$bookId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -117,7 +117,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/legal/privacy-policy'
     | '/legal/terms-and-conditions'
-    | '/book/bookId'
+    | '/book/$bookId'
   id:
     | '__root__'
     | '/'
@@ -127,7 +127,7 @@ export interface FileRouteTypes {
     | '/_protected/search/'
     | '/legal/privacy-policy/'
     | '/legal/terms-and-conditions/'
-    | '/_protected/book/bookId/'
+    | '/_protected/book/$bookId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -209,10 +209,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedFinishedIndexRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
-    '/_protected/book/bookId/': {
-      id: '/_protected/book/bookId/'
-      path: '/book/bookId'
-      fullPath: '/book/bookId'
+    '/_protected/book/$bookId/': {
+      id: '/_protected/book/$bookId/'
+      path: '/book/$bookId'
+      fullPath: '/book/$bookId'
       preLoaderRoute: typeof ProtectedBookBookIdIndexRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }

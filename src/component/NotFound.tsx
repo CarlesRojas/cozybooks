@@ -1,5 +1,5 @@
 import BackButton from "@/component/BackButton";
-import { LuBookX } from "lucide-react";
+import { BookX } from "lucide-react";
 import { ReactNode } from "react";
 
 export enum NotFoundType {
@@ -12,7 +12,7 @@ interface Props {
 
 const NotFound = ({ type }: Props) => {
     const icon: Record<NotFoundType, ReactNode> = {
-        [NotFoundType.BOOK]: <LuBookX className="size-12 animate-bounce" />,
+        [NotFoundType.BOOK]: <BookX className="size-12 animate-bounce" />,
     };
 
     const message: Record<NotFoundType, string> = {

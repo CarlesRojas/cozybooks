@@ -91,11 +91,14 @@ function RouteComponent() {
                         title="Results"
                         books={searchedBooks.data.items}
                         showPagination
-                        pageState={searchPage}
+                        query={query}
+                        searchPage={searchPage}
+                        recommendedPage={recommendedPage}
                         totalItems={searchedBooks.data.totalItems}
                         stickyClassName="top-[5rem] pt-2"
                         pageSize={PAGE_SIZE}
                         isLoading={searchedBooks.isPlaceholderData}
+                        type="search"
                         noBooksChildren={<p className="font-medium tracking-wide opacity-80">No results found</p>}
                     />
                 )}
@@ -105,11 +108,14 @@ function RouteComponent() {
                         title="Recommended for you"
                         books={recommendedBooks.data.items}
                         showPagination
-                        pageState={recommendedPage}
+                        query={query}
+                        searchPage={searchPage}
+                        recommendedPage={recommendedPage}
                         totalItems={recommendedBooks.data.totalItems}
                         stickyClassName="top-[5rem] pt-2"
                         pageSize={PAGE_SIZE}
                         isLoading={recommendedBooks.isLoading || recommendedBooks.isPending}
+                        type="recommendedBooks"
                     />
                 )}
             </div>

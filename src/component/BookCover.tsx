@@ -3,14 +3,15 @@ import { getBiggestBookImage } from "@/lib/util";
 import { Book } from "@/type/Book";
 import { Link } from "@tanstack/react-router";
 import { Book as BookIcon } from "lucide-react";
-import { ComponentProps, ReactNode, useMemo, useRef, useState } from "react";
+import { ReactNode, useMemo, useRef, useState } from "react";
 
 export interface Props {
     book: Book;
     maxWidth?: number;
+    linkToBook?: boolean;
 }
 
-const BookCover = ({ book, to, maxWidth, className, ref, ...props }: ComponentProps<typeof Link> & Props) => {
+const BookCover = ({ book, maxWidth, linkToBook, ...props }: Props) => {
     const biggestImage = useRef(getBiggestBookImage(book));
 
     const scaledImage = useMemo(() => {
@@ -26,17 +27,18 @@ const BookCover = ({ book, to, maxWidth, className, ref, ...props }: ComponentPr
     const [src, setSrc] = useState(scaledImage ?? biggestImage.current);
 
     const container = (children: ReactNode) =>
-        to ? (
+        linkToBook ? (
             <Link
-                className={cn("aspect-book group relative w-full cursor-pointer focus-visible:outline-none", className)}
-                ref={ref}
+                to={"/book/$bookId"}
+                params={{ bookId: book.id }}
+                className="aspect-book group relative w-full cursor-pointer focus-visible:outline-none"
                 resetScroll
                 {...props}
             >
                 {children}
             </Link>
         ) : (
-            <div className={cn("aspect-book group relative w-full focus-visible:outline-none", className)}>{children}</div>
+            <div className="aspect-book group relative w-full focus-visible:outline-none">{children}</div>
         );
 
     return container(
@@ -50,8 +52,8 @@ const BookCover = ({ book, to, maxWidth, className, ref, ...props }: ComponentPr
                 <img
                     className={cn(
                         "absolute inset-0 -z-10 h-full w-full object-cover object-center blur-[8px] transition-opacity select-none",
-                        !to && "opacity-100 dark:opacity-40",
-                        to &&
+                        !linkToBook && "opacity-100 dark:opacity-40",
+                        linkToBook &&
                             "opacity-0 group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-60 dark:group-focus:opacity-60",
                     )}
                     style={{ viewTransitionName: `bookCover-blur-${book.id}` }}
@@ -67,7 +69,7 @@ const BookCover = ({ book, to, maxWidth, className, ref, ...props }: ComponentPr
                 <img
                     className={cn(
                         "h-full w-full rounded-xl border border-neutral-500/10 object-cover object-center transition-transform select-none",
-                        to && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
+                        linkToBook && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
                     width={maxWidth ?? 400}
@@ -82,8 +84,8 @@ const BookCover = ({ book, to, maxWidth, className, ref, ...props }: ComponentPr
                 <div
                     className={cn(
                         "absolute inset-0 -z-10 h-full w-full bg-neutral-200 object-cover object-center blur-[8px] transition-opacity select-none dark:bg-neutral-800",
-                        !to && "opacity-100 dark:opacity-100",
-                        to &&
+                        !linkToBook && "opacity-100 dark:opacity-100",
+                        linkToBook &&
                             "opacity-0 group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-100 dark:group-focus:opacity-100",
                     )}
                     style={{ viewTransitionName: `bookCover-blur-${book.id}` }}
@@ -94,15 +96,15 @@ const BookCover = ({ book, to, maxWidth, className, ref, ...props }: ComponentPr
                 <div
                     className={cn(
                         "bg-neutral-150 dark:bg-neutral-850 flex h-full w-full flex-col items-center justify-center gap-1 rounded-xl border border-neutral-500/10 object-cover object-center p-3 transition-transform select-none",
-                        to && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
+                        linkToBook && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
                 >
-                    <BookIcon className={cn("mb-2 size-8 min-h-8 min-w-8 stroke-2", !to && "size-16 min-h-16 min-w-16 stroke-2")} />
+                    <BookIcon className={cn("mb-2 size-8 min-h-8 min-w-8 stroke-2", !linkToBook && "size-16 min-h-16 min-w-16 stroke-2")} />
 
-                    {to && <h3 className="text-center leading-snug font-bold tracking-wide">{book.title}</h3>}
+                    {linkToBook && <h3 className="text-center leading-snug font-bold tracking-wide">{book.title}</h3>}
 
-                    {to && book.authors && book.authors.length > 0 && (
+                    {linkToBook && book.authors && book.authors.length > 0 && (
                         <p className="text-center text-sm leading-snug font-semibold tracking-wide opacity-50">{book.authors[0]}</p>
                     )}
                 </div>

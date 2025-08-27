@@ -1,17 +1,21 @@
 import { Button } from "@/component/ui/button";
 import { Combobox, ComboboxItem } from "@/component/ui/combobox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
-import { useCreateFinishedDate } from "@/server/old/use/finished/useCreateFinishedDate";
-import { useDeleteFinishedDate } from "@/server/old/use/finished/useDeleteFinishedDate";
-import { useFinishedDates } from "@/server/old/use/finished/useFinishedDates";
-import { useUpdateFinishedDate } from "@/server/old/use/finished/useUpdateFinishedDate";
-import { useRemoveBookFromFinished } from "@/server/old/use/status/useRemoveBookFromFinished";
+import { useCreateFinishedDate } from "@/server/use/finished/useCreateFinishedDate";
+import { useDeleteFinishedDate } from "@/server/use/finished/useDeleteFinishedDate";
+import { useFinishedDates } from "@/server/use/finished/useFinishedDates";
+import { useUpdateFinishedDate } from "@/server/use/finished/useUpdateFinishedDate";
+import { useRemoveBookFromFinished } from "@/server/use/status/useRemoveBookFromFinished";
+
 import { Book } from "@/type/Book";
-import { LuPlus, LuTrash2, LuUpload } from "lucide-react";
+import { QueryClient } from "@tanstack/react-query";
+import { Plus, Trash2, Upload } from "lucide-react";
 import { ReactElement, useState } from "react";
 
 interface Props {
     book: Book;
+    userId: string;
+    queryClient: QueryClient;
 }
 
 const months: Record<number, string> = {
@@ -29,8 +33,8 @@ const months: Record<number, string> = {
     11: "December",
 };
 
-const FinishedOn = ({ book }: Props) => {
-    const finishedDates = useFinishedDates({ bookId: book.id });
+const FinishedOn = ({ book, userId, queryClient }: Props) => {
+    const finishedDates = useFinishedDates({ bookId: book.id, userId });
 
     const removeBookFromFinished = useRemoveBookFromFinished();
     const updateFinishedDate = useUpdateFinishedDate();
@@ -140,12 +144,18 @@ const FinishedOn = ({ book }: Props) => {
                             {updateForm({
                                 date: finishedDate.timestamp,
                                 onUpdate: (newDate) => {
-                                    updateFinishedDate.mutate({ id: finishedDate.id, bookId: book.id, timestamp: newDate });
+                                    updateFinishedDate.mutate({
+                                        id: finishedDate.id,
+                                        bookId: book.id,
+                                        timestamp: newDate,
+                                        userId,
+                                        queryClient,
+                                    });
                                     setEditPopoverOpen(undefined);
                                 },
                                 submit: (
                                     <>
-                                        <LuUpload className="icon mr-3" />
+                                        <Upload className="icon mr-3" />
                                         <p>Update</p>
                                     </>
                                 ),
@@ -157,12 +167,12 @@ const FinishedOn = ({ book }: Props) => {
                             <Button
                                 variant="destructive"
                                 onClick={() => {
-                                    deleteFinishedDate.mutate({ id: finishedDate.id, bookId: book.id });
-                                    if (finishedDates.data!.length === 1) removeBookFromFinished.mutate({ book });
+                                    deleteFinishedDate.mutate({ id: finishedDate.id, bookId: book.id, userId, queryClient });
+                                    if (finishedDates.data!.length === 1) removeBookFromFinished.mutate({ book, userId, queryClient });
                                     setEditPopoverOpen(undefined);
                                 }}
                             >
-                                <LuTrash2 className="icon mr-3 stroke-2" />
+                                <Trash2 className="icon mr-3 stroke-2" />
                                 <p>Delete</p>
                             </Button>
                         </PopoverContent>
@@ -180,7 +190,7 @@ const FinishedOn = ({ book }: Props) => {
                 >
                     <PopoverTrigger asChild>
                         <Button variant="input" size="icon" disabled={isPending}>
-                            <LuPlus className="icon" />
+                            <Plus className="icon" />
                         </Button>
                     </PopoverTrigger>
 
@@ -188,12 +198,12 @@ const FinishedOn = ({ book }: Props) => {
                         {updateForm({
                             date: new Date(),
                             onUpdate: (newDate) => {
-                                createFinishedDate.mutate({ bookId: book.id, timestamp: newDate });
+                                createFinishedDate.mutate({ bookId: book.id, timestamp: newDate, userId, queryClient });
                                 setNewDatePopoverOpen(false);
                             },
                             submit: (
                                 <>
-                                    <LuPlus className="icon mr-3" />
+                                    <Plus className="icon mr-3" />
                                     <p>Add entry</p>
                                 </>
                             ),

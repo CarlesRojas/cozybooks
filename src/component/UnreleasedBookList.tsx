@@ -4,14 +4,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover"
 import UnreleasedBookItem from "@/component/UnreleasedBookItem";
 import { cn } from "@/lib/cn";
 import { useAddUnreleasedBook } from "@/server/use/unreleasedBook/useAddUnreleasedBook";
-import { UnreleasedBook } from "@/type/UnreleasedBook";
-import { QueryClient } from "@tanstack/react-query";
+import type { UnreleasedBook } from "@/type/UnreleasedBook";
+import type { QueryClient } from "@tanstack/react-query";
 import { Book, Plus } from "lucide-react";
 import { useState } from "react";
 
 interface Props {
     stickyClassName?: string;
-    unreleasedBooks: UnreleasedBook[];
+    unreleasedBooks: Array<UnreleasedBook>;
     queryClient: QueryClient;
     userId: string;
 }

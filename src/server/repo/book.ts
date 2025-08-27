@@ -1,8 +1,10 @@
 import { GOOGLE_BOOKS_URL } from "@/const";
 import { env } from "@/env";
-import { db, InferResultType } from "@/server/db";
+import type { InferResultType } from "@/server/db";
+import { db } from "@/server/db";
 import { book, bookInsertSchema } from "@/server/db/schema/book";
-import { Book, BookSchema } from "@/type/Book";
+import type { Book } from "@/type/Book";
+import { BookSchema } from "@/type/Book";
 import { createServerFn } from "@tanstack/react-start";
 import axios from "axios";
 import z from "zod";
@@ -23,7 +25,7 @@ export const getBook = createServerFn({ method: "GET" })
             where: (book, { eq }) => eq(book.id, id),
         });
 
-        return !!result ? toDomainBook(result) : null;
+        return result ? toDomainBook(result) : null;
     });
 
 export const getBookWithGoogleFallback = createServerFn({ method: "GET" })
@@ -46,7 +48,7 @@ export const parseGoogleBook = (googleBook: any) => {
     const rawBook = { id: googleBook.id };
     if (googleBook.volumeInfo) Object.assign(rawBook, googleBook.volumeInfo);
     if (googleBook.volumeInfo?.imageLinks) Object.assign(rawBook, googleBook.volumeInfo.imageLinks);
-    return BookSchema.parse(rawBook) as Book;
+    return BookSchema.parse(rawBook);
 };
 
 export const getGoogleBook = async (bookId: string) => {
@@ -66,5 +68,5 @@ export const getGoogleBook = async (bookId: string) => {
 };
 
 export const toDomainBook = (book: SelectBook) => {
-    return BookSchema.parse(book) as Book;
+    return BookSchema.parse(book);
 };

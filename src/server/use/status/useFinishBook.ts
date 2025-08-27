@@ -1,10 +1,12 @@
 import { addFinished } from "@/server/repo/finished";
 import { addBookToLibrary, isBookInLibrary } from "@/server/repo/library";
 import { removeFromReading } from "@/server/use/status/useStopReading";
-import { Book, BookStatus, VolumesResult } from "@/type/Book";
-import { Finished } from "@/type/Finished";
+import type { Book, VolumesResult } from "@/type/Book";
+import { BookStatus } from "@/type/Book";
+import type { Finished } from "@/type/Finished";
 import { LibraryType } from "@/type/Library";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 interface Props {
     book: Book;
@@ -51,11 +53,12 @@ export const useFinishBook = () => {
             }
 
             await queryClient.cancelQueries({ queryKey: ["finishedDates", book.id] });
-            const previousFinishedDatesData: Finished[] | undefined = queryClient.getQueryData(["finishedDates", book.id]);
+            const previousFinishedDatesData: Array<Finished> | undefined = queryClient.getQueryData(["finishedDates", book.id]);
             if (previousFinishedDatesData) {
-                const newData: Finished[] = [...previousFinishedDatesData, { id: -1, userId, bookId: book.id, timestamp: new Date() }].sort(
-                    (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
-                );
+                const newData: Array<Finished> = [
+                    ...previousFinishedDatesData,
+                    { id: -1, userId, bookId: book.id, timestamp: new Date() },
+                ].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
                 queryClient.setQueryData(["finishedDates", book.id], newData);
             }

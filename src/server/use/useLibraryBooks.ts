@@ -1,7 +1,9 @@
 import { getLibraryBooks } from "@/server/repo/library";
-import { BookStatus, VolumesResult } from "@/type/Book";
+import type { VolumesResult } from "@/type/Book";
+import { BookStatus } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 interface Props {
     userId: string;
@@ -29,7 +31,7 @@ const getLibrary = async ({ userId, type, maxResults, startIndex, queryClient }:
 };
 
 export const useLibraryBooks = ({ userId, type, maxResults, startIndex, queryClient }: Props) => {
-    const key: any[] = ["libraryBooks", type];
+    const key: Array<any> = ["libraryBooks", type];
     if (maxResults) key.push(maxResults);
     if (startIndex) key.push(startIndex);
 

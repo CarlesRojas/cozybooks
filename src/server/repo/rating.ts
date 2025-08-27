@@ -14,16 +14,16 @@ type RatingPk = z.infer<typeof RatingPkSchema>;
 export const createRating = createServerFn({ method: "POST" })
     .validator((rating: InsertRating) => ratingInsertSchema.parse(rating))
     .handler(async ({ data: insertRating }) => {
-        await db.insert(rating).values(insertRating);
-    });
+        const existsRating = await db.query.rating.findFirst({
+            where: (rating, { eq, and }) => and(eq(rating.bookId, insertRating.bookId), eq(rating.userId, insertRating.userId)),
+        });
 
-export const updateRating = createServerFn({ method: "POST" })
-    .validator((rating: InsertRating) => ratingInsertSchema.parse(rating))
-    .handler(async ({ data: insertRating }) => {
-        await db
-            .update(rating)
-            .set({ rating: insertRating.rating })
-            .where(and(eq(rating.bookId, insertRating.bookId), eq(rating.userId, insertRating.userId)));
+        if (existsRating)
+            await db
+                .update(rating)
+                .set({ rating: insertRating.rating })
+                .where(and(eq(rating.bookId, insertRating.bookId), eq(rating.userId, insertRating.userId)));
+        else await db.insert(rating).values(insertRating);
     });
 
 export const deleteRating = createServerFn({ method: "POST" })

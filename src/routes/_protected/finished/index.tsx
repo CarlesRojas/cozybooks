@@ -4,7 +4,7 @@ import Star from "@/component/Star";
 import Stats from "@/component/Stats";
 import { cn } from "@/lib/cn";
 import { useLibraryBooks } from "@/server/use/useLibraryBooks";
-import { Book } from "@/type/Book";
+import type { Book } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader } from "lucide-react";
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_protected/finished/")({
 
 interface Group {
     key: string;
-    books: Book[];
+    books: Array<Book>;
 }
 
 function RouteComponent() {
@@ -31,29 +31,29 @@ function RouteComponent() {
         () =>
             finishedBooks.data?.items.sort((a, b) => {
                 if (sort === Sort.BOOK) return a.title.localeCompare(b.title);
-                if (sort === Sort.DATE) {
-                    const aFinishedDate = a.finished?.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())[0].timestamp;
-                    const bFinishedDate = b.finished?.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())[0].timestamp;
+                else if (sort === Sort.DATE) {
+                    const aFinishedDate = a.finished?.sort((newA, newB) => newA.timestamp.getTime() - newB.timestamp.getTime())[0]
+                        .timestamp;
+                    const bFinishedDate = b.finished?.sort((newA, newB) => newA.timestamp.getTime() - newB.timestamp.getTime())[0]
+                        .timestamp;
                     if (!aFinishedDate) return 1;
                     if (!bFinishedDate) return -1;
                     return bFinishedDate.getTime() - aFinishedDate.getTime();
-                }
-                if (sort === Sort.RATING) {
+                } else {
                     const aRating = a.rating && a.rating?.length > 0 ? a.rating[0].rating : null;
                     const bRating = b.rating && b.rating?.length > 0 ? b.rating[0].rating : null;
                     if (!aRating) return 1;
                     if (!bRating) return -1;
                     return bRating - aRating;
                 }
-                return 0;
             }),
         [sort, finishedBooks.data],
     );
 
-    const groups: Group[] = useMemo(() => {
+    const groups: Array<Group> = useMemo(() => {
         if (!sortedBooks) return [];
 
-        const result: Group[] = [];
+        const result: Array<Group> = [];
         sortedBooks.forEach((book) => {
             const keyMap: Record<Sort, string> = {
                 [Sort.BOOK]: book.title.length > 0 && /^[a-zA-Z]/.test(book.title[0]) ? book.title[0].toUpperCase() : "#",

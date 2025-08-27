@@ -1,6 +1,8 @@
-import { db, InferResultType, WithRequired } from "@/server/db";
+import type { InferResultType, WithRequired } from "@/server/db";
+import { db } from "@/server/db";
 import { finished, finishedInsertSchema, finishedUpdateSchema } from "@/server/db/schema";
-import { Finished, FinishedSchema } from "@/type/Finished";
+import type { Finished } from "@/type/Finished";
+import { FinishedSchema } from "@/type/Finished";
 import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 import z from "zod";
@@ -34,9 +36,9 @@ export const getFinished = createServerFn({ method: "GET" })
             orderBy: (finished, { asc }) => asc(finished.timestamp),
         });
 
-        return !!result ? result.map((elem) => toDomainFinished(elem)) : null;
+        return result ? result.map((elem) => toDomainFinished(elem)) : null;
     });
 
 const toDomainFinished = (finished: SelectFinished) => {
-    return FinishedSchema.parse(finished) as Finished;
+    return FinishedSchema.parse(finished);
 };

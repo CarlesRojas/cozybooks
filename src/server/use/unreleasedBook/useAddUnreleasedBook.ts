@@ -1,6 +1,7 @@
 import { addUnreleasedBook } from "@/server/repo/unreleasedBook";
-import { UnreleasedBook } from "@/type/UnreleasedBook";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import type { UnreleasedBook } from "@/type/UnreleasedBook";
+import type { QueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 interface Props {
     name: string;
@@ -18,7 +19,7 @@ export const useAddUnreleasedBook = () => {
 
         onMutate: async ({ name, userId, queryClient }) => {
             await queryClient.cancelQueries({ queryKey: ["unreleasedBooks"] });
-            const previousData: UnreleasedBook[] | undefined = queryClient.getQueryData(["unreleasedBooks"]);
+            const previousData: Array<UnreleasedBook> | undefined = queryClient.getQueryData(["unreleasedBooks"]);
 
             const randomNumber = -Math.floor(Math.random() * 10000000);
 

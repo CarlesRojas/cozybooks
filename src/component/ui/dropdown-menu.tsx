@@ -25,7 +25,7 @@ export const DropdownMenuSubTrigger = ({
     <DropdownMenuPrimitive.SubTrigger
         ref={ref}
         className={cn(
-            "flex cursor-default select-none items-center rounded-lg px-2 py-1.5 text-base font-medium outline-none focus:bg-neutral-100 data-[state=open]:bg-neutral-100 dark:focus:bg-neutral-800 dark:data-[state=open]:bg-neutral-800",
+            "flex cursor-default items-center rounded-lg px-2 py-1.5 text-base font-medium outline-none select-none focus:bg-neutral-100 data-[state=open]:bg-neutral-100 dark:focus:bg-neutral-800 dark:data-[state=open]:bg-neutral-800",
             inset && "pl-8",
             className,
         )}
@@ -70,7 +70,7 @@ export const DropdownMenuItem = ({
     <DropdownMenuPrimitive.Item
         ref={ref}
         className={cn(
-            "relative flex cursor-default select-none items-center rounded-lg px-3 py-3 text-base font-medium outline-none transition-colors focus:bg-neutral-100 focus:text-neutral-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-neutral-800 dark:focus:text-neutral-50",
+            "relative flex cursor-default items-center rounded-lg px-3 py-3 text-base font-medium transition-colors outline-none select-none focus:bg-neutral-100 focus:text-neutral-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-neutral-800 dark:focus:text-neutral-50",
             inset && "pl-8",
             className,
         )}
@@ -88,7 +88,7 @@ export const DropdownMenuCheckboxItem = ({
     <DropdownMenuPrimitive.CheckboxItem
         ref={ref}
         className={cn(
-            "relative flex cursor-default select-none items-center rounded-lg py-1.5 pl-8 pr-2 text-base font-medium outline-none transition-colors focus:bg-neutral-100 focus:text-neutral-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-neutral-800 dark:focus:text-neutral-50",
+            "relative flex cursor-default items-center rounded-lg py-1.5 pr-2 pl-8 text-base font-medium transition-colors outline-none select-none focus:bg-neutral-100 focus:text-neutral-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-neutral-800 dark:focus:text-neutral-50",
             className,
         )}
         checked={checked}
@@ -107,7 +107,7 @@ export const DropdownMenuRadioItem = ({ className, children, ref, ...props }: Co
     <DropdownMenuPrimitive.RadioItem
         ref={ref}
         className={cn(
-            "relative flex cursor-default select-none items-center rounded-lg py-3 pl-8 pr-4 text-base font-medium outline-none transition-colors focus:bg-neutral-100 focus:text-neutral-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-neutral-800 dark:focus:text-neutral-50",
+            "relative flex cursor-default items-center rounded-lg py-3 pr-4 pl-8 text-base font-medium transition-colors outline-none select-none focus:bg-neutral-100 focus:text-neutral-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-neutral-800 dark:focus:text-neutral-50",
             className,
         )}
         {...props}

@@ -1,14 +1,15 @@
 import Settings from "@/component/Settings";
-import SortMenu, { Sort } from "@/component/SortMenu";
+import type { Sort } from "@/component/SortMenu";
+import SortMenu from "@/component/SortMenu";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
 import { NO_NAVBAR_ROUTES, Route } from "@/type/Route";
-import { QueryClient } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "@tanstack/react-router";
-import { User } from "better-auth";
+import type { User } from "better-auth";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 import { isIOS } from "react-device-detect";
 
 interface Props {
@@ -20,7 +21,7 @@ interface Props {
 const Navigation = ({ user, queryClient, sort }: Props) => {
     const location = useLocation();
 
-    const routes: string[] = [Route.READING, Route.FINISHED, Route.SEARCH];
+    const routes: Array<string> = [Route.READING, Route.FINISHED, Route.SEARCH];
     const routeTitle: Partial<Record<string, ReactElement>> = {
         [Route.READING]: <p className="z-40 transition-colors">Reading</p>,
         [Route.FINISHED]: <p className="z-40 transition-colors">Finished</p>,

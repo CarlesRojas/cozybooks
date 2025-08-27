@@ -1,5 +1,6 @@
 import { Button } from "@/component/ui/button";
-import { ReactNode, useCallback, useState } from "react";
+import type { ReactNode } from "react";
+import { useCallback, useState } from "react";
 import { ReadMore } from "react-shorten";
 
 export interface Props {

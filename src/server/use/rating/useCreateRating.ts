@@ -1,7 +1,8 @@
 import { createRating } from "@/server/repo/rating";
-import { VolumesResult } from "@/type/Book";
+import type { VolumesResult } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 interface Props {
     bookId: string;

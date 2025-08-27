@@ -1,6 +1,7 @@
 import { removeUnreleasedBook } from "@/server/repo/unreleasedBook";
-import { UnreleasedBook } from "@/type/UnreleasedBook";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import type { UnreleasedBook } from "@/type/UnreleasedBook";
+import type { QueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 interface Props {
     unreleasedBookId: number;
@@ -17,7 +18,7 @@ export const useDeleteUnreleasedBook = () => {
 
         onMutate: async ({ unreleasedBookId, queryClient }) => {
             await queryClient.cancelQueries({ queryKey: ["unreleasedBooks"] });
-            const previousData: UnreleasedBook[] | undefined = queryClient.getQueryData(["unreleasedBooks"]);
+            const previousData: Array<UnreleasedBook> | undefined = queryClient.getQueryData(["unreleasedBooks"]);
 
             previousData &&
                 queryClient.setQueryData(

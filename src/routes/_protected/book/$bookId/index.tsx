@@ -9,7 +9,7 @@ import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
 import { getBookWithGoogleFallback } from "@/server/repo/book";
 import { convertHtmlToReact } from "@hedgedoc/html-to-react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { isIOS } from "react-device-detect";
 
 export const Route = createFileRoute("/_protected/book/$bookId/")({
@@ -27,7 +27,7 @@ function RouteComponent() {
 
     const { title, authors, description, pageCount, previewLink, categories } = book;
 
-    const categorySet = new Set(categories?.flatMap((category) => category.split("/").map((category) => category.trim())) ?? []);
+    const categorySet = new Set(categories?.flatMap((c) => c.split("/").map((category) => category.trim())) ?? []);
 
     return (
         <main

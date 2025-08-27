@@ -1,5 +1,6 @@
 import { Button } from "@/component/ui/button";
-import { Combobox, ComboboxItem } from "@/component/ui/combobox";
+import type { ComboboxItem } from "@/component/ui/combobox";
+import { Combobox } from "@/component/ui/combobox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
 import { useCreateFinishedDate } from "@/server/use/finished/useCreateFinishedDate";
 import { useDeleteFinishedDate } from "@/server/use/finished/useDeleteFinishedDate";
@@ -7,10 +8,11 @@ import { useFinishedDates } from "@/server/use/finished/useFinishedDates";
 import { useUpdateFinishedDate } from "@/server/use/finished/useUpdateFinishedDate";
 import { useRemoveBookFromFinished } from "@/server/use/status/useRemoveBookFromFinished";
 
-import { Book } from "@/type/Book";
-import { QueryClient } from "@tanstack/react-query";
+import type { Book } from "@/type/Book";
+import type { QueryClient } from "@tanstack/react-query";
 import { Plus, Trash2, Upload } from "lucide-react";
-import { ReactElement, useState } from "react";
+import type { ReactElement } from "react";
+import { useState } from "react";
 
 interface Props {
     book: Book;
@@ -44,7 +46,6 @@ const FinishedOn = ({ book, userId, queryClient }: Props) => {
     const isPending =
         finishedDates.isPending ||
         finishedDates.isFetching ||
-        finishedDates.isLoading ||
         updateFinishedDate.isPending ||
         createFinishedDate.isPending ||
         deleteFinishedDate.isPending;
@@ -58,11 +59,11 @@ const FinishedOn = ({ book, userId, queryClient }: Props) => {
     if (!finishedDates.data || finishedDates.data.length === 0) return null;
 
     const currentYear = new Date().getFullYear();
-    const monthOptions: ComboboxItem[] = Array.from({ length: 12 }, (_, i) => ({
+    const monthOptions: Array<ComboboxItem> = Array.from({ length: 12 }, (_, i) => ({
         id: i.toString(),
         label: months[i],
     }));
-    const yearOptions: ComboboxItem[] = Array.from({ length: 150 }, (_, i) => ({
+    const yearOptions: Array<ComboboxItem> = Array.from({ length: 150 }, (_, i) => ({
         id: (currentYear - i).toString(),
         label: (currentYear - i).toString(),
     }));

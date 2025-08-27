@@ -2,7 +2,7 @@ import { Dialog, DialogContent } from "@/component/ui/dialog";
 import { cn } from "@/lib/cn";
 import { Command as CommandPrimitive } from "cmdk";
 import { Search } from "lucide-react";
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 
 export const Command = ({ className, ref, ...props }: ComponentProps<typeof CommandPrimitive>) => (
     <CommandPrimitive
@@ -19,7 +19,7 @@ export const CommandDialog = ({ children, ...props }: ComponentProps<typeof Dial
     return (
         <Dialog {...props}>
             <DialogContent className="overflow-hidden p-0 shadow-lg">
-                <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-neutral-500 dark:[&_[cmdk-group-heading]]:text-neutral-400 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+                <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-neutral-500 dark:[&_[cmdk-group-heading]]:text-neutral-400 [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
                     {children}
                 </Command>
             </DialogContent>
@@ -42,7 +42,7 @@ export const CommandInput = ({ className, ref, ...props }: ComponentProps<typeof
 );
 
 export const CommandList = ({ className, ref, ...props }: ComponentProps<typeof CommandPrimitive.List>) => (
-    <CommandPrimitive.List ref={ref} className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)} {...props} />
+    <CommandPrimitive.List ref={ref} className={cn("max-h-[300px] overflow-x-hidden overflow-y-auto", className)} {...props} />
 );
 
 export const CommandEmpty = ({ ref, ...props }: ComponentProps<typeof CommandPrimitive.Empty>) => (
@@ -68,7 +68,7 @@ export const CommandItem = ({ className, ref, ...props }: ComponentProps<typeof 
     <CommandPrimitive.Item
         ref={ref}
         className={cn(
-            "text-md relative flex cursor-default select-none items-center rounded-lg px-3 py-2 font-medium outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-neutral-100 data-[selected=true]:text-neutral-900 data-[disabled=true]:opacity-50 dark:data-[selected=true]:bg-neutral-800 dark:data-[selected=true]:text-neutral-50",
+            "text-md relative flex cursor-default items-center rounded-lg px-3 py-2 font-medium outline-none select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-neutral-100 data-[selected=true]:text-neutral-900 dark:data-[selected=true]:bg-neutral-800 dark:data-[selected=true]:text-neutral-50",
             className,
         )}
         {...props}

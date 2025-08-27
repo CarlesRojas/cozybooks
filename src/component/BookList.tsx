@@ -1,13 +1,13 @@
 import BookCover from "@/component/BookCover";
 import Pagination from "@/component/Pagination";
 import { cn } from "@/lib/cn";
-import { Book } from "@/type/Book";
+import type { Book } from "@/type/Book";
 import { useNavigate } from "@tanstack/react-router";
-import { ReactElement, ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 
 interface BaseProps {
     title: string | ReactElement;
-    books: Book[];
+    books: Array<Book>;
     stickyClassName?: string;
     isLoading?: boolean;
     noBooksChildren?: ReactNode;

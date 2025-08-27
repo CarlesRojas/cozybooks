@@ -1,4 +1,5 @@
-import { Book, BookSchema } from "@/type/Book";
+import type { Book } from "@/type/Book";
+import { BookSchema } from "@/type/Book";
 import { z } from "zod";
 
 export interface TokenProps {
@@ -30,8 +31,6 @@ export const getSmallestBookImage = (book: Book) => {
 };
 
 export const renderObject = (obj: Record<string, any>, level = 0) => {
-    if (!obj) return null;
-
     return (
         <ul style={{ marginLeft: `${level * 32}px` }} className="max-w-100vw overflow-x-hidden">
             {Object.entries(obj).map(([key, value], index) => (
@@ -47,5 +46,5 @@ export const parseGoogleBook = (googleBook: any) => {
     const rawBook = { id: googleBook.id };
     if (googleBook.volumeInfo) Object.assign(rawBook, googleBook.volumeInfo);
     if (googleBook.volumeInfo?.imageLinks) Object.assign(rawBook, googleBook.volumeInfo.imageLinks);
-    return BookSchema.parse(rawBook) as Book;
+    return BookSchema.parse(rawBook);
 };

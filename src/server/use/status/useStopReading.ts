@@ -1,8 +1,10 @@
 import { removeBookFromLibrary } from "@/server/repo/library";
 import { addToWantToRead } from "@/server/use/status/useAddToWantToRead";
-import { Book, BookStatus, VolumesResult } from "@/type/Book";
+import type { Book, VolumesResult } from "@/type/Book";
+import { BookStatus } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 interface Props {
     book: Book;

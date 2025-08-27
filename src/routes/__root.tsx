@@ -8,7 +8,7 @@ import appCss from "@/style.css?url";
 import { QueryKey } from "@/type/QueryKey";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import z from "zod";
 
 const finishedSearchParamsSchema = z.object({
@@ -39,7 +39,6 @@ export const Route = createRootRouteWithContext<Context>()({
 
     beforeLoad: async ({ context }) => {
         const result = await context.queryClient.fetchQuery({ queryKey: [QueryKey.USER], queryFn: getUser });
-        if (!result) return { user: null, googleToken: null };
 
         return { user: result.user, googleToken: result.googleToken };
     },

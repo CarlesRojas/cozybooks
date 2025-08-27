@@ -1,6 +1,7 @@
 import { db } from "@/server/db";
 import { unreleasedBook, unreleasedBookInsertSchema } from "@/server/db/schema";
-import { UnreleasedBook, UnreleasedBookSchema } from "@/type/UnreleasedBook";
+import type { UnreleasedBook } from "@/type/UnreleasedBook";
+import { UnreleasedBookSchema } from "@/type/UnreleasedBook";
 import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
@@ -33,5 +34,5 @@ export const getUnreleasedBooks = createServerFn({ method: "GET" })
             orderBy: (unreleasedBook, { asc }) => asc(unreleasedBook.name),
         });
 
-        return z.array(UnreleasedBookSchema).parse(results) as UnreleasedBook[];
+        return z.array(UnreleasedBookSchema).parse(results);
     });

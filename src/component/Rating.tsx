@@ -5,10 +5,11 @@ import { cn } from "@/lib/cn";
 import { useCreateRating } from "@/server/use/rating/useCreateRating";
 import { useDeleteRating } from "@/server/use/rating/useDeleteRating";
 import { useRating } from "@/server/use/rating/useRating";
-import { Book } from "@/type/Book";
-import { QueryClient } from "@tanstack/react-query";
+import type { Book } from "@/type/Book";
+import type { QueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
-import { MouseEvent, TouchEvent, useEffect, useRef, useState } from "react";
+import type { MouseEvent, TouchEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
     book: Book;

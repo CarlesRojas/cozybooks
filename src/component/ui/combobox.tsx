@@ -5,7 +5,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover"
 import { useMediaQuery } from "@/hook/useMediaQuery";
 import { cn } from "@/lib/cn";
 import { ChevronDown } from "lucide-react";
-import { ReactNode, useState } from "react";
+import type { ReactNode } from "react";
+import { useState } from "react";
 
 export interface ComboboxItem {
     id: string;
@@ -17,7 +18,7 @@ export interface ComboboxItem {
 interface Props {
     value: ComboboxItem | null;
     setValue: (value: ComboboxItem | null) => void;
-    options: ComboboxItem[];
+    options: Array<ComboboxItem>;
     text: { filter: string; select: string; noResults: string };
     placeholder?: string;
     showInput?: boolean;
@@ -77,7 +78,7 @@ export const Combobox = ({ value, setValue, options, text, placeholder, showInpu
 interface ListProps {
     setOpen: (open: boolean) => void;
     setSelected: (value: ComboboxItem | null) => void;
-    options: ComboboxItem[];
+    options: Array<ComboboxItem>;
     text: { filter: string; select: string; noResults: string };
     showInput?: boolean;
     centered?: boolean;

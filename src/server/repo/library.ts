@@ -1,7 +1,8 @@
 import { db } from "@/server/db";
 import { library, libraryInsertSchema } from "@/server/db/schema";
-import { BookSchema, VolumesResult, VolumesResultSchema } from "@/type/Book";
-import { LibraryType } from "@/type/Library";
+import type { VolumesResult } from "@/type/Book";
+import { BookSchema, VolumesResultSchema } from "@/type/Book";
+import type { LibraryType } from "@/type/Library";
 import { createServerFn } from "@tanstack/react-start";
 import { and, count, eq } from "drizzle-orm";
 import z from "zod";
@@ -71,5 +72,5 @@ export const getLibraryBooks = createServerFn({ method: "GET" })
         return VolumesResultSchema.parse({
             totalItems: numberOfBooks,
             items: results.map((libraryBook) => BookSchema.parse(libraryBook.book)),
-        }) as VolumesResult;
+        });
     });

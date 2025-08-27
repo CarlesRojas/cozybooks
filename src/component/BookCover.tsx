@@ -1,9 +1,10 @@
 import { cn } from "@/lib/cn";
 import { getBiggestBookImage } from "@/lib/util";
-import { Book } from "@/type/Book";
+import type { Book } from "@/type/Book";
 import { Link } from "@tanstack/react-router";
 import { Book as BookIcon } from "lucide-react";
-import { ReactNode, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import { useMemo, useRef, useState } from "react";
 
 export interface Props {
     book: Book;

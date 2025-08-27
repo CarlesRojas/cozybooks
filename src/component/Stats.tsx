@@ -1,12 +1,12 @@
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
-import { Book } from "@/type/Book";
+import type { Book } from "@/type/Book";
 import { BookOpen, GalleryHorizontalEnd } from "lucide-react";
 import millify from "millify";
 import { useMemo, useState } from "react";
 
 interface Props {
-    books: Book[];
+    books: Array<Book>;
     stickyClassName?: string;
 }
 
@@ -84,8 +84,8 @@ const Stats = ({ books, stickyClassName }: Props) => {
         [books],
     );
 
-    const groups: Group[] = useMemo(() => {
-        const result: Group[] = [];
+    const groups: Array<Group> = useMemo(() => {
+        const result: Array<Group> = [];
         books.forEach((book) => {
             book.finished?.forEach((finished) => {
                 const year = finished.timestamp.getFullYear();

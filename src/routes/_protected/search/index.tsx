@@ -114,7 +114,7 @@ function RouteComponent() {
                         totalItems={recommendedBooks.data.totalItems}
                         stickyClassName="top-[5rem] pt-2"
                         pageSize={PAGE_SIZE}
-                        isLoading={recommendedBooks.isLoading || recommendedBooks.isPending}
+                        isLoading={recommendedBooks.isPending}
                         type="recommendedBooks"
                     />
                 )}

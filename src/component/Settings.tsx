@@ -11,11 +11,12 @@ import {
     DropdownMenuTrigger,
 } from "@/component/ui/dropdown-menu";
 import { authClient } from "@/lib/auth/client";
-import { Theme, useTheme } from "@/lib/theme";
+import type { Theme } from "@/lib/theme";
+import { useTheme } from "@/lib/theme";
 import { QueryKey } from "@/type/QueryKey";
-import { QueryClient } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
-import { User } from "better-auth";
+import type { User } from "better-auth";
 import { LogOut, User2 } from "lucide-react";
 
 interface Props {

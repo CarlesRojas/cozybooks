@@ -1,8 +1,8 @@
 import { Button } from "@/component/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
 import { useDeleteUnreleasedBook } from "@/server/use/unreleasedBook/useDeleteUnreleasedBook";
-import { UnreleasedBook } from "@/type/UnreleasedBook";
-import { QueryClient } from "@tanstack/react-query";
+import type { UnreleasedBook } from "@/type/UnreleasedBook";
+import type { QueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { Book, Search, Trash2 } from "lucide-react";
 import { useState } from "react";

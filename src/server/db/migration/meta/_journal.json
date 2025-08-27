@@ -1,20 +1,20 @@
 {
-  "version": "7",
-  "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1756290976900,
-      "tag": "0000_unknown_strong_guy",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1756291634119,
-      "tag": "0001_cheerful_lionheart",
-      "breakpoints": true
-    }
-  ]
+    "version": "7",
+    "dialect": "postgresql",
+    "entries": [
+        {
+            "idx": 0,
+            "version": "7",
+            "when": 1756290976900,
+            "tag": "0000_unknown_strong_guy",
+            "breakpoints": true
+        },
+        {
+            "idx": 1,
+            "version": "7",
+            "when": 1756291634119,
+            "tag": "0001_cheerful_lionheart",
+            "breakpoints": true
+        }
+    ]
 }

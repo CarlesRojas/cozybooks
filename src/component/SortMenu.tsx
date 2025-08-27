@@ -10,7 +10,7 @@ import {
 } from "@/component/ui/dropdown-menu";
 import { cn } from "@/lib/cn";
 import { useNavigate } from "@tanstack/react-router";
-import { User } from "better-auth";
+import type { User } from "better-auth";
 import { ArrowDownUp } from "lucide-react";
 
 interface Props {
@@ -37,16 +37,14 @@ const SortMenu = ({ className, user, sort }: Props) => {
             </Button>
 
             <DropdownMenuContent className="mx-2 my-3">
-                {!!user && (
-                    <DropdownMenuLabel className="flex items-center gap-2">
-                        <Avatar>
-                            <AvatarImage src={user.image ?? undefined} />
-                            <AvatarFallback className="uppercase">{user.name[0]}</AvatarFallback>
-                        </Avatar>
+                <DropdownMenuLabel className="flex items-center gap-2">
+                    <Avatar>
+                        <AvatarImage src={user.image ?? undefined} />
+                        <AvatarFallback className="uppercase">{user.name[0]}</AvatarFallback>
+                    </Avatar>
 
-                        {`Hi ${user.name.split(" ").slice(0, 2).join(" ")}!`}
-                    </DropdownMenuLabel>
-                )}
+                    {`Hi ${user.name.split(" ").slice(0, 2).join(" ")}!`}
+                </DropdownMenuLabel>
 
                 <DropdownMenuRadioGroup
                     value={sort}

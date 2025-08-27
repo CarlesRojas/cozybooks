@@ -6,10 +6,11 @@ import { useRemoveFromWantToRead } from "@/server/use/status/useRemoveFromWantTo
 import { useStartReading } from "@/server/use/status/useStartReading";
 import { useStopReading } from "@/server/use/status/useStopReading";
 import { useBookStatus } from "@/server/use/useBookStatus";
-import { Book, BookStatus } from "@/type/Book";
-import { QueryClient } from "@tanstack/react-query";
+import type { Book } from "@/type/Book";
+import { BookStatus } from "@/type/Book";
+import type { QueryClient } from "@tanstack/react-query";
 import { BookMarked, BookOpen, Loader, Plus, X } from "lucide-react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 interface Props {
     book: Book;

@@ -1,8 +1,9 @@
 import { addFinished } from "@/server/repo/finished";
-import { VolumesResult } from "@/type/Book";
-import { Finished } from "@/type/Finished";
+import type { VolumesResult } from "@/type/Book";
+import type { Finished } from "@/type/Finished";
 import { LibraryType } from "@/type/Library";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 interface Props {
     userId: string;
@@ -20,7 +21,7 @@ export const useCreateFinishedDate = () => {
         mutationFn: createFinishedDate,
         onMutate: async ({ bookId, timestamp, queryClient, userId }) => {
             await queryClient.cancelQueries({ queryKey: ["finishedDates", bookId] });
-            const previousData: Finished[] | undefined = queryClient.getQueryData(["finishedDates", bookId]);
+            const previousData: Array<Finished> | undefined = queryClient.getQueryData(["finishedDates", bookId]);
 
             if (previousData) {
                 const newData = [...previousData, { id: -1, userId, bookId, timestamp }].sort(

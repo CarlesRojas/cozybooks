@@ -42,7 +42,7 @@ export const DrawerFooter = ({ className, ...props }: ComponentProps<"div">) => 
 );
 
 export const DrawerTitle = ({ className, ref, ...props }: ComponentProps<typeof DrawerPrimitive.Title>) => (
-    <DrawerPrimitive.Title ref={ref} className={cn("text-lg font-semibold leading-none tracking-tight", className)} {...props} />
+    <DrawerPrimitive.Title ref={ref} className={cn("text-lg leading-none font-semibold tracking-tight", className)} {...props} />
 );
 
 export const DrawerDescription = ({ className, ref, ...props }: ComponentProps<typeof DrawerPrimitive.Description>) => (

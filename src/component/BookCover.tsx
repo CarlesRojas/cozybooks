@@ -11,7 +11,7 @@ export interface Props {
 }
 
 const BookCover = ({ book, to, maxWidth, className, ref, ...props }: ComponentProps<typeof Link> & Props) => {
-    const biggestImage = useRef(book && getBiggestBookImage(book));
+    const biggestImage = useRef(getBiggestBookImage(book));
 
     const scaledImage = useMemo(() => {
         if (!biggestImage.current) return null;
@@ -49,7 +49,7 @@ const BookCover = ({ book, to, maxWidth, className, ref, ...props }: ComponentPr
             {src && (
                 <img
                     className={cn(
-                        "absolute inset-0 -z-10 h-full w-full select-none object-cover object-center blur-[8px] transition-opacity",
+                        "absolute inset-0 -z-10 h-full w-full object-cover object-center blur-[8px] transition-opacity select-none",
                         !to && "opacity-100 dark:opacity-40",
                         to &&
                             "opacity-0 group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-60 dark:group-focus:opacity-60",
@@ -66,7 +66,7 @@ const BookCover = ({ book, to, maxWidth, className, ref, ...props }: ComponentPr
             {src && (
                 <img
                     className={cn(
-                        "h-full w-full select-none rounded-xl border border-neutral-500/10 object-cover object-center transition-transform",
+                        "h-full w-full rounded-xl border border-neutral-500/10 object-cover object-center transition-transform select-none",
                         to && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
@@ -81,7 +81,7 @@ const BookCover = ({ book, to, maxWidth, className, ref, ...props }: ComponentPr
             {!src && (
                 <div
                     className={cn(
-                        "absolute inset-0 -z-10 h-full w-full select-none bg-neutral-200 object-cover object-center blur-[8px] transition-opacity dark:bg-neutral-800",
+                        "absolute inset-0 -z-10 h-full w-full bg-neutral-200 object-cover object-center blur-[8px] transition-opacity select-none dark:bg-neutral-800",
                         !to && "opacity-100 dark:opacity-100",
                         to &&
                             "opacity-0 group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-100 dark:group-focus:opacity-100",
@@ -93,17 +93,17 @@ const BookCover = ({ book, to, maxWidth, className, ref, ...props }: ComponentPr
             {!src && (
                 <div
                     className={cn(
-                        "bg-neutral-150 dark:bg-neutral-850 flex h-full w-full select-none flex-col items-center justify-center gap-1 rounded-xl border border-neutral-500/10 object-cover object-center p-3 transition-transform",
+                        "bg-neutral-150 dark:bg-neutral-850 flex h-full w-full flex-col items-center justify-center gap-1 rounded-xl border border-neutral-500/10 object-cover object-center p-3 transition-transform select-none",
                         to && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
                 >
                     <BookIcon className={cn("mb-2 size-8 min-h-8 min-w-8 stroke-2", !to && "size-16 min-h-16 min-w-16 stroke-2")} />
 
-                    {to && <h3 className="text-center font-bold leading-snug tracking-wide">{book.title}</h3>}
+                    {to && <h3 className="text-center leading-snug font-bold tracking-wide">{book.title}</h3>}
 
                     {to && book.authors && book.authors.length > 0 && (
-                        <p className="text-center text-sm font-semibold leading-snug tracking-wide opacity-50">{book.authors[0]}</p>
+                        <p className="text-center text-sm leading-snug font-semibold tracking-wide opacity-50">{book.authors[0]}</p>
                     )}
                 </div>
             )}

@@ -59,8 +59,8 @@ export const useUpdateFinishedDate = () => {
             context && queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], context.previousFinishedData);
         },
         onSettled: (data, err, { bookId }) => {
-            queryClient.invalidateQueries({ queryKey: ["finishedDates", bookId], refetchType: "all" });
-            queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
+            queryClient.refetchQueries({ queryKey: ["finishedDates", bookId], refetchType: "all" });
+            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
         },
     });
 };

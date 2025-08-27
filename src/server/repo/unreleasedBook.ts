@@ -23,7 +23,7 @@ export const removeUnreleasedBook = createServerFn({ method: "POST" })
         await db.delete(unreleasedBook).where(eq(unreleasedBook.id, id));
     });
 
-export const getUnreleasedBooks = createServerFn({ method: "POST" })
+export const getUnreleasedBooks = createServerFn({ method: "GET" })
     .validator((userId: string) => {
         return z.string().parse(userId);
     })

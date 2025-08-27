@@ -75,10 +75,10 @@ export const useFinishBook = () => {
             context && queryClient.setQueryData(["finishedDates", book.id], context.previousFinishedDatesData);
         },
         onSettled: (data, err, { book }) => {
-            queryClient.invalidateQueries({ queryKey: ["bookStatus", book.id], refetchType: "all" });
-            queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.READING], refetchType: "all" });
-            queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED], refetchType: "all" });
-            queryClient.invalidateQueries({ queryKey: ["finishedDates", book.id], refetchType: "all" });
+            queryClient.refetchQueries({ queryKey: ["bookStatus", book.id], refetchType: "all" });
+            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.READING], refetchType: "all" });
+            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED], refetchType: "all" });
+            queryClient.refetchQueries({ queryKey: ["finishedDates", book.id], refetchType: "all" });
         },
     });
 };

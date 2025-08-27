@@ -1,14 +1,14 @@
 import { getLibraryBooks } from "@/server/repo/library";
 import { BookStatus, VolumesResult } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useQuery } from "@tanstack/react-query";
 
 interface Props {
     userId: string;
     type: LibraryType;
     maxResults?: number;
     startIndex?: number;
-    queryClient: ReturnType<typeof useQueryClient>;
+    queryClient: QueryClient;
 }
 
 const getLibrary = async ({ userId, type, maxResults, startIndex, queryClient }: Props): Promise<VolumesResult> => {

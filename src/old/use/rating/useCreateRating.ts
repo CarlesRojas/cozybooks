@@ -43,8 +43,8 @@ export const useCreateRating = () => {
         },
 
         onSettled: (data, error, { bookId }) => {
-            queryClient.invalidateQueries({ queryKey: ["rating", bookId] });
-            queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
+            queryClient.refetchQueries({ queryKey: ["rating", bookId] });
+            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
         },
     });
 };

@@ -1,26 +1,21 @@
-import { removeUnreleasedBook } from "@/server/action/unreleasedBook";
-import { getClientSide } from "@/server/use/useUser";
+import { removeUnreleasedBook } from "@/server/repo/unreleasedBook";
 import { UnreleasedBook } from "@/type/UnreleasedBook";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 
 interface Props {
     unreleasedBookId: number;
+    queryClient: QueryClient;
 }
 
 export const deleteUnreleasedBook = async ({ unreleasedBookId }: Props) => {
-    const user = await getClientSide();
-    if (!user) return;
-
-    await removeUnreleasedBook(unreleasedBookId);
+    await removeUnreleasedBook({ data: unreleasedBookId });
 };
 
 export const useDeleteUnreleasedBook = () => {
-    const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: deleteUnreleasedBook,
 
-        onMutate: async ({ unreleasedBookId }) => {
+        onMutate: async ({ unreleasedBookId, queryClient }) => {
             await queryClient.cancelQueries({ queryKey: ["unreleasedBooks"] });
             const previousData: UnreleasedBook[] | undefined = queryClient.getQueryData(["unreleasedBooks"]);
 
@@ -33,12 +28,12 @@ export const useDeleteUnreleasedBook = () => {
             return { previousData };
         },
 
-        onError: (error, vars, context) => {
+        onError: (_, { queryClient }, context) => {
             context && queryClient.setQueryData(["libraryBooks"], context.previousData);
         },
 
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["libraryBooks"] });
+        onSettled: (_, __, { queryClient }) => {
+            queryClient.refetchQueries({ queryKey: ["libraryBooks"] });
         },
     });
 };

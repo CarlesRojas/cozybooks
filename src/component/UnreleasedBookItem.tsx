@@ -1,17 +1,19 @@
 import { Button } from "@/component/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
-import { useDeleteUnreleasedBook } from "@/server/old/use/unreleasedBook/useDeleteUnreleasedBook";
+import { useDeleteUnreleasedBook } from "@/server/use/unreleasedBook/useDeleteUnreleasedBook";
 import { UnreleasedBook } from "@/type/UnreleasedBook";
+import { QueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { LuBook, LuSearch, LuTrash2 } from "lucide-react";
+import { Book, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 interface Props {
     unreleasedBook: UnreleasedBook;
+    queryClient: QueryClient;
     isLoading?: boolean;
 }
 
-const UnreleasedBookItem = ({ unreleasedBook, isLoading }: Props) => {
+const UnreleasedBookItem = ({ unreleasedBook, queryClient, isLoading }: Props) => {
     const navigate = useNavigate({ from: "/search" });
 
     const { id, name } = unreleasedBook;
@@ -23,7 +25,7 @@ const UnreleasedBookItem = ({ unreleasedBook, isLoading }: Props) => {
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
                 <Button variant="input" disabled={isLoading}>
-                    <LuBook className="icon mr-3" />
+                    <Book className="icon mr-3" />
                     <p className="text-sm font-semibold tracking-wide">{name}</p>
                 </Button>
             </PopoverTrigger>
@@ -36,18 +38,18 @@ const UnreleasedBookItem = ({ unreleasedBook, isLoading }: Props) => {
                         setPopoverOpen(false);
                     }}
                 >
-                    <LuSearch className="icon mr-3 stroke-2" />
+                    <Search className="icon mr-3 stroke-2" />
                     <p>Search</p>
                 </Button>
 
                 <Button
                     variant="destructive"
                     onClick={() => {
-                        deleteUnreleasedBook.mutate({ unreleasedBookId: id });
+                        deleteUnreleasedBook.mutate({ unreleasedBookId: id, queryClient });
                         setPopoverOpen(false);
                     }}
                 >
-                    <LuTrash2 className="icon mr-3 stroke-2" />
+                    <Trash2 className="icon mr-3 stroke-2" />
                     <p>Delete</p>
                 </Button>
             </PopoverContent>

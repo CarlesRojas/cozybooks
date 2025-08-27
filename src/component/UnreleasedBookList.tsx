@@ -3,17 +3,20 @@ import { Input } from "@/component/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
 import UnreleasedBookItem from "@/component/UnreleasedBookItem";
 import { cn } from "@/lib/cn";
-import { useAddUnreleasedBook } from "@/server/old/use/unreleasedBook/useAddUnreleasedBook";
+import { useAddUnreleasedBook } from "@/server/use/unreleasedBook/useAddUnreleasedBook";
 import { UnreleasedBook } from "@/type/UnreleasedBook";
-import { LuBook, LuPlus } from "lucide-react";
+import { QueryClient } from "@tanstack/react-query";
+import { Book, Plus } from "lucide-react";
 import { useState } from "react";
 
 interface Props {
     stickyClassName?: string;
     unreleasedBooks: UnreleasedBook[];
+    queryClient: QueryClient;
+    userId: string;
 }
 
-const UnreleasedBookList = ({ stickyClassName, unreleasedBooks }: Props) => {
+const UnreleasedBookList = ({ stickyClassName, unreleasedBooks, queryClient, userId }: Props) => {
     const addUnreleasedBook = useAddUnreleasedBook();
 
     const [popoverOpen, setPopoverOpen] = useState(false);
@@ -21,7 +24,7 @@ const UnreleasedBookList = ({ stickyClassName, unreleasedBooks }: Props) => {
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        addUnreleasedBook.mutate({ name: newBookName });
+        addUnreleasedBook.mutate({ name: newBookName, userId, queryClient });
         setPopoverOpen(false);
     };
 
@@ -45,6 +48,7 @@ const UnreleasedBookList = ({ stickyClassName, unreleasedBooks }: Props) => {
                         <UnreleasedBookItem
                             key={unreleasedBook.id}
                             unreleasedBook={unreleasedBook}
+                            queryClient={queryClient}
                             isLoading={addUnreleasedBook.isPending}
                         />
                     ))}
@@ -58,7 +62,7 @@ const UnreleasedBookList = ({ stickyClassName, unreleasedBooks }: Props) => {
                     >
                         <PopoverTrigger asChild>
                             <Button variant="input" size="icon" disabled={addUnreleasedBook.isPending}>
-                                <LuPlus className="icon" />
+                                <Plus className="icon" />
                             </Button>
                         </PopoverTrigger>
 
@@ -72,12 +76,12 @@ const UnreleasedBookList = ({ stickyClassName, unreleasedBooks }: Props) => {
                                     onChange={(event) => setNewBookName(event.target.value)}
                                     onClear={newBookName.length > 0 ? () => setNewBookName("") : undefined}
                                     icon={
-                                        <LuBook className="icon stroke-2 text-neutral-500 transition-colors group-focus-within:text-neutral-950 group-focus-within:dark:text-neutral-50" />
+                                        <Book className="icon stroke-2 text-neutral-500 transition-colors group-focus-within:text-neutral-950 group-focus-within:dark:text-neutral-50" />
                                     }
                                 />
 
                                 <Button type="submit">
-                                    <LuPlus className="icon mr-3" />
+                                    <Plus className="icon mr-3" />
                                     <p>Add</p>
                                 </Button>
                             </form>

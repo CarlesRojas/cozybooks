@@ -46,8 +46,8 @@ export const useAddToWantToRead = () => {
             context && queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ], context.previousToReadData);
         },
         onSettled: (data, err, { book }) => {
-            queryClient.invalidateQueries({ queryKey: ["bookStatus", book.id], refetchType: "all" });
-            queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ], refetchType: "all" });
+            queryClient.refetchQueries({ queryKey: ["bookStatus", book.id], refetchType: "all" });
+            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ], refetchType: "all" });
         },
     });
 };

@@ -1,6 +1,4 @@
 import BookCover from "@/component/BookCover";
-import Pagination from "@/component/Pagination";
-import { useUrlState } from "@/hook/useUrlState";
 import { cn } from "@/lib/cn";
 import { Book } from "@/type/Book";
 import { Route } from "@/type/Route";
@@ -17,7 +15,7 @@ interface BaseProps {
 interface PaginationProps {
     showPagination: true;
     totalItems: number;
-    pageState: ReturnType<typeof useUrlState<number>>;
+    pageState: number;
     pageSize: number;
 }
 
@@ -28,10 +26,11 @@ interface NoPaginationProps {
 type Props = BaseProps & (PaginationProps | NoPaginationProps);
 
 const BookList = (props: Props) => {
-    const { title, books, showPagination, stickyClassName, isLoading, noBooksChildren } = props;
+    const { title, books, stickyClassName, isLoading, noBooksChildren } = props;
 
-    const numberOfPages = showPagination ? Math.ceil((props.totalItems || 1) / props.pageSize) : 1;
-    const currentPage = showPagination ? Math.max(Math.min(props.pageState[0], numberOfPages), 1) : 1;
+    // TODO: Add pagination
+    // const numberOfPages = showPagination ? Math.ceil((props.totalItems || 1) / props.pageSize) : 1;
+    // const currentPage = showPagination ? Math.max(Math.min(props.pageState[0], numberOfPages), 1) : 1;
 
     return (
         <section className="flex h-fit w-full flex-col gap-4">
@@ -59,7 +58,7 @@ const BookList = (props: Props) => {
                 </div>
             )}
 
-            {showPagination && numberOfPages > 1 && (
+            {/* {showPagination && numberOfPages > 1 && (
                 <div className="mx-auto w-full max-w-screen-lg px-6">
                     <Pagination
                         numberOfPages={Math.min(numberOfPages, 5)}
@@ -67,7 +66,7 @@ const BookList = (props: Props) => {
                         onPageChange={(page) => props.pageState[1](page + 1, true)}
                     />
                 </div>
-            )}
+            )} */}
         </section>
     );
 };

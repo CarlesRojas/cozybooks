@@ -34,7 +34,7 @@ export const useRemoveBookFromFinished = () => {
             context && queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], context.previousFinishedData);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED], refetchType: "all" });
+            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED], refetchType: "all" });
         },
     });
 };

@@ -1,6 +1,8 @@
 import BookList from "@/component/BookList";
 import { Button } from "@/component/ui/button";
+import UnreleasedBookList from "@/component/UnreleasedBookList";
 import { cn } from "@/lib/cn";
+import { useUnreleasedBooks } from "@/server/use/unreleasedBook/useUnreleasedBooks";
 import { useLibraryBooks } from "@/server/use/useLibraryBooks";
 import { LibraryType } from "@/type/Library";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -13,10 +15,9 @@ function Reading() {
     const context = Route.useRouteContext();
     const readingBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.READING, queryClient: context.queryClient });
     const toReadBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.TO_READ, queryClient: context.queryClient });
-    console.log(toReadBooks.data);
-    // const unreleasedBooks = useUnreleasedBooks();
+    const unreleasedBooks = useUnreleasedBooks(context.user!.id);
 
-    const isPending = readingBooks.isPending || toReadBooks.isPending; //|| unreleasedBooks.isPending;
+    const isPending = readingBooks.isPending || toReadBooks.isPending || unreleasedBooks.isPending;
 
     return (
         <main
@@ -58,7 +59,14 @@ function Reading() {
                         <BookList title="Want to read" books={toReadBooks.data.items} showPagination={false} stickyClassName="top-0 pt-3" />
                     )}
 
-                    {/* {unreleasedBooks.data && <UnreleasedBookList unreleasedBooks={unreleasedBooks.data} stickyClassName="top-0 pt-3" />} */}
+                    {unreleasedBooks.data && (
+                        <UnreleasedBookList
+                            unreleasedBooks={unreleasedBooks.data}
+                            stickyClassName="top-0 pt-3"
+                            queryClient={context.queryClient}
+                            userId={context.user!.id}
+                        />
+                    )}
                 </div>
             )}
         </main>

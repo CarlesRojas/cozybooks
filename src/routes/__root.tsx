@@ -1,5 +1,7 @@
+import Navigation from "@/component/Navigation";
 import type { Context } from "@/lib/context";
 import { seo } from "@/lib/seo";
+import { ThemeProvider } from "@/lib/theme";
 import { getUser } from "@/server/repo/auth";
 import appCss from "@/style.css?url";
 import { QueryKey } from "@/type/QueryKey";
@@ -11,7 +13,8 @@ export const Route = createRootRouteWithContext<Context>()({
         meta: [
             { charSet: "utf-8" },
             { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" },
-            { name: "theme-color", content: "#0a0a0a" },
+            { name: "theme-color", media: "(prefers-color-scheme: light)", content: "#fafafa" },
+            { name: "theme-color", media: "(prefers-color-scheme: dark)", content: "#0a0a0a" },
             { name: "apple-mobile-web-app-capable", content: "yes" },
             { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
             ...seo({
@@ -37,14 +40,20 @@ export const Route = createRootRouteWithContext<Context>()({
 });
 
 function RootDocument({ children }: { children: ReactNode }) {
+    const { user, queryClient } = Route.useRouteContext();
+
     return (
         <html lang="en">
             <head>
                 <HeadContent />
             </head>
 
-            <body className="font-montserrat">
-                {children}
+            <body className="font-montserrat relative overflow-y-auto bg-neutral-50 text-neutral-950 dark:bg-neutral-950 dark:text-neutral-50">
+                <ThemeProvider>
+                    {children}
+
+                    <Navigation user={user} queryClient={queryClient} />
+                </ThemeProvider>
 
                 <Scripts />
             </body>

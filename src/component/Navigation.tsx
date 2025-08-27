@@ -1,30 +1,35 @@
 import Settings from "@/component/Settings";
 import SortMenu from "@/component/SortMenu";
 import { Button } from "@/component/ui/button";
-import { useRoute } from "@/hook/useRoute";
 import { cn } from "@/lib/cn";
-import { useUser } from "@/server/old/use/useUser";
 import { NO_NAVBAR_ROUTES, Route } from "@/type/Route";
+import { QueryClient } from "@tanstack/react-query";
+import { Link, useLocation } from "@tanstack/react-router";
+import { User } from "better-auth";
 import { motion } from "framer-motion";
-import { LuSearch } from "lucide-react";
-import Link from "next/link";
+import { Search } from "lucide-react";
 import { ReactElement } from "react";
 import { isIOS } from "react-device-detect";
 
-const Navigation = () => {
-    const currentRoute = useRoute();
-    const user = useUser();
+interface Props {
+    user: User | null;
+    queryClient: QueryClient;
+}
 
-    const routes = [Route.READING, Route.FINISHED, Route.SEARCH];
-    const routeTitle: Partial<Record<Route, ReactElement>> = {
+const Navigation = ({ user, queryClient }: Props) => {
+    const location = useLocation();
+
+    const routes: string[] = [Route.READING, Route.FINISHED, Route.SEARCH];
+    const routeTitle: Partial<Record<string, ReactElement>> = {
         [Route.READING]: <p className="z-40 transition-colors">Reading</p>,
         [Route.FINISHED]: <p className="z-40 transition-colors">Finished</p>,
-        [Route.SEARCH]: <LuSearch className="icon z-40 min-w-10 transition-colors" />,
+        [Route.SEARCH]: <Search className="icon z-40 min-w-10 transition-colors" />,
     };
 
-    const showSortButton = currentRoute === Route.FINISHED;
+    console.log(location);
+    const showSortButton = location.pathname === Route.FINISHED;
 
-    if (NO_NAVBAR_ROUTES.includes(currentRoute) || user.isLoading || user.isError || !user.data) return null;
+    if (NO_NAVBAR_ROUTES.includes(location.pathname as Route) || !user) return null;
 
     return (
         <>
@@ -48,11 +53,11 @@ const Navigation = () => {
                             variant="navigation"
                             className={cn(
                                 "group relative hover:text-black hover:dark:text-white",
-                                route === currentRoute && "!text-neutral-50",
+                                route === location.pathname && "!text-neutral-50",
                             )}
                         >
-                            <Link href={route}>
-                                {route === currentRoute && (
+                            <Link to={route}>
+                                {route === location.pathname && (
                                     <motion.div
                                         className="pointer-events-none absolute inset-1 z-30 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"
                                         layoutId="activeSection"
@@ -66,7 +71,7 @@ const Navigation = () => {
                     ))}
                 </div>
 
-                <Settings user={user.data} />
+                <Settings user={user} queryClient={queryClient} />
             </motion.nav>
         </>
     );

@@ -1,15 +1,7 @@
 import { Button } from "@/component/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
-    DropdownMenuTrigger,
-} from "@/component/ui/dropdown-menu";
-import { useUrlState } from "@/hook/useUrlState";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/component/ui/dropdown-menu";
 import { cn } from "@/lib/cn";
-import { LuArrowDownUp } from "lucide-react";
-import { z } from "zod";
+import { ArrowDownUp } from "lucide-react";
 
 interface Props {
     className?: string;
@@ -22,13 +14,13 @@ export enum Sort {
 }
 
 const SortMenu = ({ className }: Props) => {
-    const [sort, setSort] = useUrlState("sort", Sort.DATE, z.nativeEnum(Sort));
+    // const [sort, setSort] = useUrlState("sort", Sort.DATE, z.nativeEnum(Sort));
 
     return (
         <DropdownMenu modal={true}>
             <Button size="icon" variant="glass" className={cn(className)} asChild>
                 <DropdownMenuTrigger>
-                    <LuArrowDownUp className="icon" />
+                    <ArrowDownUp className="icon" />
                 </DropdownMenuTrigger>
             </Button>
 
@@ -42,11 +34,11 @@ const SortMenu = ({ className }: Props) => {
                     {`Hi ${user.name.split(" ").slice(0, 2).join(" ")}!`}
                 </DropdownMenuLabel> */}
 
-                <DropdownMenuRadioGroup value={sort} onValueChange={(value) => setSort(value as Sort)}>
+                {/* <DropdownMenuRadioGroup value={sort} onValueChange={(value) => setSort(value as Sort)}>
                     <DropdownMenuRadioItem value={Sort.BOOK}>Sort by book name</DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value={Sort.DATE}>Sort by year finished</DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value={Sort.RATING}>Sort by your rating</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
+                </DropdownMenuRadioGroup> */}
             </DropdownMenuContent>
         </DropdownMenu>
     );

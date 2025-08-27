@@ -6,7 +6,7 @@ import { createRouter as createTanstackRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
 export const createRouter = () => {
-    if ("serviceWorker" in navigator) {
+    if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
         const registerServiceWorker = () => {
             navigator.serviceWorker.register("/service-worker.js");
         };

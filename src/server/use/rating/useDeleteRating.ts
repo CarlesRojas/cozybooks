@@ -1,48 +1,43 @@
-import { createRating } from "@/server/action/rating";
-import { getClientSide } from "@/server/use/useUser";
+import { deleteRating } from "@/server/repo/rating";
 import { VolumesResult } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 
 interface Props {
     bookId: string;
-    rating: number;
+    userId: string;
+    queryClient: QueryClient;
 }
 
-export const createBookRating = async ({ bookId, rating }: Props) => {
-    const user = await getClientSide();
-    if (!user) return;
-
-    await createRating({ userId: user.id, bookId, rating });
+export const deleteBookRating = async ({ bookId, userId }: Props) => {
+    await deleteRating({ data: { userId, bookId } });
 };
 
-export const useCreateRating = () => {
-    const queryClient = useQueryClient();
-
+export const useDeleteRating = () => {
     return useMutation({
-        mutationFn: createBookRating,
+        mutationFn: deleteBookRating,
 
-        onMutate: async ({ bookId, rating }) => {
+        onMutate: async ({ bookId, queryClient }) => {
             await queryClient.cancelQueries({ queryKey: ["rating", bookId] });
             const previousData: number | undefined = queryClient.getQueryData(["rating", bookId]);
-            queryClient.setQueryData(["rating", bookId], rating);
+            queryClient.setQueryData(["rating", bookId], null);
 
             await queryClient.cancelQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
             const previousFinishedData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.FINISHED]);
             if (previousFinishedData) {
-                const newItems = previousFinishedData.items.map((item) => (item.id === bookId ? { ...item, rating: [{ rating }] } : item));
+                const newItems = previousFinishedData.items.map((item) => (item.id === bookId ? { ...item, rating: [] } : item));
                 queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], { ...previousFinishedData, items: newItems });
             }
 
             return { previousData, previousFinishedData };
         },
 
-        onError: (error, { bookId }, context) => {
+        onError: (_, { bookId, queryClient }, context) => {
             context && queryClient.setQueryData(["rating", bookId], context.previousData);
             context && queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], context.previousFinishedData);
         },
 
-        onSettled: (data, error, { bookId }) => {
+        onSettled: (_, __, { bookId, queryClient }) => {
             queryClient.refetchQueries({ queryKey: ["rating", bookId] });
             queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
         },

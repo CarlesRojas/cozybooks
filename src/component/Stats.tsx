@@ -1,11 +1,9 @@
 import { Button } from "@/component/ui/button";
-import { useUrlState } from "@/hook/useUrlState";
 import { cn } from "@/lib/cn";
 import { Book } from "@/type/Book";
-import { LuBookOpen, LuGalleryHorizontalEnd } from "lucide-react";
+import { BookOpen, GalleryHorizontalEnd } from "lucide-react";
 import millify from "millify";
-import { useMemo } from "react";
-import { z } from "zod";
+import { useMemo, useState } from "react";
 
 interface Props {
     books: Book[];
@@ -27,7 +25,7 @@ interface Group {
 }
 
 const Stats = ({ books, stickyClassName }: Props) => {
-    const [statType, setStatType] = useUrlState("stat", StatType.BOOKS, z.nativeEnum(StatType));
+    const [statType, setStatType] = useState(StatType.BOOKS);
 
     const totalBooks = useMemo(() => books.reduce((acc, book) => acc + (book.finished?.length ?? 1), 0), [books]);
     const totalPages = useMemo(
@@ -198,11 +196,7 @@ const Stats = ({ books, stickyClassName }: Props) => {
 
                 <div className="relative flex flex-wrap gap-2">
                     <Button variant="glass" onClick={() => setStatType(statType === StatType.BOOKS ? StatType.PAGES : StatType.BOOKS)}>
-                        {statType === StatType.BOOKS ? (
-                            <LuGalleryHorizontalEnd className="icon mr-3" />
-                        ) : (
-                            <LuBookOpen className="icon mr-3" />
-                        )}
+                        {statType === StatType.BOOKS ? <GalleryHorizontalEnd className="icon mr-3" /> : <BookOpen className="icon mr-3" />}
 
                         <p className="text-lg font-bold tracking-wide">
                             {statType === StatType.BOOKS ? "View page stats" : "View book stats"}

@@ -1,4 +1,5 @@
 import Navigation from "@/component/Navigation";
+import { Sort } from "@/component/SortMenu";
 import type { Context } from "@/lib/context";
 import { seo } from "@/lib/seo";
 import { ThemeProvider } from "@/lib/theme";
@@ -6,7 +7,13 @@ import { getUser } from "@/server/repo/auth";
 import appCss from "@/style.css?url";
 import { QueryKey } from "@/type/QueryKey";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import { ReactNode } from "react";
+import z from "zod";
+
+const finishedSearchParamsSchema = z.object({
+    sort: z.nativeEnum(Sort).default(Sort.DATE),
+});
 
 export const Route = createRootRouteWithContext<Context>()({
     head: () => ({
@@ -31,16 +38,17 @@ export const Route = createRootRouteWithContext<Context>()({
     }),
 
     beforeLoad: async ({ context }) => {
-        const user = await context.queryClient.fetchQuery({ queryKey: [QueryKey.USER], queryFn: getUser });
-
-        return { user };
+        return await context.queryClient.fetchQuery({ queryKey: [QueryKey.USER], queryFn: getUser });
     },
 
     shellComponent: RootDocument,
+
+    validateSearch: zodValidator(finishedSearchParamsSchema),
 });
 
 function RootDocument({ children }: { children: ReactNode }) {
     const { user, queryClient } = Route.useRouteContext();
+    const { sort } = Route.useSearch();
 
     return (
         <html lang="en">
@@ -51,8 +59,7 @@ function RootDocument({ children }: { children: ReactNode }) {
             <body className="font-montserrat relative overflow-y-auto bg-neutral-50 text-neutral-950 dark:bg-neutral-950 dark:text-neutral-50">
                 <ThemeProvider>
                     {children}
-
-                    <Navigation user={user} queryClient={queryClient} />
+                    <Navigation user={user} queryClient={queryClient} sort={sort} />
                 </ThemeProvider>
 
                 <Scripts />

@@ -6,7 +6,8 @@ export const getUser = createServerFn({ method: "GET" }).handler(async () => {
     const { headers } = getWebRequest()!;
 
     const session = await auth.api.getSession({ headers });
+    const accessToken = await auth.api.getAccessToken({ body: { providerId: "google" }, headers });
     if (!session) return null;
 
-    return session.user;
+    return { user: session.user, googleToken: accessToken.accessToken };
 });

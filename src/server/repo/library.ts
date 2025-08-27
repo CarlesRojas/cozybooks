@@ -9,17 +9,13 @@ import z from "zod";
 type InsertLibraryBook = typeof library.$inferInsert;
 
 export const addBookToLibrary = createServerFn({ method: "POST" })
-    .validator((libraryBook: InsertLibraryBook) => {
-        return libraryInsertSchema.parse(libraryBook);
-    })
+    .validator((libraryBook: InsertLibraryBook) => libraryInsertSchema.parse(libraryBook))
     .handler(async ({ data: libraryBook }) => {
         await db.insert(library).values(libraryBook);
     });
 
 export const removeBookFromLibrary = createServerFn({ method: "POST" })
-    .validator((libraryBook: InsertLibraryBook) => {
-        return libraryInsertSchema.parse(libraryBook);
-    })
+    .validator((libraryBook: InsertLibraryBook) => libraryInsertSchema.parse(libraryBook))
     .handler(async ({ data: libraryBook }) => {
         await db
             .delete(library)
@@ -27,9 +23,7 @@ export const removeBookFromLibrary = createServerFn({ method: "POST" })
     });
 
 export const isBookInLibrary = createServerFn({ method: "POST" })
-    .validator((libraryBook: InsertLibraryBook) => {
-        return libraryInsertSchema.parse(libraryBook);
-    })
+    .validator((libraryBook: InsertLibraryBook) => libraryInsertSchema.parse(libraryBook))
     .handler(async ({ data: libraryBook }) => {
         const result = await db.query.library.findFirst({
             where: (library, { eq, and }) =>
@@ -46,11 +40,11 @@ interface GetLibraryProps {
 }
 
 export const getLibraryBooks = createServerFn({ method: "GET" })
-    .validator((data: GetLibraryProps) => {
-        return z
+    .validator((data: GetLibraryProps) =>
+        z
             .object({ userId: z.string(), type: z.string(), maxResults: z.number().optional(), startIndex: z.number().optional() })
-            .parse(data);
-    })
+            .parse(data),
+    )
     .handler(async ({ data: { userId, type, maxResults, startIndex } }) => {
         const numberOfBooks = (
             await db

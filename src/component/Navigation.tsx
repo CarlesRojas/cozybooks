@@ -1,5 +1,5 @@
 import Settings from "@/component/Settings";
-import SortMenu from "@/component/SortMenu";
+import SortMenu, { Sort } from "@/component/SortMenu";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
 import { NO_NAVBAR_ROUTES, Route } from "@/type/Route";
@@ -14,9 +14,10 @@ import { isIOS } from "react-device-detect";
 interface Props {
     user: User | null;
     queryClient: QueryClient;
+    sort: Sort;
 }
 
-const Navigation = ({ user, queryClient }: Props) => {
+const Navigation = ({ user, queryClient, sort }: Props) => {
     const location = useLocation();
 
     const routes: string[] = [Route.READING, Route.FINISHED, Route.SEARCH];
@@ -26,7 +27,6 @@ const Navigation = ({ user, queryClient }: Props) => {
         [Route.SEARCH]: <Search className="icon z-40 min-w-10 transition-colors" />,
     };
 
-    console.log(location);
     const showSortButton = location.pathname === Route.FINISHED;
 
     if (NO_NAVBAR_ROUTES.includes(location.pathname as Route) || !user) return null;
@@ -43,7 +43,7 @@ const Navigation = ({ user, queryClient }: Props) => {
             >
                 {/* <div className="pointer-events-none absolute inset-0 -bottom-10 -top-10 bg-gradient-to-t from-black/20 to-black/0 dark:from-black/50" /> */}
 
-                <SortMenu className={cn(!showSortButton && "pointer-events-none opacity-0")} />
+                <SortMenu className={cn(!showSortButton && "pointer-events-none opacity-0")} user={user} sort={sort} />
 
                 <div className="flex h-fit items-center rounded-full bg-neutral-300/70 backdrop-blur-md dark:bg-neutral-700/60">
                     {routes.map((route) => (
@@ -56,7 +56,7 @@ const Navigation = ({ user, queryClient }: Props) => {
                                 route === location.pathname && "!text-neutral-50",
                             )}
                         >
-                            <Link to={route}>
+                            <Link to={route} search={{ sort }}>
                                 {route === location.pathname && (
                                     <motion.div
                                         className="pointer-events-none absolute inset-1 z-30 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"

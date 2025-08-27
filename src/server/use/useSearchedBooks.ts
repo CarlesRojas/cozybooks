@@ -1,6 +1,6 @@
 import { GOOGLE_BOOKS_URL } from "@/const";
+import { parseGoogleBook } from "@/lib/util";
 import { VolumesResult, VolumesResultSchema } from "@/type/Book";
-import { TokenProps, parseGoogleBook, withToken } from "@/util";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -8,14 +8,15 @@ interface Props {
     query: string;
     booksPerPage?: number;
     offset?: number;
+    googleToken: string;
 }
 
-export const searchBooks = withToken(async ({ query, booksPerPage = 8, offset = 0, token }: Props & TokenProps) => {
+export const searchBooks = async ({ query, booksPerPage = 8, offset = 0, googleToken }: Props) => {
     if (!query) return VolumesResultSchema.parse({ totalItems: 0, items: [] });
 
     const url = new URL(`${GOOGLE_BOOKS_URL}/volumes`);
     const params = new URLSearchParams({
-        access_token: token,
+        access_token: googleToken,
         q: query.trim(),
         maxResults: booksPerPage.toString(),
         startIndex: offset.toString(),
@@ -30,12 +31,12 @@ export const searchBooks = withToken(async ({ query, booksPerPage = 8, offset = 
         totalItems: response.data.totalItems,
         items: response.data.items.map((item: any) => parseGoogleBook(item)),
     }) as VolumesResult;
-});
+};
 
-export const useSearchedBooks = ({ query, booksPerPage, offset }: Props) => {
+export const useSearchedBooks = ({ query, booksPerPage, offset, googleToken }: Props) => {
     return useQuery({
         queryKey: ["searchedBooks", query, booksPerPage, offset],
-        queryFn: () => searchBooks({ query, booksPerPage, offset }),
+        queryFn: () => searchBooks({ query, booksPerPage, offset, googleToken }),
         placeholderData: keepPreviousData,
     });
 };

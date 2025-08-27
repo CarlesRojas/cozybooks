@@ -1,37 +1,31 @@
-import { deleteFinished, getFinished } from "@/server/action/finished";
-import { removeBookFromLibrary } from "@/server/action/library";
-import { getClientSide } from "@/server/use/useUser";
+import { addFinished } from "@/server/repo/finished";
 import { VolumesResult } from "@/type/Book";
 import { Finished } from "@/type/Finished";
 import { LibraryType } from "@/type/Library";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 
 interface Props {
+    userId: string;
     bookId: string;
-    id: number;
+    timestamp: Date;
+    queryClient: QueryClient;
 }
 
-export const deleteFinishedDate = async ({ id, bookId }: Props) => {
-    await deleteFinished(id);
-
-    const user = await getClientSide();
-    if (!user) return;
-
-    const finished = await getFinished(user.id, bookId);
-    if (!finished || finished.length === 0) await removeBookFromLibrary({ bookId, userId: user.id, type: LibraryType.FINISHED });
+export const createFinishedDate = async ({ bookId, timestamp, userId }: Props) => {
+    await addFinished({ data: { bookId, userId, timestamp } });
 };
 
-export const useDeleteFinishedDate = () => {
-    const queryClient = useQueryClient();
-
+export const useCreateFinishedDate = () => {
     return useMutation({
-        mutationFn: deleteFinishedDate,
-        onMutate: async ({ bookId, id }) => {
+        mutationFn: createFinishedDate,
+        onMutate: async ({ bookId, timestamp, queryClient, userId }) => {
             await queryClient.cancelQueries({ queryKey: ["finishedDates", bookId] });
             const previousData: Finished[] | undefined = queryClient.getQueryData(["finishedDates", bookId]);
 
             if (previousData) {
-                const newData = previousData.filter((finishedDate) => finishedDate.id !== id);
+                const newData = [...previousData, { id: -1, userId, bookId, timestamp }].sort(
+                    (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
+                );
                 queryClient.setQueryData(["finishedDates", bookId], newData);
             }
 
@@ -40,7 +34,8 @@ export const useDeleteFinishedDate = () => {
             if (previousFinishedData) {
                 const newItems = previousFinishedData.items.map((item) => {
                     if (item.id !== bookId) return item;
-                    const finished = item.finished?.filter((finishedDate) => finishedDate.id !== id);
+                    const finished = item.finished ?? [];
+                    finished.push({ id: -1, userId, bookId, timestamp });
                     return { ...item, finished };
                 });
                 queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], { ...previousFinishedData, items: newItems });
@@ -48,12 +43,12 @@ export const useDeleteFinishedDate = () => {
 
             return { previousData, previousFinishedData };
         },
-        onError: (err, { bookId }, context) => {
+        onError: (_, { bookId, queryClient }, context) => {
             context && queryClient.setQueryData(["finishedDates", bookId], context.previousData);
             context && queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], context.previousFinishedData);
         },
-        onSettled: (data, err, { bookId }) => {
-            queryClient.refetchQueries({ queryKey: ["finishedDates", bookId], refetchType: "all" });
+        onSettled: (_, __, { bookId, queryClient }) => {
+            queryClient.refetchQueries({ queryKey: ["finishedDates", bookId] });
             queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
         },
     });

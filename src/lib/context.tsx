@@ -12,12 +12,13 @@ const queryClient = new QueryClient({
 });
 
 export const getContext = () => {
-    return { queryClient, user: null };
+    return { queryClient, user: null, googleToken: null };
 };
 
 export type Context = {
     queryClient: QueryClient;
-    user: Awaited<ReturnType<typeof getUser>>;
+    user: NonNullable<Awaited<ReturnType<typeof getUser>>>["user"];
+    googleToken: NonNullable<Awaited<ReturnType<typeof getUser>>>["googleToken"];
 };
 
 export const Providers = ({ children }: { children: ReactNode }) => {

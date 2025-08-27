@@ -1,26 +1,22 @@
-import { removeBookFromLibrary } from "@/server/action/library";
-import { getClientSide } from "@/server/use/useUser";
+import { removeBookFromLibrary } from "@/server/repo/library";
 import { Book, VolumesResult } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 
 interface Props {
     book: Book;
+    userId: string;
+    queryClient: QueryClient;
 }
 
-export const removeFromFinished = async ({ book }: Props) => {
-    const user = await getClientSide();
-    if (!user) return;
-
-    await removeBookFromLibrary({ bookId: book.id, userId: user.id, type: LibraryType.FINISHED });
+export const removeFromFinished = async ({ book, userId }: Props) => {
+    await removeBookFromLibrary({ data: { bookId: book.id, userId, type: LibraryType.FINISHED } });
 };
 
 export const useRemoveBookFromFinished = () => {
-    const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: removeFromFinished,
-        onMutate: async ({ book }) => {
+        onMutate: async ({ book, queryClient }) => {
             await queryClient.cancelQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
             const previousFinishedData: VolumesResult | undefined = queryClient.getQueryData(["libraryBooks", LibraryType.FINISHED]);
             if (previousFinishedData) {
@@ -30,11 +26,11 @@ export const useRemoveBookFromFinished = () => {
 
             return { previousFinishedData };
         },
-        onError: (err, { book }, context) => {
+        onError: (_, { queryClient }, context) => {
             context && queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], context.previousFinishedData);
         },
-        onSettled: () => {
-            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED], refetchType: "all" });
+        onSettled: (_, __, { queryClient }) => {
+            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
         },
     });
 };

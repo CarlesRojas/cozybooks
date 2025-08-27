@@ -5,17 +5,6 @@ export interface TokenProps {
     token: string;
 }
 
-// TODO withToken
-// export const withToken = <T extends TokenProps, R>(fn: (props: T) => Promise<R>) => {
-//     return async (props?: Omit<T, "token">) => {
-//         const user = await getServerUser();
-//         const token = user?.accessToken;
-//         if (!user || user.error === REFRESH_TOKEN_ERROR || !token) await signOut({ callbackUrl: Route.AUTH_SIGN_IN });
-
-//         return await fn({ ...(props ?? {}), token } as T);
-//     };
-// };
-
 export const filteredArray = (s: z.ZodTypeAny) => z.array(z.any()).transform((as) => as.filter((a) => s.safeParse(a).success));
 
 export const getBiggestBookImage = (book: Book) => {

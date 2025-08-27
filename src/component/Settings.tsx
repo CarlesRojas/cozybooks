@@ -30,6 +30,7 @@ const Settings = ({ user, queryClient }: Props) => {
     const logout = async () => {
         await authClient.signOut();
         await queryClient.invalidateQueries({ queryKey: [QueryKey.USER] });
+        await queryClient.invalidateQueries({ queryKey: [QueryKey.GOOGLE_TOKEN] });
         await router.invalidate();
     };
 

@@ -1,20 +1,17 @@
-import { addBookToLibrary } from "@/server/action/library";
+import { addBookToLibrary } from "@/server/repo/library";
 import { removeFromWantToRead } from "@/server/use/status/useRemoveFromWantToRead";
-import { BookStatus } from "@/server/use/useBookStatus";
-import { getClientSide } from "@/server/use/useUser";
-import { Book, VolumesResult } from "@/type/Book";
+import { Book, BookStatus, VolumesResult } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 
 interface Props {
     book: Book;
+    userId: string;
+    queryClient: QueryClient;
 }
 
-export const addToReading = async ({ book }: Props) => {
-    const user = await getClientSide();
-    if (!user) return;
-
-    await addBookToLibrary({ bookId: book.id, userId: user.id, type: LibraryType.READING });
+export const addToReading = async ({ book, userId }: Props) => {
+    await addBookToLibrary({ data: { bookId: book.id, userId, type: LibraryType.READING } });
 };
 
 const startReading = async (props: Props) => {
@@ -23,11 +20,9 @@ const startReading = async (props: Props) => {
 };
 
 export const useStartReading = () => {
-    const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: startReading,
-        onMutate: async ({ book }) => {
+        onMutate: async ({ book, queryClient }) => {
             await queryClient.cancelQueries({ queryKey: ["bookStatus", book.id] });
             const previousData: BookStatus | undefined = queryClient.getQueryData(["bookStatus", book.id]);
             queryClient.setQueryData(["bookStatus", book.id], BookStatus.READING_NOW);
@@ -49,15 +44,15 @@ export const useStartReading = () => {
 
             return { previousData, previousReadingData, previousToReadData };
         },
-        onError: (err, { book }, context) => {
+        onError: (_, { book, queryClient }, context) => {
             context && queryClient.setQueryData(["bookStatus", book.id], context.previousData);
             context && queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ], context.previousToReadData);
             context && queryClient.setQueryData(["libraryBooks", LibraryType.READING], context.previousReadingData);
         },
-        onSettled: (data, err, { book }) => {
-            queryClient.refetchQueries({ queryKey: ["bookStatus", book.id], refetchType: "all" });
-            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ], refetchType: "all" });
-            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.READING], refetchType: "all" });
+        onSettled: (_, __, { book, queryClient }) => {
+            queryClient.refetchQueries({ queryKey: ["bookStatus", book.id] });
+            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ] });
+            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.READING] });
         },
     });
 };

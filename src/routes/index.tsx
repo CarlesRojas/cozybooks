@@ -4,7 +4,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 export const Route = createFileRoute("/")({
     component: App,
     beforeLoad: ({ context }) => {
-        if (!!context.user) throw redirect({ to: `/` as any });
+        if (!!context.user) throw redirect({ to: `/reading` as any });
     },
 });
 

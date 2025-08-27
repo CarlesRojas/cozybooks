@@ -1,10 +1,22 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/component/ui/avatar";
 import { Button } from "@/component/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/component/ui/dropdown-menu";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuTrigger,
+} from "@/component/ui/dropdown-menu";
 import { cn } from "@/lib/cn";
+import { useNavigate } from "@tanstack/react-router";
+import { User } from "better-auth";
 import { ArrowDownUp } from "lucide-react";
 
 interface Props {
     className?: string;
+    user: User;
+    sort: Sort;
 }
 
 export enum Sort {
@@ -13,8 +25,8 @@ export enum Sort {
     RATING = "RATING",
 }
 
-const SortMenu = ({ className }: Props) => {
-    // const [sort, setSort] = useUrlState("sort", Sort.DATE, z.nativeEnum(Sort));
+const SortMenu = ({ className, user, sort }: Props) => {
+    const navigate = useNavigate();
 
     return (
         <DropdownMenu modal={true}>
@@ -25,20 +37,25 @@ const SortMenu = ({ className }: Props) => {
             </Button>
 
             <DropdownMenuContent className="mx-2 my-3">
-                {/* <DropdownMenuLabel className="flex items-center gap-2">
-                    <Avatar>
-                        <AvatarImage src={user.image} />
-                        <AvatarFallback className="uppercase">{user.name[0]}</AvatarFallback>
-                    </Avatar>
+                {!!user && (
+                    <DropdownMenuLabel className="flex items-center gap-2">
+                        <Avatar>
+                            <AvatarImage src={user.image ?? undefined} />
+                            <AvatarFallback className="uppercase">{user.name[0]}</AvatarFallback>
+                        </Avatar>
 
-                    {`Hi ${user.name.split(" ").slice(0, 2).join(" ")}!`}
-                </DropdownMenuLabel> */}
+                        {`Hi ${user.name.split(" ").slice(0, 2).join(" ")}!`}
+                    </DropdownMenuLabel>
+                )}
 
-                {/* <DropdownMenuRadioGroup value={sort} onValueChange={(value) => setSort(value as Sort)}>
+                <DropdownMenuRadioGroup
+                    value={sort}
+                    onValueChange={(value) => navigate({ to: `/finished`, search: { sort: value as Sort } })}
+                >
                     <DropdownMenuRadioItem value={Sort.BOOK}>Sort by book name</DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value={Sort.DATE}>Sort by year finished</DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value={Sort.RATING}>Sort by your rating</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup> */}
+                </DropdownMenuRadioGroup>
             </DropdownMenuContent>
         </DropdownMenu>
     );

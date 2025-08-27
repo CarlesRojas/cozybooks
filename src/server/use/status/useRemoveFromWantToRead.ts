@@ -1,27 +1,22 @@
-import { removeBookFromLibrary } from "@/server/action/library";
-import { BookStatus } from "@/server/use/useBookStatus";
-import { getClientSide } from "@/server/use/useUser";
-import { Book, VolumesResult } from "@/type/Book";
+import { removeBookFromLibrary } from "@/server/repo/library";
+import { Book, BookStatus, VolumesResult } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 
 interface Props {
     book: Book;
+    userId: string;
+    queryClient: QueryClient;
 }
 
-export const removeFromWantToRead = async ({ book }: Props) => {
-    const user = await getClientSide();
-    if (!user) return;
-
-    await removeBookFromLibrary({ bookId: book.id, userId: user.id, type: LibraryType.TO_READ });
+export const removeFromWantToRead = async ({ book, userId }: Props) => {
+    await removeBookFromLibrary({ data: { bookId: book.id, userId, type: LibraryType.TO_READ } });
 };
 
 export const useRemoveFromWantToRead = () => {
-    const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: removeFromWantToRead,
-        onMutate: async ({ book }) => {
+        onMutate: async ({ book, queryClient }) => {
             await queryClient.cancelQueries({ queryKey: ["bookStatus", book.id] });
             const previousData: BookStatus | undefined = queryClient.getQueryData(["bookStatus", book.id]);
             queryClient.setQueryData(["bookStatus", book.id], BookStatus.NONE);
@@ -35,13 +30,13 @@ export const useRemoveFromWantToRead = () => {
 
             return { previousData, previousToReadData };
         },
-        onError: (err, { book }, context) => {
+        onError: (_, { book, queryClient }, context) => {
             context && queryClient.setQueryData(["bookStatus", book.id], context.previousData);
             context && queryClient.setQueryData(["libraryBooks", LibraryType.TO_READ], context.previousToReadData);
         },
-        onSettled: (data, err, { book }) => {
-            queryClient.refetchQueries({ queryKey: ["bookStatus", book.id], refetchType: "all" });
-            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ], refetchType: "all" });
+        onSettled: (_, __, { book, queryClient }) => {
+            queryClient.refetchQueries({ queryKey: ["bookStatus", book.id] });
+            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.TO_READ] });
         },
     });
 };

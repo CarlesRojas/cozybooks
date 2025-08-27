@@ -11,17 +11,13 @@ type InsertBook = typeof book.$inferInsert;
 type SelectBook = InferResultType<"book">;
 
 export const addBook = createServerFn({ method: "POST" })
-    .validator((book: InsertBook) => {
-        return bookInsertSchema.parse(book);
-    })
+    .validator((book: InsertBook) => bookInsertSchema.parse(book))
     .handler(async ({ data: insertBook }) => {
         await db.insert(book).values(insertBook);
     });
 
 export const getBook = createServerFn({ method: "GET" })
-    .validator((id: string) => {
-        return z.string().parse(id);
-    })
+    .validator((id: string) => z.string().parse(id))
     .handler(async ({ data: id }) => {
         const result = await db.query.book.findFirst({
             where: (book, { eq }) => eq(book.id, id),
@@ -31,9 +27,7 @@ export const getBook = createServerFn({ method: "GET" })
     });
 
 export const getBookWithGoogleFallback = createServerFn({ method: "GET" })
-    .validator((id: string) => {
-        return z.string().parse(id);
-    })
+    .validator((id: string) => z.string().parse(id))
     .handler(async ({ data: bookId }) => {
         const book = await getBook({ data: bookId });
         if (book) return book;

@@ -1,24 +1,21 @@
-import { addFinished } from "@/server/action/finished";
-import { addBookToLibrary, isBookInLibrary } from "@/server/action/library";
+import { addFinished } from "@/server/repo/finished";
+import { addBookToLibrary, isBookInLibrary } from "@/server/repo/library";
 import { removeFromReading } from "@/server/use/status/useStopReading";
-import { BookStatus } from "@/server/use/useBookStatus";
-import { getClientSide } from "@/server/use/useUser";
-import { Book, VolumesResult } from "@/type/Book";
+import { Book, BookStatus, VolumesResult } from "@/type/Book";
 import { Finished } from "@/type/Finished";
 import { LibraryType } from "@/type/Library";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 
 interface Props {
     book: Book;
+    userId: string;
+    queryClient: QueryClient;
 }
 
-export const addToFinished = async ({ book }: Props) => {
-    const user = await getClientSide();
-    if (!user) return;
-
-    const addFinishedPromise = addFinished({ bookId: book.id, userId: user.id, timestamp: new Date() });
-    const bookAlreadyFinished = await isBookInLibrary({ bookId: book.id, userId: user.id, type: LibraryType.FINISHED });
-    if (!bookAlreadyFinished) await addBookToLibrary({ bookId: book.id, userId: user.id, type: LibraryType.FINISHED });
+export const addToFinished = async ({ book, userId }: Props) => {
+    const addFinishedPromise = addFinished({ data: { bookId: book.id, userId, timestamp: new Date() } });
+    const bookAlreadyFinished = await isBookInLibrary({ data: { bookId: book.id, userId, type: LibraryType.FINISHED } });
+    if (!bookAlreadyFinished) await addBookToLibrary({ data: { bookId: book.id, userId, type: LibraryType.FINISHED } });
     await addFinishedPromise;
 };
 
@@ -28,11 +25,9 @@ export const finishBook = async (props: Props) => {
 };
 
 export const useFinishBook = () => {
-    const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: finishBook,
-        onMutate: async ({ book }) => {
+        onMutate: async ({ book, queryClient, userId }) => {
             await queryClient.cancelQueries({ queryKey: ["bookStatus", book.id] });
             const previousData: BookStatus | undefined = queryClient.getQueryData(["bookStatus", book.id]);
             queryClient.setQueryData(["bookStatus", book.id], BookStatus.NONE);
@@ -58,27 +53,26 @@ export const useFinishBook = () => {
             await queryClient.cancelQueries({ queryKey: ["finishedDates", book.id] });
             const previousFinishedDatesData: Finished[] | undefined = queryClient.getQueryData(["finishedDates", book.id]);
             if (previousFinishedDatesData) {
-                const newData: Finished[] = [
-                    ...previousFinishedDatesData,
-                    { id: -1, userId: -1, bookId: book.id, timestamp: new Date() },
-                ].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+                const newData: Finished[] = [...previousFinishedDatesData, { id: -1, userId, bookId: book.id, timestamp: new Date() }].sort(
+                    (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
+                );
 
                 queryClient.setQueryData(["finishedDates", book.id], newData);
             }
 
             return { previousData, previousFinishedData, previousReadingData, previousFinishedDatesData };
         },
-        onError: (err, { book }, context) => {
+        onError: (_, { book, queryClient }, context) => {
             context && queryClient.setQueryData(["bookStatus", book.id], context.previousData);
             context && queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], context.previousFinishedData);
             context && queryClient.setQueryData(["libraryBooks", LibraryType.READING], context.previousReadingData);
             context && queryClient.setQueryData(["finishedDates", book.id], context.previousFinishedDatesData);
         },
-        onSettled: (data, err, { book }) => {
-            queryClient.refetchQueries({ queryKey: ["bookStatus", book.id], refetchType: "all" });
-            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.READING], refetchType: "all" });
-            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED], refetchType: "all" });
-            queryClient.refetchQueries({ queryKey: ["finishedDates", book.id], refetchType: "all" });
+        onSettled: (_, __, { book, queryClient }) => {
+            queryClient.refetchQueries({ queryKey: ["bookStatus", book.id] });
+            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.READING] });
+            queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
+            queryClient.refetchQueries({ queryKey: ["finishedDates", book.id] });
         },
     });
 };

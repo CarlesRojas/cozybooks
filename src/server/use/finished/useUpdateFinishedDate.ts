@@ -1,29 +1,25 @@
-import { updateFinished } from "@/server/action/finished";
-import { getClientSide } from "@/server/use/useUser";
+import { updateFinished } from "@/server/repo/finished";
 import { VolumesResult } from "@/type/Book";
 import { Finished } from "@/type/Finished";
 import { LibraryType } from "@/type/Library";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 
 interface Props {
     id: number;
     bookId: string;
     timestamp: Date;
+    userId: string;
+    queryClient: QueryClient;
 }
 
-export const updateFinishedDate = async (props: Props) => {
-    const user = await getClientSide();
-    if (!user) return;
-
-    await updateFinished({ ...props, userId: user.id });
+export const updateFinishedDate = async (data: Props) => {
+    await updateFinished({ data });
 };
 
 export const useUpdateFinishedDate = () => {
-    const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: updateFinishedDate,
-        onMutate: async ({ bookId, id, timestamp }) => {
+        onMutate: async ({ bookId, id, timestamp, queryClient }) => {
             await queryClient.cancelQueries({ queryKey: ["finishedDates", bookId] });
             const previousData: Finished[] | undefined = queryClient.getQueryData(["finishedDates", bookId]);
 
@@ -54,12 +50,12 @@ export const useUpdateFinishedDate = () => {
 
             return { previousData, previousFinishedData };
         },
-        onError: (err, { bookId }, context) => {
+        onError: (_, { bookId, queryClient }, context) => {
             context && queryClient.setQueryData(["finishedDates", bookId], context.previousData);
             context && queryClient.setQueryData(["libraryBooks", LibraryType.FINISHED], context.previousFinishedData);
         },
-        onSettled: (data, err, { bookId }) => {
-            queryClient.refetchQueries({ queryKey: ["finishedDates", bookId], refetchType: "all" });
+        onSettled: (_, __, { bookId, queryClient }) => {
+            queryClient.refetchQueries({ queryKey: ["finishedDates", bookId] });
             queryClient.refetchQueries({ queryKey: ["libraryBooks", LibraryType.FINISHED] });
         },
     });

@@ -45,7 +45,11 @@ const Rating = ({ book, tooltipSide = "top", userId, queryClient }: Props) => {
         }
 
         if (state.interacting || state.rating === null || currentRating.data === state.rating) return;
-        createRating.mutate({ bookId: book.id, rating: state.rating, userId, queryClient });
+
+        // Ensure rating is a valid number before calling createRating
+        if (typeof state.rating === "number" && state.rating >= 1 && state.rating <= 10) {
+            createRating.mutate({ bookId: book.id, rating: state.rating, userId, queryClient });
+        }
 
         const isMouse = window.matchMedia("(hover: hover)").matches;
         if (isMouse) setState((prev) => ({ ...prev, interacting: true }));

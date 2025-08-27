@@ -17,8 +17,8 @@ export const getContext = () => {
 
 export type Context = {
     queryClient: QueryClient;
-    user: NonNullable<Awaited<ReturnType<typeof getUser>>>["user"];
-    googleToken: NonNullable<Awaited<ReturnType<typeof getUser>>>["googleToken"];
+    user: NonNullable<Awaited<ReturnType<typeof getUser>>>["user"] | null;
+    googleToken: NonNullable<Awaited<ReturnType<typeof getUser>>>["googleToken"] | null;
 };
 
 export const Providers = ({ children }: { children: ReactNode }) => {

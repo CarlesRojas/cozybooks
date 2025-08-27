@@ -24,8 +24,8 @@ export const removeUnreleasedBook = createServerFn({ method: "POST" })
     });
 
 export const getUnreleasedBooks = createServerFn({ method: "POST" })
-    .validator((userId: number) => {
-        return z.number().parse(userId);
+    .validator((userId: string) => {
+        return z.string().parse(userId);
     })
     .handler(async ({ data: userId }) => {
         const results = await db.query.unreleasedBook.findMany({

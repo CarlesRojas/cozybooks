@@ -39,7 +39,7 @@ export const isBookInLibrary = createServerFn({ method: "POST" })
     });
 
 interface GetLibraryProps {
-    userId: number;
+    userId: string;
     type: LibraryType;
     maxResults?: number;
     startIndex?: number;
@@ -48,7 +48,7 @@ interface GetLibraryProps {
 export const getLibraryBooks = createServerFn({ method: "GET" })
     .validator((data: GetLibraryProps) => {
         return z
-            .object({ userId: z.number(), type: z.string(), maxResults: z.number().optional(), startIndex: z.number().optional() })
+            .object({ userId: z.string(), type: z.string(), maxResults: z.number().optional(), startIndex: z.number().optional() })
             .parse(data);
     })
     .handler(async ({ data: { userId, type, maxResults, startIndex } }) => {

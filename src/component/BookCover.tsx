@@ -1,15 +1,16 @@
-import { cn, getBiggestBookImage } from "@/lib/util";
+import { cn } from "@/lib/cn";
+import { getBiggestBookImage } from "@/lib/util";
 import { Book } from "@/type/Book";
-import { LuBook } from "lucide-react";
-import { Link } from "next-view-transitions";
-import { AnchorHTMLAttributes, ReactNode, forwardRef, useMemo, useRef, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { Book as BookIcon } from "lucide-react";
+import { ComponentProps, ReactNode, useMemo, useRef, useState } from "react";
 
-export interface Props extends AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface Props {
     book: Book;
     maxWidth?: number;
 }
 
-const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, className, ...props }, ref) => {
+const BookCover = ({ book, to, maxWidth, className, ref, ...props }: ComponentProps<typeof Link> & Props) => {
     const biggestImage = useRef(book && getBiggestBookImage(book));
 
     const scaledImage = useMemo(() => {
@@ -25,12 +26,11 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
     const [src, setSrc] = useState(scaledImage ?? biggestImage.current);
 
     const container = (children: ReactNode) =>
-        href ? (
+        to ? (
             <Link
                 className={cn("aspect-book group relative w-full cursor-pointer focus-visible:outline-none", className)}
                 ref={ref}
-                href={href}
-                scroll={true}
+                resetScroll
                 {...props}
             >
                 {children}
@@ -50,8 +50,8 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
                 <img
                     className={cn(
                         "absolute inset-0 -z-10 h-full w-full select-none object-cover object-center blur-[8px] transition-opacity",
-                        !href && "opacity-100 dark:opacity-40",
-                        href &&
+                        !to && "opacity-100 dark:opacity-40",
+                        to &&
                             "opacity-0 group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-60 dark:group-focus:opacity-60",
                     )}
                     style={{ viewTransitionName: `bookCover-blur-${book.id}` }}
@@ -67,7 +67,7 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
                 <img
                     className={cn(
                         "h-full w-full select-none rounded-xl border border-neutral-500/10 object-cover object-center transition-transform",
-                        href && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
+                        to && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
                     width={maxWidth ?? 400}
@@ -82,8 +82,8 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
                 <div
                     className={cn(
                         "absolute inset-0 -z-10 h-full w-full select-none bg-neutral-200 object-cover object-center blur-[8px] transition-opacity dark:bg-neutral-800",
-                        !href && "opacity-100 dark:opacity-100",
-                        href &&
+                        !to && "opacity-100 dark:opacity-100",
+                        to &&
                             "opacity-0 group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-100 dark:group-focus:opacity-100",
                     )}
                     style={{ viewTransitionName: `bookCover-blur-${book.id}` }}
@@ -94,22 +94,21 @@ const BookCover = forwardRef<HTMLAnchorElement, Props>(({ book, href, maxWidth, 
                 <div
                     className={cn(
                         "bg-neutral-150 dark:bg-neutral-850 flex h-full w-full select-none flex-col items-center justify-center gap-1 rounded-xl border border-neutral-500/10 object-cover object-center p-3 transition-transform",
-                        href && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
+                        to && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
                 >
-                    <LuBook className={cn("mb-2 size-8 min-h-8 min-w-8 stroke-2", !href && "size-16 min-h-16 min-w-16 stroke-2")} />
+                    <BookIcon className={cn("mb-2 size-8 min-h-8 min-w-8 stroke-2", !to && "size-16 min-h-16 min-w-16 stroke-2")} />
 
-                    {href && <h3 className="text-center font-bold leading-snug tracking-wide">{book.title}</h3>}
+                    {to && <h3 className="text-center font-bold leading-snug tracking-wide">{book.title}</h3>}
 
-                    {href && book.authors && book.authors.length > 0 && (
+                    {to && book.authors && book.authors.length > 0 && (
                         <p className="text-center text-sm font-semibold leading-snug tracking-wide opacity-50">{book.authors[0]}</p>
                     )}
                 </div>
             )}
         </>,
     );
-});
-BookCover.displayName = "BookCover";
+};
 
 export default BookCover;

@@ -33,8 +33,8 @@ export const deleteFinished = createServerFn({ method: "POST" })
     });
 
 export const getFinished = createServerFn({ method: "GET" })
-    .validator((data: { userId: number; bookId: string }) => {
-        return z.object({ userId: z.number(), bookId: z.string() }).parse(data);
+    .validator((data: { userId: string; bookId: string }) => {
+        return z.object({ userId: z.string(), bookId: z.string() }).parse(data);
     })
     .handler(async ({ data: { userId, bookId } }) => {
         const result = await db.query.finished.findMany({

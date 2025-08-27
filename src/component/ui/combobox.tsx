@@ -1,11 +1,11 @@
+import { Button } from "@/component/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/component/ui/command";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/component/ui/drawer";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
 import { useMediaQuery } from "@/hook/useMediaQuery";
 import { cn } from "@/lib/cn";
-import { LuChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { ReactNode, useState } from "react";
-import { Button } from "./button";
 
 export interface ComboboxItem {
     id: string;
@@ -18,11 +18,7 @@ interface Props {
     value: ComboboxItem | null;
     setValue: (value: ComboboxItem | null) => void;
     options: ComboboxItem[];
-    text: {
-        filter: string;
-        select: string;
-        noResults: string;
-    };
+    text: { filter: string; select: string; noResults: string };
     placeholder?: string;
     showInput?: boolean;
     showDropdownIcon?: boolean;
@@ -41,7 +37,7 @@ export const Combobox = ({ value, setValue, options, text, placeholder, showInpu
                     <Button variant="input" className={cn("justify-start", triggerClassName)}>
                         {value ? (value.trigger ?? value.label) : (placeholder ?? text.select)}
 
-                        {showDropdownIcon && <LuChevronDown className="ml-3 h-4 w-4 stroke-[3]" />}
+                        {showDropdownIcon && <ChevronDown className="ml-3 h-4 w-4 stroke-[3]" />}
                     </Button>
                 </PopoverTrigger>
 
@@ -58,7 +54,7 @@ export const Combobox = ({ value, setValue, options, text, placeholder, showInpu
                 <Button variant="input" className={cn("justify-start", triggerClassName)}>
                     {value ? (value.trigger ?? value.label) : (placeholder ?? text.select)}
 
-                    {showDropdownIcon && <LuChevronDown className="ml-3 h-4 w-4 stroke-[3]" />}
+                    {showDropdownIcon && <ChevronDown className="ml-3 h-4 w-4 stroke-[3]" />}
                 </Button>
             </DrawerTrigger>
 
@@ -82,11 +78,7 @@ interface ListProps {
     setOpen: (open: boolean) => void;
     setSelected: (value: ComboboxItem | null) => void;
     options: ComboboxItem[];
-    text: {
-        filter: string;
-        select: string;
-        noResults: string;
-    };
+    text: { filter: string; select: string; noResults: string };
     showInput?: boolean;
     centered?: boolean;
 }

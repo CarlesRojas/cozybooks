@@ -1,14 +1,14 @@
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
-import { LuX } from "lucide-react";
-import { ReactNode, forwardRef } from "react";
+import { X } from "lucide-react";
+import type { ComponentProps, ReactNode } from "react";
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends ComponentProps<"input"> {
     icon?: ReactNode;
     onClear?: () => void;
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, icon, onClear, ...props }, ref) => {
+export const Input = ({ className, type, icon, onClear, ref, ...props }: InputProps) => {
     return (
         <div className="bg-neutral-150 dark:bg-neutral-850 relative flex w-full items-center gap-3 rounded-xl px-3 sm:max-w-[30rem]">
             <label className={cn("group flex h-12 grow items-center gap-3 focus-within:outline-none", className)}>
@@ -24,12 +24,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, icon,
 
             {onClear && (
                 <Button type="button" size="ghost" variant="ghost" onClick={onClear}>
-                    <LuX className="icon" />
+                    <X className="icon" />
                 </Button>
             )}
         </div>
     );
-});
-Input.displayName = "Input";
-
-export { Input };
+};

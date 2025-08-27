@@ -4,7 +4,7 @@ import { LogIn } from "lucide-react";
 
 const SignInButton = () => {
     const login = async () => {
-        await authClient.signIn.social({ provider: "google", callbackURL: `/create` });
+        await authClient.signIn.social({ provider: "google", callbackURL: `/reading` });
     };
 
     return (

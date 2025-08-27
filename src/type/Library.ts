@@ -9,7 +9,7 @@ export enum LibraryType {
 export const LibraryBookSchema = z.object({
     bookId: z.string(),
     type: z.nativeEnum(LibraryType),
-    userId: z.number(),
+    userId: z.string(),
     createdAt: z.date(),
 });
 

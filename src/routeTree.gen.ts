@@ -15,6 +15,10 @@ import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LegalTermsAndConditionsIndexRouteImport } from './routes/legal/terms-and-conditions/index'
 import { Route as LegalPrivacyPolicyIndexRouteImport } from './routes/legal/privacy-policy/index'
+import { Route as ProtectedSearchIndexRouteImport } from './routes/_protected/search/index'
+import { Route as ProtectedReadingIndexRouteImport } from './routes/_protected/reading/index'
+import { Route as ProtectedFinishedIndexRouteImport } from './routes/_protected/finished/index'
+import { Route as ProtectedBookBookIdIndexRouteImport } from './routes/_protected/book/[bookId]/index'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
 const rootServerRouteImport = createServerRootRoute()
@@ -39,6 +43,27 @@ const LegalPrivacyPolicyIndexRoute = LegalPrivacyPolicyIndexRouteImport.update({
   path: '/legal/privacy-policy/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProtectedSearchIndexRoute = ProtectedSearchIndexRouteImport.update({
+  id: '/search/',
+  path: '/search/',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedReadingIndexRoute = ProtectedReadingIndexRouteImport.update({
+  id: '/reading/',
+  path: '/reading/',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedFinishedIndexRoute = ProtectedFinishedIndexRouteImport.update({
+  id: '/finished/',
+  path: '/finished/',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedBookBookIdIndexRoute =
+  ProtectedBookBookIdIndexRouteImport.update({
+    id: '/book/bookId/',
+    path: '/book/bookId/',
+    getParentRoute: () => ProtectedRouteRoute,
+  } as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -47,37 +72,67 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/finished': typeof ProtectedFinishedIndexRoute
+  '/reading': typeof ProtectedReadingIndexRoute
+  '/search': typeof ProtectedSearchIndexRoute
   '/legal/privacy-policy': typeof LegalPrivacyPolicyIndexRoute
   '/legal/terms-and-conditions': typeof LegalTermsAndConditionsIndexRoute
+  '/book/bookId': typeof ProtectedBookBookIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/finished': typeof ProtectedFinishedIndexRoute
+  '/reading': typeof ProtectedReadingIndexRoute
+  '/search': typeof ProtectedSearchIndexRoute
   '/legal/privacy-policy': typeof LegalPrivacyPolicyIndexRoute
   '/legal/terms-and-conditions': typeof LegalTermsAndConditionsIndexRoute
+  '/book/bookId': typeof ProtectedBookBookIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_protected': typeof ProtectedRouteRoute
+  '/_protected': typeof ProtectedRouteRouteWithChildren
+  '/_protected/finished/': typeof ProtectedFinishedIndexRoute
+  '/_protected/reading/': typeof ProtectedReadingIndexRoute
+  '/_protected/search/': typeof ProtectedSearchIndexRoute
   '/legal/privacy-policy/': typeof LegalPrivacyPolicyIndexRoute
   '/legal/terms-and-conditions/': typeof LegalTermsAndConditionsIndexRoute
+  '/_protected/book/bookId/': typeof ProtectedBookBookIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/legal/privacy-policy' | '/legal/terms-and-conditions'
+  fullPaths:
+    | '/'
+    | '/finished'
+    | '/reading'
+    | '/search'
+    | '/legal/privacy-policy'
+    | '/legal/terms-and-conditions'
+    | '/book/bookId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/legal/privacy-policy' | '/legal/terms-and-conditions'
+  to:
+    | '/'
+    | '/finished'
+    | '/reading'
+    | '/search'
+    | '/legal/privacy-policy'
+    | '/legal/terms-and-conditions'
+    | '/book/bookId'
   id:
     | '__root__'
     | '/'
     | '/_protected'
+    | '/_protected/finished/'
+    | '/_protected/reading/'
+    | '/_protected/search/'
     | '/legal/privacy-policy/'
     | '/legal/terms-and-conditions/'
+    | '/_protected/book/bookId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ProtectedRouteRoute: typeof ProtectedRouteRoute
+  ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
   LegalPrivacyPolicyIndexRoute: typeof LegalPrivacyPolicyIndexRoute
   LegalTermsAndConditionsIndexRoute: typeof LegalTermsAndConditionsIndexRoute
 }
@@ -133,6 +188,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalPrivacyPolicyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_protected/search/': {
+      id: '/_protected/search/'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof ProtectedSearchIndexRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/reading/': {
+      id: '/_protected/reading/'
+      path: '/reading'
+      fullPath: '/reading'
+      preLoaderRoute: typeof ProtectedReadingIndexRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/finished/': {
+      id: '/_protected/finished/'
+      path: '/finished'
+      fullPath: '/finished'
+      preLoaderRoute: typeof ProtectedFinishedIndexRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/book/bookId/': {
+      id: '/_protected/book/bookId/'
+      path: '/book/bookId'
+      fullPath: '/book/bookId'
+      preLoaderRoute: typeof ProtectedBookBookIdIndexRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
   }
 }
 declare module '@tanstack/react-start/server' {
@@ -147,9 +230,27 @@ declare module '@tanstack/react-start/server' {
   }
 }
 
+interface ProtectedRouteRouteChildren {
+  ProtectedFinishedIndexRoute: typeof ProtectedFinishedIndexRoute
+  ProtectedReadingIndexRoute: typeof ProtectedReadingIndexRoute
+  ProtectedSearchIndexRoute: typeof ProtectedSearchIndexRoute
+  ProtectedBookBookIdIndexRoute: typeof ProtectedBookBookIdIndexRoute
+}
+
+const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
+  ProtectedFinishedIndexRoute: ProtectedFinishedIndexRoute,
+  ProtectedReadingIndexRoute: ProtectedReadingIndexRoute,
+  ProtectedSearchIndexRoute: ProtectedSearchIndexRoute,
+  ProtectedBookBookIdIndexRoute: ProtectedBookBookIdIndexRoute,
+}
+
+const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
+  ProtectedRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ProtectedRouteRoute: ProtectedRouteRoute,
+  ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
   LegalPrivacyPolicyIndexRoute: LegalPrivacyPolicyIndexRoute,
   LegalTermsAndConditionsIndexRoute: LegalTermsAndConditionsIndexRoute,
 }

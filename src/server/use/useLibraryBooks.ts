@@ -1,25 +1,18 @@
-import { getLibraryBooks } from "@/server/action/library";
-import { BookStatus } from "@/server/use/useBookStatus";
-import { getClientSide } from "@/server/use/useUser";
-import { VolumesResult, VolumesResultSchema } from "@/type/Book";
+import { getLibraryBooks } from "@/server/repo/library";
+import { BookStatus, VolumesResult } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
+    userId: string;
     type: LibraryType;
     maxResults?: number;
     startIndex?: number;
-}
-
-interface PropsWithQueryClient extends Props {
     queryClient: ReturnType<typeof useQueryClient>;
 }
 
-const getLibrary = async ({ type, maxResults, startIndex, queryClient }: PropsWithQueryClient): Promise<VolumesResult> => {
-    const user = await getClientSide();
-    if (!user) return VolumesResultSchema.parse({ items: [], totalItems: 0 }) as VolumesResult;
-
-    const result = await getLibraryBooks({ type, maxResults, startIndex, userId: user.id });
+const getLibrary = async ({ userId, type, maxResults, startIndex, queryClient }: Props): Promise<VolumesResult> => {
+    const result = await getLibraryBooks({ data: { type, maxResults, startIndex, userId } });
 
     result.items.forEach((book) => {
         const rating = (book.rating && book.rating.length > 0 ? book.rating[0].rating : null) ?? null;
@@ -35,15 +28,10 @@ const getLibrary = async ({ type, maxResults, startIndex, queryClient }: PropsWi
     return result;
 };
 
-export const useLibraryBooks = ({ type, maxResults, startIndex }: Props) => {
-    const queryClient = useQueryClient();
-
+export const useLibraryBooks = ({ userId, type, maxResults, startIndex, queryClient }: Props) => {
     const key: any[] = ["libraryBooks", type];
     if (maxResults) key.push(maxResults);
     if (startIndex) key.push(startIndex);
 
-    return useQuery({
-        queryKey: key,
-        queryFn: () => getLibrary({ type, maxResults, startIndex, queryClient }),
-    });
+    return useQuery({ queryKey: key, queryFn: () => getLibrary({ userId, type, maxResults, startIndex, queryClient }) });
 };

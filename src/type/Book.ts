@@ -1,6 +1,12 @@
 import { FinishedSchema } from "@/type/Finished";
 import { z } from "zod";
 
+export enum BookStatus {
+    NONE = "NONE",
+    READING_NOW = "READING_NOW",
+    WANT_TO_READ = "WANT_TO_READ",
+}
+
 export const BookSchema = z.object({
     id: z.string(),
 

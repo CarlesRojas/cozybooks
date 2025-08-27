@@ -13,7 +13,7 @@ const Welcome = ({ isError }: Props) => {
         <main suppressHydrationWarning className={cn("relative flex h-dvh w-full flex-col items-center px-4 py-16", isIOS && "mb-4")}>
             <div className="relative flex h-[90dvh] w-full flex-col items-center justify-center">
                 <section className="relative flex w-full grow flex-col items-center justify-center gap-3">
-                    <img src="/logo512.png" alt="CozyBooks" width={256} height={256} className="-m-4 size-44 rounded-3xl" />
+                    <img src="/logo512.png" alt="CozyBooks" width={256} height={256} className="-m-4 size-32 rounded-3xl sm:size-44" />
 
                     <h1 className="mx-auto max-w-64 text-center text-4xl leading-tight font-bold tracking-wide text-pretty">
                         Welcome to CozyBooks

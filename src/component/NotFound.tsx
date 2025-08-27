@@ -1,6 +1,6 @@
 import BackButton from "@/component/BackButton";
+import { LuBookX } from "lucide-react";
 import { ReactNode } from "react";
-import { LuBookX } from "react-icons/lu";
 
 export enum NotFoundType {
     BOOK = "BOOK",

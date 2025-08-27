@@ -1,11 +1,9 @@
-"use client";
-
 import BookCover from "@/component/BookCover";
 import Pagination from "@/component/Pagination";
 import { useUrlState } from "@/hook/useUrlState";
+import { cn } from "@/lib/cn";
 import { Book } from "@/type/Book";
 import { Route } from "@/type/Route";
-import { cn } from "@/util";
 import { ReactElement, ReactNode } from "react";
 
 interface BaseProps {
@@ -40,7 +38,7 @@ const BookList = (props: Props) => {
             {(books.length > 0 || !isLoading) && (
                 <div className={cn("sticky top-0 z-30 bg-neutral-50 pb-2 dark:bg-neutral-950", stickyClassName)}>
                     {typeof title === "string" ? (
-                        <h2 className="mx-auto max-w-screen-lg px-6 text-2xl font-bold leading-5 text-neutral-950/90 dark:text-neutral-50/90">
+                        <h2 className="mx-auto max-w-screen-lg px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">
                             {title}
                         </h2>
                     ) : (

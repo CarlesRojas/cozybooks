@@ -1,5 +1,3 @@
-"use client";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/component/ui/avatar";
 import { Button } from "@/component/ui/button";
 import {
@@ -12,10 +10,10 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/component/ui/dropdown-menu";
-import { signOutWithGoogle } from "@/server/action/user";
+import { signOutWithGoogle } from "@/server/old/repo/user";
 import { User } from "@/type/User";
+import { LuLogOut, LuUser2 } from "lucide-react";
 import { useTheme } from "next-themes";
-import { LuLogOut, LuUser2 } from "react-icons/lu";
 
 interface Props {
     user: User;

@@ -2,9 +2,9 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Drawer, DrawerContent, DrawerTrigger } from "@/component/ui/drawer";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
 import { useMediaQuery } from "@/hook/useMediaQuery";
-import { cn } from "@/util";
+import { cn } from "@/lib/cn";
+import { LuChevronDown } from "lucide-react";
 import { ReactNode, useState } from "react";
-import { LuChevronDown } from "react-icons/lu";
 import { Button } from "./button";
 
 export interface ComboboxItem {
@@ -39,7 +39,7 @@ export const Combobox = ({ value, setValue, options, text, placeholder, showInpu
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button variant="input" className={cn("justify-start", triggerClassName)}>
-                        {value ? value.trigger ?? value.label : placeholder ?? text.select}
+                        {value ? (value.trigger ?? value.label) : (placeholder ?? text.select)}
 
                         {showDropdownIcon && <LuChevronDown className="ml-3 h-4 w-4 stroke-[3]" />}
                     </Button>
@@ -56,7 +56,7 @@ export const Combobox = ({ value, setValue, options, text, placeholder, showInpu
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
                 <Button variant="input" className={cn("justify-start", triggerClassName)}>
-                    {value ? value.trigger ?? value.label : placeholder ?? text.select}
+                    {value ? (value.trigger ?? value.label) : (placeholder ?? text.select)}
 
                     {showDropdownIcon && <LuChevronDown className="ml-3 h-4 w-4 stroke-[3]" />}
                 </Button>

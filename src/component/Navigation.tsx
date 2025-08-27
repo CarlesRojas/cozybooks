@@ -1,17 +1,15 @@
-"use client";
-
 import Settings from "@/component/Settings";
 import SortMenu from "@/component/SortMenu";
 import { Button } from "@/component/ui/button";
 import { useRoute } from "@/hook/useRoute";
-import { useUser } from "@/server/use/useUser";
+import { cn } from "@/lib/cn";
+import { useUser } from "@/server/old/use/useUser";
 import { NO_NAVBAR_ROUTES, Route } from "@/type/Route";
-import { cn } from "@/util";
 import { motion } from "framer-motion";
+import { LuSearch } from "lucide-react";
 import Link from "next/link";
 import { ReactElement } from "react";
 import { isIOS } from "react-device-detect";
-import { LuSearch } from "react-icons/lu";
 
 const Navigation = () => {
     const currentRoute = useRoute();
@@ -49,7 +47,7 @@ const Navigation = () => {
                             key={route}
                             variant="navigation"
                             className={cn(
-                                "group relative mouse:hover:text-black mouse:hover:dark:text-white",
+                                "group mouse:hover:text-black mouse:hover:dark:text-white relative",
                                 route === currentRoute && "!text-neutral-50",
                             )}
                         >

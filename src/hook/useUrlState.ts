@@ -5,7 +5,7 @@ export const useUrlState = <T = string>(key: string, defaultState: T, schema: Zo
     const { push } = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const state = schema.parse(searchParams.get(key) === "null" ? null : searchParams.get(key) ?? defaultState);
+    const state = schema.parse(searchParams.get(key) === "null" ? null : (searchParams.get(key) ?? defaultState));
 
     const setState = (newState: T, scroll = false, extraParams: { key: string; value: string | null }[] = []) => {
         if (newState === state) return;

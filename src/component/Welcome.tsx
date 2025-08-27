@@ -1,7 +1,7 @@
 import SignInButton from "@/component/SignInButton";
 import { Button } from "@/component/ui/button";
+import { cn } from "@/lib/cn";
 import { Route } from "@/type/Route";
-import { cn } from "@/util";
 import Link from "next/link";
 import { isIOS } from "react-device-detect";
 
@@ -16,11 +16,11 @@ const Welcome = async ({ isError }: Props) => {
                 <section className="relative flex w-full grow flex-col items-center justify-center gap-3">
                     <img src="/logo512.png" alt="CozyBooks" width={256} height={256} className="-m-4 size-44 rounded-3xl" />
 
-                    <h1 className="mx-auto max-w-64 text-pretty text-center text-4xl font-bold leading-tight tracking-wide">
+                    <h1 className="mx-auto max-w-64 text-center text-4xl leading-tight font-bold tracking-wide text-pretty">
                         Welcome to CozyBooks
                     </h1>
 
-                    <p className="max-w-[30rem] text-pretty text-center text-lg font-medium leading-snug tracking-wide opacity-70">
+                    <p className="max-w-[30rem] text-center text-lg leading-snug font-medium tracking-wide text-pretty opacity-70">
                         The best way to keep track of all the books you have and enjoy all the ones you want to read.
                     </p>
                 </section>
@@ -29,12 +29,12 @@ const Welcome = async ({ isError }: Props) => {
                     <SignInButton />
 
                     {isError && (
-                        <p className="max-w-[30rem] text-pretty text-sm font-semibold tracking-wide text-red-500">
+                        <p className="max-w-[30rem] text-sm font-semibold tracking-wide text-pretty text-red-500">
                             There was an error while signing in. Please try again.
                         </p>
                     )}
 
-                    <p className="max-w-[30rem] text-pretty text-sm font-semibold tracking-wide opacity-40">
+                    <p className="max-w-[30rem] text-sm font-semibold tracking-wide text-pretty opacity-40">
                         Sign in with your Google account to get started. We will only use your data (email, name, and book library) to
                         provide you with the best experience. We do not sell or share your data with anyone.
                     </p>

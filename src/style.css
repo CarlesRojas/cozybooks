@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
+
+@theme {
+    --font-sora: "Montserrat", sans-serif;
+}
+
+@layer components {
+    .icon {
+        @apply size-5 min-h-5 min-w-5 stroke-[3];
+    }
+
+    .focus-scale {
+        @apply mouse:transition-transform mouse:focus-visible:z-10 mouse:focus-visible:scale-110 mouse:focus-visible:outline-none;
+    }
+
+    .skeleton {
+        @apply animate-pulse !border-neutral-300 !bg-neutral-200 !text-transparent dark:!border-neutral-700 dark:!bg-neutral-900;
+    }
+}
+
+* {
+    @apply m-0 box-border min-w-0 p-0;
+}
+
+html {
+    @apply mouse:text-[16px] relative min-h-dvh w-full text-[14px] antialiased;
+}
+
+body {
+    @apply relative min-h-dvh w-full;
+}
+
+img,
+video,
+svg {
+    @apply block;
+}

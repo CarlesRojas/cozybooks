@@ -1,9 +1,7 @@
-"use client";
-
 import { Button } from "@/component/ui/button";
-import { cn } from "@/util";
+import { cn } from "@/lib/cn";
+import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { LuArrowLeft } from "react-icons/lu";
 
 interface Props {
     className?: string;
@@ -14,7 +12,7 @@ const BackButton = ({ className }: Props) => {
 
     return (
         <Button onClick={back} size="icon" variant="glass" className={cn("z-40", className)}>
-            <LuArrowLeft className="icon" />
+            <ArrowLeft className="icon" />
         </Button>
     );
 };

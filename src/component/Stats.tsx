@@ -1,12 +1,10 @@
-"use client";
-
 import { Button } from "@/component/ui/button";
 import { useUrlState } from "@/hook/useUrlState";
+import { cn } from "@/lib/cn";
 import { Book } from "@/type/Book";
-import { cn } from "@/util";
+import { LuBookOpen, LuGalleryHorizontalEnd } from "lucide-react";
 import millify from "millify";
 import { useMemo } from "react";
-import { LuBookOpen, LuGalleryHorizontalEnd } from "react-icons/lu";
 import { z } from "zod";
 
 interface Props {
@@ -119,13 +117,13 @@ const Stats = ({ books, stickyClassName }: Props) => {
                 className,
             )}
         >
-            <p className="text-center text-sm font-semibold leading-tight tracking-wide text-white opacity-80 sm:text-base md:text-lg">
+            <p className="text-center text-sm leading-tight font-semibold tracking-wide text-white opacity-80 sm:text-base md:text-lg">
                 {title}
             </p>
 
-            <p className="text-center text-4xl font-bold leading-tight tracking-wide text-white sm:text-6xl">{millify(value)}</p>
+            <p className="text-center text-4xl leading-tight font-bold tracking-wide text-white sm:text-6xl">{millify(value)}</p>
 
-            <p className="text-balance text-center text-sm font-semibold leading-tight tracking-wide text-white opacity-80 sm:text-base md:text-lg">
+            <p className="text-center text-sm leading-tight font-semibold tracking-wide text-balance text-white opacity-80 sm:text-base md:text-lg">
                 {subtitle}
             </p>
         </div>
@@ -134,7 +132,7 @@ const Stats = ({ books, stickyClassName }: Props) => {
     return (
         <section className="flex h-fit w-full flex-col gap-4">
             <div className={cn("sticky top-0 z-30 bg-neutral-50 pb-2 dark:bg-neutral-950", stickyClassName)}>
-                <h2 className="mx-auto max-w-screen-lg px-6 text-2xl font-bold leading-5 text-neutral-950/90 dark:text-neutral-50/90">
+                <h2 className="mx-auto max-w-screen-lg px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">
                     Stats
                 </h2>
             </div>
@@ -165,18 +163,18 @@ const Stats = ({ books, stickyClassName }: Props) => {
                     <div className="relative col-span-3 row-span-1 overflow-x-auto overflow-y-hidden rounded-2xl bg-gradient-to-t from-purple-900/80 to-purple-400 p-3 sm:rounded-3xl sm:p-4">
                         <div className="flex h-full w-fit flex-row gap-1.5">
                             <div className="items-left mr-8 flex h-full w-fit flex-col justify-end">
-                                <p className="min-w-fit text-nowrap text-xl font-semibold leading-tight text-white sm:text-2xl md:text-2xl">
+                                <p className="min-w-fit text-xl leading-tight font-semibold text-nowrap text-white sm:text-2xl md:text-2xl">
                                     {statType === StatType.BOOKS ? "Books" : "Pages"}
                                 </p>
 
-                                <p className="min-w-fit text-nowrap text-xl font-semibold leading-tight text-white opacity-60 sm:text-2xl md:text-2xl">
+                                <p className="min-w-fit text-xl leading-tight font-semibold text-nowrap text-white opacity-60 sm:text-2xl md:text-2xl">
                                     Per Year
                                 </p>
                             </div>
 
                             {sortedGroups.map((group) => (
                                 <div key={group.year} className="flex h-full w-fit flex-col items-center gap-1">
-                                    <p className="text-center text-xs font-semibold leading-tight tracking-wide text-white opacity-80">
+                                    <p className="text-center text-xs leading-tight font-semibold tracking-wide text-white opacity-80">
                                         {millify(statType === StatType.BOOKS ? group.books : group.pages)}
                                     </p>
 
@@ -189,7 +187,7 @@ const Stats = ({ books, stickyClassName }: Props) => {
                                         />
                                     </div>
 
-                                    <p className="text-center text-xs font-semibold leading-tight tracking-wide text-white opacity-80">
+                                    <p className="text-center text-xs leading-tight font-semibold tracking-wide text-white opacity-80">
                                         {group.year}
                                     </p>
                                 </div>

@@ -1,7 +1,5 @@
-"use client";
-
 import { PaginationContent, PaginationLink, PaginationNext, PaginationPrevious, PaginationWrapper } from "@/component/ui/pagination";
-import { cn } from "@/util";
+import { cn } from "@/lib/cn";
 
 interface Props {
     numberOfPages: number;
@@ -44,7 +42,7 @@ const Pagination = ({ numberOfPages, currentPage, onPageChange }: Props) => {
                     <PaginationLink key={page} onClick={() => onPageChange(page)} isActive={page === currentPage}>
                         <div
                             className={cn(
-                                "size-[10px] min-h-[10px] min-w-[10px] rounded-full bg-neutral-500/30 mouse:group-hover:bg-neutral-500/70 mouse:group-focus-visible:bg-neutral-500/70",
+                                "mouse:group-hover:bg-neutral-500/70 mouse:group-focus-visible:bg-neutral-500/70 size-[10px] min-h-[10px] min-w-[10px] rounded-full bg-neutral-500/30",
                                 page === currentPage && "bg-neutral-600 dark:bg-neutral-400",
                             )}
                         />

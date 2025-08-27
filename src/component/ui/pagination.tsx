@@ -1,7 +1,7 @@
 import { ButtonProps, buttonVariants } from "@/component/ui/button";
-import { cn } from "@/util";
+import { cn } from "@/lib/cn";
+import { LuChevronLeft, LuChevronRight } from "lucide-react";
 import { ComponentProps, forwardRef } from "react";
-import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 const PaginationWrapper = ({ className, ...props }: ComponentProps<"nav">) => (
     <nav role="navigation" aria-label="pagination" className={cn("flex w-fit", className)} {...props} />

@@ -1,16 +1,14 @@
-"use client";
-
 import { Button } from "@/component/ui/button";
-import { useFinishedDates } from "@/server/use/finished/useFinishedDates";
-import { useAddToWantToRead } from "@/server/use/status/useAddToWantToRead";
-import { useFinishBook } from "@/server/use/status/useFinishBook";
-import { useRemoveFromWantToRead } from "@/server/use/status/useRemoveFromWantToRead";
-import { useStartReading } from "@/server/use/status/useStartReading";
-import { useStopReading } from "@/server/use/status/useStopReading";
-import { BookStatus, useBookStatus } from "@/server/use/useBookStatus";
+import { useFinishedDates } from "@/server/old/use/finished/useFinishedDates";
+import { useAddToWantToRead } from "@/server/old/use/status/useAddToWantToRead";
+import { useFinishBook } from "@/server/old/use/status/useFinishBook";
+import { useRemoveFromWantToRead } from "@/server/old/use/status/useRemoveFromWantToRead";
+import { useStartReading } from "@/server/old/use/status/useStartReading";
+import { useStopReading } from "@/server/old/use/status/useStopReading";
+import { BookStatus, useBookStatus } from "@/server/old/use/useBookStatus";
 import { Book } from "@/type/Book";
+import { LuBookMarked, LuBookOpen, LuLoader, LuPlus, LuX } from "lucide-react";
 import { ReactNode } from "react";
-import { LuBookMarked, LuBookOpen, LuLoader, LuPlus, LuX } from "react-icons/lu";
 
 interface Props {
     book: Book;
@@ -41,7 +39,7 @@ const LibraryButton = ({ book }: Props) => {
             <div className="flex w-full flex-wrap items-center justify-center gap-3">{children}</div>
 
             {isError && (
-                <p className="max-w-[30rem] text-pretty text-center text-sm font-semibold tracking-wide text-red-500">
+                <p className="max-w-[30rem] text-center text-sm font-semibold tracking-wide text-pretty text-red-500">
                     There was an error.
                 </p>
             )}

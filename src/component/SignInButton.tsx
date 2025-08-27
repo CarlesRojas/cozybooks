@@ -1,8 +1,6 @@
-"use client";
-
 import { Button } from "@/component/ui/button";
-import { signInWithGoogle } from "@/server/action/user";
-import { LuLogIn } from "react-icons/lu";
+import { signInWithGoogle } from "@/server/old/repo/user";
+import { LuLogIn } from "lucide-react";
 
 const SignInButton = () => {
     return (

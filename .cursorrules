@@ -1,0 +1,28 @@
+# shadcn instructions
+
+Use the latest version of Shadcn to install new components, like this command to add a button component:
+
+```bash
+pnpx shadcn@latest add button
+```
+
+# Commit Message instructions
+
+Commints should always be a single short phrase
+
+- `feat` Commits that add, adjust or remove a new feature to the API or UI
+- `fix` Commits that fix an API or UI bug of a preceded `feat` commit
+- `refactor` Commits that rewrite or restructure code without altering API or UI behavior
+- `style` Commits that address code style (e.g., white-space, formatting, missing semi-colons) and do not affect application behavior
+- `test` Commits that add missing tests or correct existing ones
+- `docs` Commits that exclusively affect documentation
+- `build` Commits that affect build-related components such as build tools, dependencies, project version, CI/CD pipelines, ...
+- `chore` Miscellaneous commits e.g. modifying `.gitignore`, ...
+
+### Examples
+
+feat: add email notifications on new direct messages
+fix: add missing parameter to service call
+build: update dependencies
+refactor: implement fibonacci number calculation as recursion
+style: remove empty line

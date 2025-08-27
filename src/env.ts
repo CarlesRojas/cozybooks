@@ -1,4 +1,4 @@
-import { createEnv } from "@t3-oss/env-nextjs";
+import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
 
 export const env = createEnv({
@@ -10,13 +10,10 @@ export const env = createEnv({
         NEXTAUTH_URL: z.string().url(),
         DATABASE_URL: z.string().url(),
     },
+
     client: {},
-    runtimeEnv: {
-        GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-        GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-        GOOGLE_BOOKS_API_KEY: process.env.GOOGLE_BOOKS_API_KEY,
-        NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-        NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-        DATABASE_URL: process.env.DATABASE_URL,
-    },
+
+    clientPrefix: "VITE_",
+    runtimeEnv: process.env,
+    emptyStringAsUndefined: true,
 });

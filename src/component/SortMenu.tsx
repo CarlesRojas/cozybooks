@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/component/ui/button";
 import {
     DropdownMenu,
@@ -9,8 +7,8 @@ import {
     DropdownMenuTrigger,
 } from "@/component/ui/dropdown-menu";
 import { useUrlState } from "@/hook/useUrlState";
-import { cn } from "@/util";
-import { LuArrowDownUp } from "react-icons/lu";
+import { cn } from "@/lib/cn";
+import { LuArrowDownUp } from "lucide-react";
 import { z } from "zod";
 
 interface Props {

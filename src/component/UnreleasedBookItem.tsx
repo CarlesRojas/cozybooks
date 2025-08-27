@@ -1,13 +1,11 @@
-"use client";
-
 import { Button } from "@/component/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
-import { useDeleteUnreleasedBook } from "@/server/use/unreleasedBook/useDeleteUnreleasedBook";
+import { useDeleteUnreleasedBook } from "@/server/old/use/unreleasedBook/useDeleteUnreleasedBook";
 import { Route } from "@/type/Route";
 import { UnreleasedBook } from "@/type/UnreleasedBook";
+import { LuBook, LuSearch, LuTrash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { LuBook, LuSearch, LuTrash2 } from "react-icons/lu";
 
 interface Props {
     unreleasedBook: UnreleasedBook;

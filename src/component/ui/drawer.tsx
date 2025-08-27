@@ -1,9 +1,7 @@
-"use client";
-
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 
-import { cn } from "@/util";
+import { cn } from "@/lib/cn";
 
 const Drawer = ({ shouldScaleBackground = true, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
     <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
@@ -59,7 +57,7 @@ const DrawerTitle = React.forwardRef<
     React.ElementRef<typeof DrawerPrimitive.Title>,
     React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Title>
 >(({ className, ...props }, ref) => (
-    <DrawerPrimitive.Title ref={ref} className={cn("text-lg font-semibold leading-none tracking-tight", className)} {...props} />
+    <DrawerPrimitive.Title ref={ref} className={cn("text-lg leading-none font-semibold tracking-tight", className)} {...props} />
 ));
 DrawerTitle.displayName = DrawerPrimitive.Title.displayName;
 

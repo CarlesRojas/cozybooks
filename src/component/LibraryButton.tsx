@@ -16,9 +16,10 @@ interface Props {
     book: Book;
     userId: string;
     queryClient: QueryClient;
+    googleToken: string;
 }
 
-const LibraryButton = ({ book, userId, queryClient }: Props) => {
+const LibraryButton = ({ book, userId, queryClient, googleToken }: Props) => {
     const bookStatus = useBookStatus({ bookId: book.id, userId });
     const finishedDates = useFinishedDates({ bookId: book.id, userId });
 
@@ -59,7 +60,7 @@ const LibraryButton = ({ book, userId, queryClient }: Props) => {
 
     const map: Record<BookStatus, ReactNode> = {
         [BookStatus.NONE]: (
-            <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book, userId, queryClient })}>
+            <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book, userId, queryClient, googleToken })}>
                 {addToWantToRead.isPending ? <Loader className="icon mr-3 animate-spin" /> : <Plus className="icon mr-3" />}
                 <p>{finishedDates.data.length > 0 ? "I want to read this again" : "I want to read this"}</p>
             </Button>
@@ -67,12 +68,16 @@ const LibraryButton = ({ book, userId, queryClient }: Props) => {
 
         [BookStatus.WANT_TO_READ]: (
             <>
-                <Button disabled={isLoading} onClick={() => startReading.mutate({ book, userId, queryClient })}>
+                <Button disabled={isLoading} onClick={() => startReading.mutate({ book, userId, queryClient, googleToken })}>
                     {startReading.isPending ? <Loader className="icon mr-3 animate-spin" /> : <BookOpen className="icon mr-3" />}
                     <p>Start reading</p>
                 </Button>
 
-                <Button disabled={isLoading} variant="glass" onClick={() => removeFromWantToRead.mutate({ book, userId, queryClient })}>
+                <Button
+                    disabled={isLoading}
+                    variant="glass"
+                    onClick={() => removeFromWantToRead.mutate({ book, userId, queryClient, googleToken })}
+                >
                     {removeFromWantToRead.isPending ? <Loader className="icon mr-3 animate-spin" /> : <X className="icon mr-3" />}
                     <p>{finishedDates.data.length > 0 ? "I no longer want to read this again" : "I no longer want to read this"}</p>
                 </Button>
@@ -81,12 +86,12 @@ const LibraryButton = ({ book, userId, queryClient }: Props) => {
 
         [BookStatus.READING_NOW]: (
             <>
-                <Button disabled={isLoading} onClick={() => finishBook.mutate({ book, userId, queryClient })}>
+                <Button disabled={isLoading} onClick={() => finishBook.mutate({ book, userId, queryClient, googleToken })}>
                     {finishBook.isPending ? <Loader className="icon mr-3 animate-spin" /> : <BookMarked className="icon mr-3" />}
                     <p>Finish book</p>
                 </Button>
 
-                <Button disabled={isLoading} variant="glass" onClick={() => stopReading.mutate({ book, userId, queryClient })}>
+                <Button disabled={isLoading} variant="glass" onClick={() => stopReading.mutate({ book, userId, queryClient, googleToken })}>
                     {stopReading.isPending ? <Loader className="icon mr-3 animate-spin" /> : <X className="icon mr-3" />}
                     <p>Stop reading</p>
                 </Button>

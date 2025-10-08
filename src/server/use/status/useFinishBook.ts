@@ -1,8 +1,10 @@
 import { addFinished } from "@/server/repo/finished";
+import { addToGoogleBookshelf } from "@/server/repo/google";
 import { addBookToLibrary, isBookInLibrary } from "@/server/repo/library";
 import { removeFromReading } from "@/server/use/status/useStopReading";
 import type { Book, VolumesResult } from "@/type/Book";
 import { BookStatus } from "@/type/Book";
+import { BookShelfType } from "@/type/BookShelf";
 import type { Finished } from "@/type/Finished";
 import { LibraryType } from "@/type/Library";
 import type { QueryClient } from "@tanstack/react-query";
@@ -12,16 +14,17 @@ interface Props {
     book: Book;
     userId: string;
     queryClient: QueryClient;
+    googleToken: string;
 }
 
-export const addToFinished = async ({ book, userId }: Props) => {
+const addToFinished = async ({ book, userId, googleToken }: Props) => {
     const addFinishedPromise = addFinished({ data: { bookId: book.id, userId, timestamp: new Date() } });
     const bookAlreadyFinished = await isBookInLibrary({ data: { bookId: book.id, userId, type: LibraryType.FINISHED } });
     if (!bookAlreadyFinished) await addBookToLibrary({ data: { bookId: book.id, userId, type: LibraryType.FINISHED } });
-    await addFinishedPromise;
+    await Promise.all([addFinishedPromise, addToGoogleBookshelf({ book, googleToken, bookshelf: BookShelfType.HAVE_READ })]);
 };
 
-export const finishBook = async (props: Props) => {
+const finishBook = async (props: Props) => {
     await removeFromReading(props);
     await addToFinished(props);
 };

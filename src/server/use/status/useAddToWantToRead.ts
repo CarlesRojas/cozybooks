@@ -1,7 +1,9 @@
 import { addBook } from "@/server/repo/book";
+import { addToGoogleBookshelf } from "@/server/repo/google";
 import { addBookToLibrary } from "@/server/repo/library";
 import type { Book, VolumesResult } from "@/type/Book";
 import { BookStatus } from "@/type/Book";
+import { BookShelfType } from "@/type/BookShelf";
 import { LibraryType } from "@/type/Library";
 import type { QueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
@@ -10,14 +12,18 @@ interface Props {
     book: Book;
     userId: string;
     queryClient: QueryClient;
+    googleToken: string;
 }
 
-export const addToWantToRead = async ({ book, userId }: Props) => {
+export const addToWantToRead = async ({ book, userId, googleToken }: Props) => {
     try {
         await addBook({ data: book });
     } catch (error) {}
 
-    await addBookToLibrary({ data: { bookId: book.id, userId, type: LibraryType.TO_READ } });
+    await Promise.all([
+        addBookToLibrary({ data: { bookId: book.id, userId, type: LibraryType.TO_READ } }),
+        addToGoogleBookshelf({ book, googleToken, bookshelf: BookShelfType.TO_READ }),
+    ]);
 };
 
 export const useAddToWantToRead = () => {

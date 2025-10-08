@@ -18,6 +18,7 @@ interface Props {
     book: Book;
     userId: string;
     queryClient: QueryClient;
+    googleToken: string;
 }
 
 const months: Record<number, string> = {
@@ -35,7 +36,7 @@ const months: Record<number, string> = {
     11: "December",
 };
 
-const FinishedOn = ({ book, userId, queryClient }: Props) => {
+const FinishedOn = ({ book, userId, queryClient, googleToken }: Props) => {
     const finishedDates = useFinishedDates({ bookId: book.id, userId });
 
     const removeBookFromFinished = useRemoveBookFromFinished();
@@ -169,7 +170,8 @@ const FinishedOn = ({ book, userId, queryClient }: Props) => {
                                 variant="destructive"
                                 onClick={() => {
                                     deleteFinishedDate.mutate({ id: finishedDate.id, bookId: book.id, userId, queryClient });
-                                    if (finishedDates.data!.length === 1) removeBookFromFinished.mutate({ book, userId, queryClient });
+                                    if (finishedDates.data!.length === 1)
+                                        removeBookFromFinished.mutate({ book, userId, queryClient, googleToken });
                                     setEditPopoverOpen(undefined);
                                 }}
                             >

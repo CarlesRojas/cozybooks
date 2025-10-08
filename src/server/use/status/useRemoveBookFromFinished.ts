@@ -1,5 +1,7 @@
+import { removeFromGoogleBookshelf } from "@/server/repo/google";
 import { removeBookFromLibrary } from "@/server/repo/library";
 import type { Book, VolumesResult } from "@/type/Book";
+import { BookShelfType } from "@/type/BookShelf";
 import { LibraryType } from "@/type/Library";
 import type { QueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
@@ -8,10 +10,14 @@ interface Props {
     book: Book;
     userId: string;
     queryClient: QueryClient;
+    googleToken: string;
 }
 
-export const removeFromFinished = async ({ book, userId }: Props) => {
-    await removeBookFromLibrary({ data: { bookId: book.id, userId, type: LibraryType.FINISHED } });
+const removeFromFinished = async ({ book, userId, googleToken }: Props) => {
+    await Promise.all([
+        removeBookFromLibrary({ data: { bookId: book.id, userId, type: LibraryType.FINISHED } }),
+        removeFromGoogleBookshelf({ book, googleToken, bookshelf: BookShelfType.HAVE_READ }),
+    ]);
 };
 
 export const useRemoveBookFromFinished = () => {

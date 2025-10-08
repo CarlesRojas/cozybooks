@@ -27,7 +27,7 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
                 </Button>
 
                 <Button asChild>
-                    <Link to={"/" as any} onClick={isRoot ? undefined : goBack}>
+                    <Link to={"/"} onClick={isRoot ? undefined : goBack}>
                         {isRoot ? "Go home" : "Go back"}
                     </Link>
                 </Button>

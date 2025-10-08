@@ -46,5 +46,10 @@ export const parseGoogleBook = (googleBook: any) => {
     const rawBook = { id: googleBook.id };
     if (googleBook.volumeInfo) Object.assign(rawBook, googleBook.volumeInfo);
     if (googleBook.volumeInfo?.imageLinks) Object.assign(rawBook, googleBook.volumeInfo.imageLinks);
-    return BookSchema.parse(rawBook);
+
+    try {
+        return BookSchema.parse(rawBook);
+    } catch (error) {
+        return null;
+    }
 };

@@ -1,6 +1,5 @@
 import { GOOGLE_BOOKS_URL } from "@/const";
 import { parseGoogleBook } from "@/lib/util";
-import type { VolumesResult } from "@/type/Book";
 import { VolumesResultSchema } from "@/type/Book";
 import type { BookShelfType } from "@/type/BookShelf";
 import { useQuery } from "@tanstack/react-query";
@@ -27,7 +26,7 @@ export const getBookShelf = async ({ type, booksPerPage = 8, offset = 0, googleT
 
     return VolumesResultSchema.parse({
         totalItems: response.data.totalItems,
-        items: response.data.items.map((item: any) => parseGoogleBook(item)),
+        items: response.data.items.map((item: any) => parseGoogleBook(item)).filter((item: any) => item !== null),
     });
 };
 

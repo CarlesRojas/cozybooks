@@ -20,7 +20,7 @@ export function NotFound() {
                 </Button>
 
                 <Button asChild>
-                    <Link to={"/" as any}>Go home</Link>
+                    <Link to={"/"}>Go home</Link>
                 </Button>
             </p>
         </div>

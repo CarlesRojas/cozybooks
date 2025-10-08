@@ -1,6 +1,6 @@
 import { GOOGLE_BOOKS_URL } from "@/const";
 import type { Book } from "@/type/Book";
-import { BookShelfType } from "@/type/BookShelf";
+import type { BookShelfType } from "@/type/BookShelf";
 import axios from "axios";
 
 export const addToGoogleBookshelf = async ({

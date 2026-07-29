@@ -9,9 +9,12 @@ the switch-over.
 1. **Done — counterparts.** Every table and server function from `src/server` has a
    Convex counterpart (this folder), and every hook in `src/server/use` has a Convex
    counterpart in `src/convex/use`.
-2. **Next — data migration.** Copy the Postgres data into Convex (books, library,
-   finished, ratings, unreleasedBook, plus the better-auth tables mirrored in
-   `schema.ts`). `users.upsertFromAuth` is the entry point for the user rows.
+2. **Next — data migration.** Run `pnpm convex:export` (see
+   `scripts/exportForConvex.ts`) to dump Postgres as Convex-ready JSONL files in
+   `convex-export/`, then load them with the `npx convex import --replace` commands
+   the script prints (add `--prod` for production). Re-running export + import is
+   always safe. Sessions/accounts/verifications are only exported with
+   `--include-auth` — they stay live in Postgres until phase 4.
 3. **Then — switch calls.** Replace `@/server/use/...` imports with `@/convex/use/...`
    and route/loader calls with `ConvexHttpClient` calls (e.g.
    `api.books.getWithGoogleFallback` for the book route loader). The hooks keep the

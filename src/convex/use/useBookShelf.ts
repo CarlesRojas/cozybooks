@@ -1,0 +1,32 @@
+// Counterpart of `src/server/use/useBookShelf.ts`: lists a Google Bookshelf through
+// a Convex action.
+
+import { fromWireBook } from "@/convex/map";
+import type { VolumesResult } from "@/convex/type";
+import { useActionQuery } from "@/convex/use/util";
+import { api } from "@convex/_generated/api";
+import type { BookShelfType } from "@/type/BookShelf";
+import { useMemo } from "react";
+
+interface Props {
+    type: BookShelfType;
+    booksPerPage?: number;
+    offset?: number;
+    googleToken: string;
+}
+
+export const useBookShelf = ({ type, booksPerPage, offset, googleToken }: Props) => {
+    const result = useActionQuery(api.googleBooks.getBookShelf, {
+        googleToken,
+        bookshelf: type,
+        maxResults: booksPerPage ?? 8,
+        startIndex: offset ?? 0,
+    });
+
+    const data: VolumesResult | undefined = useMemo(() => {
+        if (!result.data) return undefined;
+        return { totalItems: result.data.totalItems, items: result.data.items.map(fromWireBook) };
+    }, [result.data]);
+
+    return { data, isLoading: result.isLoading, isError: result.isError };
+};

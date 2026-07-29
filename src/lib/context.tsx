@@ -1,3 +1,4 @@
+import { ConvexClientProvider } from "@/convex/provider";
 import type { getUser } from "@/server/repo/auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
@@ -22,5 +23,9 @@ export type Context = {
 };
 
 export const Providers = ({ children }: { children: ReactNode }) => {
-    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+    return (
+        <QueryClientProvider client={queryClient}>
+            <ConvexClientProvider>{children}</ConvexClientProvider>
+        </QueryClientProvider>
+    );
 };

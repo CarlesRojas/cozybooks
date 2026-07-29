@@ -54,6 +54,7 @@
         "framer-motion": "^12.43.0",
         "lucide-react": "^1.27.0",
         "millify": "^6.1.0",
+        "nitro": "3.0.260610-beta",
         "pg": "^8.22.0",
         "react": "^19.2.8",
         "react-device-detect": "^2.2.3",

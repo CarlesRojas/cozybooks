@@ -5,7 +5,7 @@ import { routeTree } from "@/routeTree.gen";
 import { createRouter as createTanstackRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
-export const createRouter = () => {
+export const getRouter = () => {
     if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
         const registerServiceWorker = () => {
             navigator.serviceWorker.register("/service-worker.js");
@@ -33,6 +33,6 @@ export const createRouter = () => {
 
 declare module "@tanstack/react-router" {
     interface Register {
-        router: ReturnType<typeof createRouter>;
+        router: ReturnType<typeof getRouter>;
     }
 }

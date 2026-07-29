@@ -22,8 +22,7 @@ interface Group {
 
 function RouteComponent() {
     const context = Route.useRouteContext();
-    const { sort: sortUrl } = Route.useSearch();
-    const sort = sortUrl as Sort;
+    const { sort } = Route.useSearch();
 
     const finishedBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.FINISHED });
 

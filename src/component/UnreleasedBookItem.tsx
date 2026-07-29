@@ -13,7 +13,7 @@ interface Props {
 }
 
 const UnreleasedBookItem = ({ unreleasedBook, userId, isLoading }: Props) => {
-    const navigate = useNavigate({ from: "/search" });
+    const navigate = useNavigate();
 
     const { id, name } = unreleasedBook;
 
@@ -33,7 +33,7 @@ const UnreleasedBookItem = ({ unreleasedBook, userId, isLoading }: Props) => {
                 <Button
                     variant="glass"
                     onClick={() => {
-                        navigate({ to: `/search`, search: { query: name, searchPage: 1, recommendedPage: 1 } });
+                        navigate({ to: "/search", search: { query: name, searchPage: 1, recommendedPage: 1 } });
                         setPopoverOpen(false);
                     }}
                 >

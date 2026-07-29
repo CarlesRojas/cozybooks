@@ -7,7 +7,6 @@ import { useBookShelf } from "@/convex/use/useBookShelf";
 import { useSearchedBooks } from "@/convex/use/useSearchedBooks";
 import { BookShelfType } from "@/type/BookShelf";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import { ArrowRight, Loader, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { isIOS } from "react-device-detect";
@@ -21,7 +20,7 @@ const searchSearchParamsSchema = z.object({
 
 export const Route = createFileRoute("/_protected/search/")({
     component: RouteComponent,
-    validateSearch: zodValidator(searchSearchParamsSchema),
+    validateSearch: searchSearchParamsSchema,
 });
 
 function RouteComponent() {

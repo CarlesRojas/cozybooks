@@ -7,7 +7,6 @@ import { getUser } from "@/lib/auth/getUser";
 import appCss from "@/style.css?url";
 import { QueryKey } from "@/type/QueryKey";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import type { ReactNode } from "react";
 import z from "zod";
 
@@ -45,7 +44,7 @@ export const Route = createRootRouteWithContext<Context>()({
 
     shellComponent: RootDocument,
 
-    validateSearch: zodValidator(finishedSearchParamsSchema),
+    validateSearch: finishedSearchParamsSchema,
 });
 
 function RootDocument({ children }: { children: ReactNode }) {

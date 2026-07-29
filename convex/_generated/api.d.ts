@@ -12,6 +12,7 @@ import type * as betterAuth from "../betterAuth.js";
 import type * as books from "../books.js";
 import type * as finished from "../finished.js";
 import type * as googleBooks from "../googleBooks.js";
+import type * as googleSync from "../googleSync.js";
 import type * as lib_googleBooks from "../lib/googleBooks.js";
 import type * as lib_model from "../lib/model.js";
 import type * as lib_publish from "../lib/publish.js";
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   books: typeof books;
   finished: typeof finished;
   googleBooks: typeof googleBooks;
+  googleSync: typeof googleSync;
   "lib/googleBooks": typeof lib_googleBooks;
   "lib/model": typeof lib_model;
   "lib/publish": typeof lib_publish;

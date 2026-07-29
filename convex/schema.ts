@@ -91,6 +91,23 @@ export default defineSchema({
     // ─── Domain ──────────────────────────────────────────────────────────────────
     books: defineTable(bookFields).index("by_google_id", ["googleId"]),
 
+    // When each user's daily Google Books reconciliation last ran (see googleSync.ts).
+    googleSyncState: defineTable({
+        userId: v.string(),
+        lastSyncedAt: v.number(),
+    }).index("by_user", ["userId"]),
+
+    // Tombstones for library removals, so the daily Google reconciliation can tell
+    // "removed in CozyBooks, still on Google" (propagate the removal) apart from
+    // "added on Google" (import it). Written on removal, cleared on re-add or once
+    // the removal has reached Google.
+    libraryRemovals: defineTable({
+        userId: v.string(),
+        bookId: v.string(),
+        type: libraryTypeValidator,
+        removedAt: v.number(),
+    }).index("by_user_type_book", ["userId", "type", "bookId"]),
+
     // Counterpart of `library` (userId + type + bookId used to be the primary key).
     library: defineTable({
         userId: v.string(),

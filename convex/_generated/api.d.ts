@@ -12,6 +12,7 @@ import type * as betterAuth from "../betterAuth.js";
 import type * as books from "../books.js";
 import type * as finished from "../finished.js";
 import type * as googleBooks from "../googleBooks.js";
+import type * as googleSync from "../googleSync.js";
 import type * as lib_googleBooks from "../lib/googleBooks.js";
 import type * as lib_model from "../lib/model.js";
 import type * as lib_publish from "../lib/publish.js";
@@ -22,26 +23,23 @@ import type * as status from "../status.js";
 import type * as unreleasedBooks from "../unreleasedBooks.js";
 import type * as users from "../users.js";
 
-import type {
-  ApiFromModules,
-  FilterApi,
-  FunctionReference,
-} from "convex/server";
+import type { ApiFromModules, FilterApi, FunctionReference } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  betterAuth: typeof betterAuth;
-  books: typeof books;
-  finished: typeof finished;
-  googleBooks: typeof googleBooks;
-  "lib/googleBooks": typeof lib_googleBooks;
-  "lib/model": typeof lib_model;
-  "lib/publish": typeof lib_publish;
-  "lib/validators": typeof lib_validators;
-  library: typeof library;
-  ratings: typeof ratings;
-  status: typeof status;
-  unreleasedBooks: typeof unreleasedBooks;
-  users: typeof users;
+    betterAuth: typeof betterAuth;
+    books: typeof books;
+    finished: typeof finished;
+    googleBooks: typeof googleBooks;
+    googleSync: typeof googleSync;
+    "lib/googleBooks": typeof lib_googleBooks;
+    "lib/model": typeof lib_model;
+    "lib/publish": typeof lib_publish;
+    "lib/validators": typeof lib_validators;
+    library: typeof library;
+    ratings: typeof ratings;
+    status: typeof status;
+    unreleasedBooks: typeof unreleasedBooks;
+    users: typeof users;
 }>;
 
 /**
@@ -52,10 +50,7 @@ declare const fullApi: ApiFromModules<{
  * const myFunctionReference = api.myModule.myFunction;
  * ```
  */
-export declare const api: FilterApi<
-  typeof fullApi,
-  FunctionReference<any, "public">
->;
+export declare const api: FilterApi<typeof fullApi, FunctionReference<any, "public">>;
 
 /**
  * A utility for referencing Convex functions in your app's internal API.
@@ -65,9 +60,6 @@ export declare const api: FilterApi<
  * const myFunctionReference = internal.myModule.myFunction;
  * ```
  */
-export declare const internal: FilterApi<
-  typeof fullApi,
-  FunctionReference<any, "internal">
->;
+export declare const internal: FilterApi<typeof fullApi, FunctionReference<any, "internal">>;
 
 export declare const components: {};

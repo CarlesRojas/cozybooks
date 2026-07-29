@@ -34,10 +34,21 @@ export const getLibraryEntry = async (ctx: QueryCtx, { userId, type, bookId }: {
         .unique();
 };
 
+const getLibraryRemoval = async (ctx: QueryCtx, { userId, type, bookId }: { userId: string; type: LibraryType; bookId: string }) => {
+    return await ctx.db
+        .query("libraryRemovals")
+        .withIndex("by_user_type_book", (q) => q.eq("userId", userId).eq("type", type).eq("bookId", bookId))
+        .unique();
+};
+
 export const addBookToLibrary = async (
     ctx: MutationCtx,
     { userId, type, bookId }: { userId: string; type: LibraryType; bookId: string },
 ) => {
+    // A re-added book must not be removed from Google by a stale tombstone.
+    const removal = await getLibraryRemoval(ctx, { userId, type, bookId });
+    if (removal) await ctx.db.delete(removal._id);
+
     const existing = await getLibraryEntry(ctx, { userId, type, bookId });
     if (existing) return existing._id;
     return await ctx.db.insert("library", { userId, type, bookId, createdAt: Date.now() });
@@ -48,7 +59,15 @@ export const removeBookFromLibrary = async (
     { userId, type, bookId }: { userId: string; type: LibraryType; bookId: string },
 ) => {
     const existing = await getLibraryEntry(ctx, { userId, type, bookId });
-    if (existing) await ctx.db.delete(existing._id);
+    if (!existing) return;
+
+    await ctx.db.delete(existing._id);
+
+    // Tombstone so the daily Google reconciliation propagates this removal even if
+    // the immediate best-effort mirror (status.ts) fails or runs without a token.
+    const removal = await getLibraryRemoval(ctx, { userId, type, bookId });
+    if (removal) await ctx.db.patch(removal._id, { removedAt: Date.now() });
+    else await ctx.db.insert("libraryRemovals", { userId, type, bookId, removedAt: Date.now() });
 };
 
 export const getFinishedForBook = async (ctx: QueryCtx, { userId, bookId }: { userId: string; bookId: string }) => {

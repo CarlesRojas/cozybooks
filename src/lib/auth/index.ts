@@ -1,11 +1,13 @@
+import { convexHttpClient } from "@/convex/http";
 import { env } from "@/env";
-import { db } from "@/server/db";
+import { convexAdapter } from "@/lib/auth/convexAdapter";
 import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { reactStartCookies } from "better-auth/react-start";
 
+if (!convexHttpClient) throw new Error("VITE_CONVEX_URL must be set: better-auth stores its data in Convex");
+
 export const auth = betterAuth({
-    database: drizzleAdapter(db, { provider: "pg" }),
+    database: convexAdapter({ client: convexHttpClient, secret: env.BETTER_AUTH_SECRET }),
 
     socialProviders: {
         google: {

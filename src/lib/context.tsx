@@ -1,5 +1,5 @@
 import { ConvexClientProvider } from "@/convex/provider";
-import type { getUser } from "@/server/repo/auth";
+import type { getUser } from "@/lib/auth/getUser";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 

@@ -3,6 +3,26 @@
 
 export const GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1";
 
+// Google Books answers 503 when it can't geolocate the caller, which is every
+// request from a datacenter IP — so every request from a Convex action, where these
+// calls now run (they used to go out from the app server on the developer's own
+// machine). Sending an explicit `country` is the documented way around it.
+// Override per deployment with `npx convex env set GOOGLE_BOOKS_COUNTRY ES`.
+export const googleBooksCountry = () => process.env.GOOGLE_BOOKS_COUNTRY ?? "US";
+
+// Google puts the actual reason in the response body; a bare status code can't tell
+// a geo rejection from an expired token, so keep the body in the error.
+export const googleBooksFetch = async (url: URL, init?: RequestInit) => {
+    const response = await fetch(url.toString(), init);
+
+    if (!response.ok) {
+        const body = await response.text().catch(() => "");
+        throw new Error(`Google Books request to ${url.pathname} failed with status ${response.status}: ${body.slice(0, 300)}`);
+    }
+
+    return response.json();
+};
+
 // Google bookshelf ids (see `src/type/BookShelf.ts`).
 export const BOOKSHELF = {
     TO_READ: 2,

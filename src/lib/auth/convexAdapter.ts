@@ -20,10 +20,25 @@ const serializeValue = (value: unknown) => (value instanceof Date ? value.getTim
 const serializeRecord = (record: Record<string, unknown>) =>
     Object.fromEntries(Object.entries(record).map(([field, value]) => [field, serializeValue(value)]));
 
-const serializeWhere = (where: Array<{ field: string; value: unknown; operator: string; connector: string }>) =>
-    where.map((clause) => ({
-        ...clause,
-        value: Array.isArray(clause.value) ? clause.value.map(serializeValue) : serializeValue(clause.value),
+interface WhereClause {
+    field: string;
+    value: unknown;
+    operator?: string;
+    connector?: string;
+    mode?: string;
+}
+
+// Only the clause fields `convex/betterAuth.ts` validates are forwarded: Convex
+// rejects objects carrying fields the validator doesn't declare, so passing the
+// clause through verbatim would break whenever better-auth adds one (1.6 added
+// `mode`). Undefined keys are dropped — Convex has no `undefined` value.
+const serializeWhere = (where: Array<WhereClause>) =>
+    where.map(({ field, value, operator, connector, mode }) => ({
+        field,
+        value: Array.isArray(value) ? value.map(serializeValue) : serializeValue(value),
+        ...(operator !== undefined && { operator }),
+        ...(connector !== undefined && { connector }),
+        ...(mode !== undefined && { mode }),
     }));
 
 const deserializeRow = (model: string, row: Record<string, any> | null) => {

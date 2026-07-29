@@ -52,7 +52,9 @@ function RootDocument({ children }: { children: ReactNode }) {
     const { sort } = Route.useSearch();
 
     return (
-        <html lang="en">
+        // The FOUC script in ThemeProvider toggles `dark` on <html> before React
+        // hydrates, so this element is expected to differ from the SSR output.
+        <html lang="en" suppressHydrationWarning>
             <head>
                 <HeadContent />
             </head>

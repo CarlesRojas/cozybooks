@@ -4,7 +4,7 @@
 
 import { v } from "convex/values";
 import { action, internalAction } from "./_generated/server";
-import { GOOGLE_BOOKS_URL, parseGoogleVolume } from "./lib/googleBooks";
+import { GOOGLE_BOOKS_URL, googleBooksCountry, googleBooksFetch, parseGoogleVolume } from "./lib/googleBooks";
 
 const publishVolume = (volume: ReturnType<typeof parseGoogleVolume>) => {
     if (!volume) return null;
@@ -68,13 +68,10 @@ export const search = action({
             startIndex: (startIndex ?? 0).toString(),
             printType: "books",
             orderBy: "relevance",
+            country: googleBooksCountry(),
         }).toString();
 
-        const response = await fetch(url.toString());
-        if (!response.ok) throw new Error(`Google Books search failed with status ${response.status}`);
-        const data = await response.json();
-
-        return parseVolumesResponse(data);
+        return parseVolumesResponse(await googleBooksFetch(url));
     },
 });
 
@@ -93,12 +90,9 @@ export const getBookShelf = action({
             maxResults: (maxResults ?? 8).toString(),
             startIndex: (startIndex ?? 0).toString(),
             projection: "full",
+            country: googleBooksCountry(),
         }).toString();
 
-        const response = await fetch(url.toString());
-        if (!response.ok) throw new Error(`Google Books bookshelf request failed with status ${response.status}`);
-        const data = await response.json();
-
-        return parseVolumesResponse(data);
+        return parseVolumesResponse(await googleBooksFetch(url));
     },
 });

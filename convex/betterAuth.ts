@@ -31,18 +31,28 @@ const INDEXED_FIELDS: Record<AuthTable, Record<string, string>> = {
     verifications: { id: "by_auth_id", identifier: "by_identifier" },
 };
 
+// `operator`/`connector`/`mode` are optional in better-auth's own WhereClause type
+// (defaults: eq / AND / sensitive), so they're accepted as optional here too — the
+// adapter forwards whatever better-auth produces.
 const whereValidator = v.optional(
     v.array(
         v.object({
             field: v.string(),
             value: v.any(),
-            operator: v.string(),
-            connector: v.string(),
+            operator: v.optional(v.string()),
+            connector: v.optional(v.string()),
+            mode: v.optional(v.string()),
         }),
     ),
 );
 
-type WhereClause = { field: string; value: any; operator: string; connector: string };
+type WhereClause = {
+    field: string;
+    value: any;
+    operator?: string;
+    connector?: string;
+    mode?: string;
+};
 
 const assertAccess = (secret: string) => {
     const expected = process.env.BETTER_AUTH_SECRET;
@@ -71,11 +81,19 @@ const toRow = (doc: Record<string, any>) => {
     return { id: authId, ...fields };
 };
 
-const matchesClause = (doc: Record<string, any>, clause: WhereClause) => {
-    const value = doc[columnFor(clause.field)];
-    const target = clause.value;
+// `mode: "insensitive"` asks for case-insensitive string equality and pattern
+// matching; it has no effect on non-string values.
+const foldCase = (value: any, insensitive: boolean): any =>
+    insensitive && typeof value === "string" ? value.toLowerCase() : value;
 
-    switch (clause.operator) {
+const matchesClause = (doc: Record<string, any>, clause: WhereClause) => {
+    const insensitive = clause.mode === "insensitive";
+    const value = foldCase(doc[columnFor(clause.field)], insensitive);
+    const target = Array.isArray(clause.value)
+        ? clause.value.map((entry) => foldCase(entry, insensitive))
+        : foldCase(clause.value, insensitive);
+
+    switch (clause.operator ?? "eq") {
         case "eq":
             return (value ?? null) === (target ?? null);
         case "ne":
@@ -101,10 +119,12 @@ const matchesClause = (doc: Record<string, any>, clause: WhereClause) => {
     }
 };
 
+const isOr = (clause: WhereClause) => clause.connector === "OR";
+
 // AND clauses must all match; OR clauses (if any) need at least one match.
 const matches = (doc: Record<string, any>, where: Array<WhereClause>) => {
-    const andClauses = where.filter((clause) => clause.connector !== "OR");
-    const orClauses = where.filter((clause) => clause.connector === "OR");
+    const andClauses = where.filter((clause) => !isOr(clause));
+    const orClauses = where.filter(isOr);
     return (
         andClauses.every((clause) => matchesClause(doc, clause)) &&
         (orClauses.length === 0 || orClauses.some((clause) => matchesClause(doc, clause)))
@@ -116,9 +136,11 @@ const matches = (doc: Record<string, any>, where: Array<WhereClause>) => {
 const findMatches = async (ctx: QueryCtx | MutationCtx, table: AuthTable, where: Array<WhereClause>) => {
     let candidates: Array<Record<string, any>> | null = null;
 
-    if (where.every((clause) => clause.connector !== "OR")) {
+    if (!where.some(isOr)) {
         for (const clause of where) {
-            if (clause.operator !== "eq" || clause.value === null) continue;
+            if ((clause.operator ?? "eq") !== "eq" || clause.value === null) continue;
+            // A case-insensitive clause can't be served by an exact index lookup.
+            if (clause.mode === "insensitive" && typeof clause.value === "string") continue;
             const index = INDEXED_FIELDS[table][clause.field];
             if (!index) continue;
 

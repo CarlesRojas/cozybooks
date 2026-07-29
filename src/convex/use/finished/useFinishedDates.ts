@@ -2,7 +2,7 @@
 // live when finished dates are created, edited or deleted, with no manual refetching.
 
 import { fromWireFinished } from "@/convex/map";
-import type { FinishedDate } from "@/convex/type";
+import type { Finished } from "@/type/Finished";
 import { api } from "@convex/_generated/api";
 import { useQuery } from "convex/react";
 import { useMemo } from "react";
@@ -12,7 +12,7 @@ interface Props {
     userId: string;
 }
 
-export const useFinishedDates = ({ bookId, userId }: Props): { data: Array<FinishedDate> | undefined; isLoading: boolean } => {
+export const useFinishedDates = ({ bookId, userId }: Props): { data: Array<Finished> | undefined; isLoading: boolean } => {
     const finished = useQuery(api.finished.getForBook, { userId, bookId });
     const data = useMemo(() => finished?.map(fromWireFinished), [finished]);
 

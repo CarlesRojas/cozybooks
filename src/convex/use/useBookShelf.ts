@@ -1,8 +1,8 @@
-// Counterpart of `src/server/use/useBookShelf.ts`: lists a Google Bookshelf through
-// a Convex action.
+// Lists one of the user's Google "My Library" bookshelves through a Convex action. This
+// is per-user data, so it needs the Google OAuth token.
 
 import { fromWireBook } from "@/convex/map";
-import type { VolumesResult } from "@/convex/type";
+import type { VolumesResult } from "@/type/Book";
 import { useActionQuery } from "@/convex/use/util";
 import { api } from "@convex/_generated/api";
 import type { BookShelfType } from "@/type/BookShelf";

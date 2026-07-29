@@ -3,7 +3,7 @@
 // add library row, insert finished date); now it's one transactional mutation.
 
 import { toWireBook } from "@/convex/map";
-import type { Book } from "@/convex/type";
+import type { Book } from "@/type/Book";
 import { setOptimisticBookStatus } from "@/convex/use/status/optimistic";
 import { useTrackedMutation } from "@/convex/use/util";
 import { api } from "@convex/_generated/api";

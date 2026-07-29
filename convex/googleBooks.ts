@@ -1,10 +1,9 @@
-// Counterparts of `src/server/repo/google.ts`, `src/server/use/useSearchedBooks.ts`
-// and `src/server/use/useBookShelf.ts` — everything that talks to the Google Books
-// API with the user's Google OAuth token.
+// Everything that talks to the Google Books API: catalogue search, and the user's
+// "My Library" bookshelves.
 
 import { v } from "convex/values";
 import { action, internalAction } from "./_generated/server";
-import { GOOGLE_BOOKS_URL, parseGoogleVolume } from "./lib/googleBooks";
+import { catalogueParams, clampMaxResults, googleBooksRequest, parseGoogleVolume } from "./lib/googleBooks";
 
 const publishVolume = (volume: ReturnType<typeof parseGoogleVolume>) => {
     if (!volume) return null;
@@ -22,9 +21,14 @@ const parseVolumesResponse = (data: any) => {
     };
 };
 
-// Counterpart of `addToGoogleBookshelf` / `removeFromGoogleBookshelf`. Runs as a
-// scheduled internal action (see `status.ts`) so bookshelf syncing happens off the
-// critical path. Best-effort like the old code: failures are ignored.
+// Mirrors a CozyBooks status change onto the user's Google "My Library" shelves. Runs as
+// a scheduled internal action (see `status.ts`) so syncing never blocks the user-facing
+// write.
+//
+// Every op is attempted even if an earlier one fails, so one rejected shelf can't stop
+// the rest — but the failures are then raised together. That deliberately differs from
+// the old fire-and-forget behavior: silently swallowing errors here means the two
+// libraries drift apart with nothing to show why.
 export const syncBookshelves = internalAction({
     args: {
         googleToken: v.string(),
@@ -37,48 +41,56 @@ export const syncBookshelves = internalAction({
         ),
     },
     handler: async (_ctx, { googleToken, volumeId, ops }) => {
+        const failures: Array<string> = [];
+
         for (const { op, bookshelf } of ops) {
             const endpoint = op === "add" ? "addVolume" : "removeVolume";
-            const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${bookshelf}/${endpoint}`);
-            url.search = new URLSearchParams({ access_token: googleToken, volumeId }).toString();
 
             try {
-                await fetch(url.toString(), { method: "POST" });
-            } catch {}
+                await googleBooksRequest({
+                    path: `/mylibrary/bookshelves/${bookshelf}/${endpoint}`,
+                    params: { volumeId },
+                    method: "POST",
+                    googleToken,
+                });
+            } catch (error) {
+                failures.push(`${endpoint} on shelf ${bookshelf}: ${error instanceof Error ? error.message : String(error)}`);
+            }
         }
+
+        if (failures.length > 0) throw new Error(`Google bookshelf sync failed for volume ${volumeId} — ${failures.join("; ")}`);
     },
 });
 
-// Counterpart of `searchBooks` (`useSearchedBooks.ts`).
+// Catalogue search. Uses the API key rather than the user's OAuth token: `volumes.list`
+// is a public endpoint, so search stays up even when a Google token has expired.
 export const search = action({
     args: {
-        googleToken: v.string(),
         query: v.string(),
         maxResults: v.optional(v.number()),
         startIndex: v.optional(v.number()),
     },
-    handler: async (_ctx, { googleToken, query, maxResults, startIndex }) => {
+    handler: async (_ctx, { query, maxResults, startIndex }) => {
         if (!query.trim()) return { totalItems: 0, items: [] };
 
-        const url = new URL(`${GOOGLE_BOOKS_URL}/volumes`);
-        url.search = new URLSearchParams({
-            access_token: googleToken,
-            q: query.trim(),
-            maxResults: (maxResults ?? 8).toString(),
-            startIndex: (startIndex ?? 0).toString(),
-            printType: "books",
-            orderBy: "relevance",
-        }).toString();
-
-        const response = await fetch(url.toString());
-        if (!response.ok) throw new Error(`Google Books search failed with status ${response.status}`);
-        const data = await response.json();
+        const data = await googleBooksRequest({
+            path: "/volumes",
+            params: {
+                ...catalogueParams(),
+                q: query.trim(),
+                maxResults: clampMaxResults(maxResults).toString(),
+                startIndex: (startIndex ?? 0).toString(),
+                printType: "books",
+                orderBy: "relevance",
+            },
+        });
 
         return parseVolumesResponse(data);
     },
 });
 
-// Counterpart of `getBookShelf` (`useBookShelf.ts`).
+// Lists one of the user's Google bookshelves. Unlike search this is per-user data, so it
+// needs the OAuth token.
 export const getBookShelf = action({
     args: {
         googleToken: v.string(),
@@ -87,17 +99,16 @@ export const getBookShelf = action({
         startIndex: v.optional(v.number()),
     },
     handler: async (_ctx, { googleToken, bookshelf, maxResults, startIndex }) => {
-        const url = new URL(`${GOOGLE_BOOKS_URL}/mylibrary/bookshelves/${bookshelf}/volumes`);
-        url.search = new URLSearchParams({
-            access_token: googleToken,
-            maxResults: (maxResults ?? 8).toString(),
-            startIndex: (startIndex ?? 0).toString(),
-            projection: "full",
-        }).toString();
-
-        const response = await fetch(url.toString());
-        if (!response.ok) throw new Error(`Google Books bookshelf request failed with status ${response.status}`);
-        const data = await response.json();
+        const data = await googleBooksRequest({
+            path: `/mylibrary/bookshelves/${bookshelf}/volumes`,
+            params: {
+                ...catalogueParams(),
+                maxResults: clampMaxResults(maxResults).toString(),
+                startIndex: (startIndex ?? 0).toString(),
+                projection: "full",
+            },
+            googleToken,
+        });
 
         return parseVolumesResponse(data);
     },

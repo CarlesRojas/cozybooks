@@ -7,7 +7,9 @@ import Rating from "@/component/Rating";
 import ShowMore from "@/component/ShowMore";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
-import { getBookWithGoogleFallback } from "@/server/repo/book";
+import { convexHttpClient } from "@/convex/http";
+import { fromWireBook } from "@/convex/map";
+import { api } from "@convex/_generated/api";
 import { convertHtmlToReact } from "@hedgedoc/html-to-react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { isIOS } from "react-device-detect";
@@ -15,14 +17,14 @@ import { isIOS } from "react-device-detect";
 export const Route = createFileRoute("/_protected/book/$bookId/")({
     component: RouteComponent,
     beforeLoad: async ({ params }) => {
-        const book = await getBookWithGoogleFallback({ data: params.bookId });
-        if (!book) return { book: null };
-        return { book };
+        if (!convexHttpClient) return { book: null };
+        const book = await convexHttpClient.action(api.books.getWithGoogleFallback, { bookId: params.bookId });
+        return { book: book ? fromWireBook(book) : null };
     },
 });
 
 function RouteComponent() {
-    const { book, user, queryClient, googleToken } = Route.useRouteContext();
+    const { book, user, googleToken } = Route.useRouteContext();
     if (!book) return <NotFound type={NotFoundType.BOOK} />;
 
     const { title, authors, description, pageCount, previewLink, categories } = book;
@@ -59,11 +61,11 @@ function RouteComponent() {
                     {pageCount && <p className="text-sm leading-snug font-medium tracking-wide opacity-60">{pageCount} pages</p>}
                 </div>
 
-                <Rating book={book} tooltipSide="top" userId={user!.id} queryClient={queryClient} />
+                <Rating book={book} tooltipSide="top" userId={user!.id} />
 
-                <LibraryButton book={book} userId={user!.id} queryClient={queryClient} googleToken={googleToken!} />
+                <LibraryButton book={book} userId={user!.id} googleToken={googleToken!} />
 
-                <FinishedOn book={book} userId={user!.id} queryClient={queryClient} googleToken={googleToken!} />
+                <FinishedOn book={book} userId={user!.id} googleToken={googleToken!} />
 
                 {description && (
                     <div className="prose prose-neutral bg-neutral-150 dark:prose-invert dark:bg-neutral-850 flex w-fit flex-col items-center rounded-3xl px-4 pt-1 pb-5 sm:px-6 sm:pt-2 sm:pb-6">

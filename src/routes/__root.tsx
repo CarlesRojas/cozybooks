@@ -3,11 +3,10 @@ import { Sort } from "@/component/SortMenu";
 import type { Context } from "@/lib/context";
 import { seo } from "@/lib/seo";
 import { ThemeProvider } from "@/lib/theme";
-import { getUser } from "@/server/repo/auth";
+import { getUser } from "@/lib/auth/getUser";
 import appCss from "@/style.css?url";
 import { QueryKey } from "@/type/QueryKey";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import type { ReactNode } from "react";
 import z from "zod";
 
@@ -45,7 +44,7 @@ export const Route = createRootRouteWithContext<Context>()({
 
     shellComponent: RootDocument,
 
-    validateSearch: zodValidator(finishedSearchParamsSchema),
+    validateSearch: finishedSearchParamsSchema,
 });
 
 function RootDocument({ children }: { children: ReactNode }) {
@@ -53,7 +52,9 @@ function RootDocument({ children }: { children: ReactNode }) {
     const { sort } = Route.useSearch();
 
     return (
-        <html lang="en">
+        // The FOUC script in ThemeProvider toggles `dark` on <html> before React
+        // hydrates, so this element is expected to differ from the SSR output.
+        <html lang="en" suppressHydrationWarning>
             <head>
                 <HeadContent />
             </head>

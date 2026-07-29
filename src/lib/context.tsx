@@ -1,7 +1,5 @@
-import { ConvexClientProvider } from "@/convex/provider";
-import type { getUser } from "@/server/repo/auth";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { ReactNode } from "react";
+import type { getUser } from "@/lib/auth/getUser";
+import { QueryClient } from "@tanstack/react-query";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -20,12 +18,4 @@ export type Context = {
     queryClient: QueryClient;
     user: NonNullable<Awaited<ReturnType<typeof getUser>>>["user"] | null;
     googleToken: NonNullable<Awaited<ReturnType<typeof getUser>>>["googleToken"] | null;
-};
-
-export const Providers = ({ children }: { children: ReactNode }) => {
-    return (
-        <QueryClientProvider client={queryClient}>
-            <ConvexClientProvider>{children}</ConvexClientProvider>
-        </QueryClientProvider>
-    );
 };

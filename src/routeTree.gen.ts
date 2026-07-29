@@ -8,28 +8,49 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createServerRootRoute } from '@tanstack/react-start/server'
-
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as LegalTermsAndConditionsIndexRouteImport } from './routes/legal/terms-and-conditions/index'
-import { Route as LegalPrivacyPolicyIndexRouteImport } from './routes/legal/privacy-policy/index'
-import { Route as ProtectedSearchIndexRouteImport } from './routes/_protected/search/index'
-import { Route as ProtectedReadingIndexRouteImport } from './routes/_protected/reading/index'
+import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as ProtectedFinishedIndexRouteImport } from './routes/_protected/finished/index'
+import { Route as ProtectedReadingIndexRouteImport } from './routes/_protected/reading/index'
+import { Route as ProtectedSearchIndexRouteImport } from './routes/_protected/search/index'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as LegalPrivacyPolicyIndexRouteImport } from './routes/legal/privacy-policy/index'
+import { Route as LegalTermsAndConditionsIndexRouteImport } from './routes/legal/terms-and-conditions/index'
 import { Route as ProtectedBookBookIdIndexRouteImport } from './routes/_protected/book/$bookId/index'
-import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
-const rootServerRouteImport = createServerRootRoute()
-
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
   id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ProtectedFinishedIndexRoute = ProtectedFinishedIndexRouteImport.update({
+  id: '/finished/',
+  path: '/finished/',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedReadingIndexRoute = ProtectedReadingIndexRouteImport.update({
+  id: '/reading/',
+  path: '/reading/',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedSearchIndexRoute = ProtectedSearchIndexRouteImport.update({
+  id: '/search/',
+  path: '/search/',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalPrivacyPolicyIndexRoute = LegalPrivacyPolicyIndexRouteImport.update({
+  id: '/legal/privacy-policy/',
+  path: '/legal/privacy-policy/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LegalTermsAndConditionsIndexRoute =
@@ -38,49 +59,26 @@ const LegalTermsAndConditionsIndexRoute =
     path: '/legal/terms-and-conditions/',
     getParentRoute: () => rootRouteImport,
   } as any)
-const LegalPrivacyPolicyIndexRoute = LegalPrivacyPolicyIndexRouteImport.update({
-  id: '/legal/privacy-policy/',
-  path: '/legal/privacy-policy/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProtectedSearchIndexRoute = ProtectedSearchIndexRouteImport.update({
-  id: '/search/',
-  path: '/search/',
-  getParentRoute: () => ProtectedRouteRoute,
-} as any)
-const ProtectedReadingIndexRoute = ProtectedReadingIndexRouteImport.update({
-  id: '/reading/',
-  path: '/reading/',
-  getParentRoute: () => ProtectedRouteRoute,
-} as any)
-const ProtectedFinishedIndexRoute = ProtectedFinishedIndexRouteImport.update({
-  id: '/finished/',
-  path: '/finished/',
-  getParentRoute: () => ProtectedRouteRoute,
-} as any)
 const ProtectedBookBookIdIndexRoute =
   ProtectedBookBookIdIndexRouteImport.update({
     id: '/book/$bookId/',
     path: '/book/$bookId/',
     getParentRoute: () => ProtectedRouteRoute,
   } as any)
-const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
-  getParentRoute: () => rootServerRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/finished': typeof ProtectedFinishedIndexRoute
-  '/reading': typeof ProtectedReadingIndexRoute
-  '/search': typeof ProtectedSearchIndexRoute
-  '/legal/privacy-policy': typeof LegalPrivacyPolicyIndexRoute
-  '/legal/terms-and-conditions': typeof LegalTermsAndConditionsIndexRoute
-  '/book/$bookId': typeof ProtectedBookBookIdIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/finished/': typeof ProtectedFinishedIndexRoute
+  '/reading/': typeof ProtectedReadingIndexRoute
+  '/search/': typeof ProtectedSearchIndexRoute
+  '/legal/privacy-policy/': typeof LegalPrivacyPolicyIndexRoute
+  '/legal/terms-and-conditions/': typeof LegalTermsAndConditionsIndexRoute
+  '/book/$bookId/': typeof ProtectedBookBookIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/finished': typeof ProtectedFinishedIndexRoute
   '/reading': typeof ProtectedReadingIndexRoute
   '/search': typeof ProtectedSearchIndexRoute
@@ -92,6 +90,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteRouteWithChildren
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/_protected/finished/': typeof ProtectedFinishedIndexRoute
   '/_protected/reading/': typeof ProtectedReadingIndexRoute
   '/_protected/search/': typeof ProtectedSearchIndexRoute
@@ -103,15 +102,17 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/finished'
-    | '/reading'
-    | '/search'
-    | '/legal/privacy-policy'
-    | '/legal/terms-and-conditions'
-    | '/book/$bookId'
+    | '/api/auth/$'
+    | '/finished/'
+    | '/reading/'
+    | '/search/'
+    | '/legal/privacy-policy/'
+    | '/legal/terms-and-conditions/'
+    | '/book/$bookId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/api/auth/$'
     | '/finished'
     | '/reading'
     | '/search'
@@ -122,6 +123,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_protected'
+    | '/api/auth/$'
     | '/_protected/finished/'
     | '/_protected/reading/'
     | '/_protected/search/'
@@ -133,40 +135,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   LegalPrivacyPolicyIndexRoute: typeof LegalPrivacyPolicyIndexRoute
   LegalTermsAndConditionsIndexRoute: typeof LegalTermsAndConditionsIndexRoute
-}
-export interface FileServerRoutesByFullPath {
-  '/api/auth/$': typeof ApiAuthSplatServerRoute
-}
-export interface FileServerRoutesByTo {
-  '/api/auth/$': typeof ApiAuthSplatServerRoute
-}
-export interface FileServerRoutesById {
-  __root__: typeof rootServerRouteImport
-  '/api/auth/$': typeof ApiAuthSplatServerRoute
-}
-export interface FileServerRouteTypes {
-  fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/api/auth/$'
-  fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/api/auth/$'
-  id: '__root__' | '/api/auth/$'
-  fileServerRoutesById: FileServerRoutesById
-}
-export interface RootServerRouteChildren {
-  ApiAuthSplatServerRoute: typeof ApiAuthSplatServerRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_protected': {
-      id: '/_protected'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof ProtectedRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -174,58 +149,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/legal/terms-and-conditions/': {
-      id: '/legal/terms-and-conditions/'
-      path: '/legal/terms-and-conditions'
-      fullPath: '/legal/terms-and-conditions'
-      preLoaderRoute: typeof LegalTermsAndConditionsIndexRouteImport
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtectedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/legal/privacy-policy/': {
-      id: '/legal/privacy-policy/'
-      path: '/legal/privacy-policy'
-      fullPath: '/legal/privacy-policy'
-      preLoaderRoute: typeof LegalPrivacyPolicyIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_protected/search/': {
-      id: '/_protected/search/'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof ProtectedSearchIndexRouteImport
+    '/_protected/finished/': {
+      id: '/_protected/finished/'
+      path: '/finished'
+      fullPath: '/finished/'
+      preLoaderRoute: typeof ProtectedFinishedIndexRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
     '/_protected/reading/': {
       id: '/_protected/reading/'
       path: '/reading'
-      fullPath: '/reading'
+      fullPath: '/reading/'
       preLoaderRoute: typeof ProtectedReadingIndexRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
-    '/_protected/finished/': {
-      id: '/_protected/finished/'
-      path: '/finished'
-      fullPath: '/finished'
-      preLoaderRoute: typeof ProtectedFinishedIndexRouteImport
+    '/_protected/search/': {
+      id: '/_protected/search/'
+      path: '/search'
+      fullPath: '/search/'
+      preLoaderRoute: typeof ProtectedSearchIndexRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
-    '/_protected/book/$bookId/': {
-      id: '/_protected/book/$bookId/'
-      path: '/book/$bookId'
-      fullPath: '/book/$bookId'
-      preLoaderRoute: typeof ProtectedBookBookIdIndexRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
-  }
-}
-declare module '@tanstack/react-start/server' {
-  interface ServerFileRoutesByPath {
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
       fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatServerRouteImport
-      parentRoute: typeof rootServerRouteImport
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/privacy-policy/': {
+      id: '/legal/privacy-policy/'
+      path: '/legal/privacy-policy'
+      fullPath: '/legal/privacy-policy/'
+      preLoaderRoute: typeof LegalPrivacyPolicyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/terms-and-conditions/': {
+      id: '/legal/terms-and-conditions/'
+      path: '/legal/terms-and-conditions'
+      fullPath: '/legal/terms-and-conditions/'
+      preLoaderRoute: typeof LegalTermsAndConditionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protected/book/$bookId/': {
+      id: '/_protected/book/$bookId/'
+      path: '/book/$bookId'
+      fullPath: '/book/$bookId/'
+      preLoaderRoute: typeof ProtectedBookBookIdIndexRouteImport
+      parentRoute: typeof ProtectedRouteRoute
     }
   }
 }
@@ -251,15 +229,19 @@ const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
   LegalPrivacyPolicyIndexRoute: LegalPrivacyPolicyIndexRoute,
   LegalTermsAndConditionsIndexRoute: LegalTermsAndConditionsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-const rootServerRouteChildren: RootServerRouteChildren = {
-  ApiAuthSplatServerRoute: ApiAuthSplatServerRoute,
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
 }
-export const serverRouteTree = rootServerRouteImport
-  ._addFileChildren(rootServerRouteChildren)
-  ._addFileTypes<FileServerRouteTypes>()

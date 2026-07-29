@@ -2,11 +2,10 @@ import Star from "@/component/Star";
 import { Button } from "@/component/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/component/ui/tooltip";
 import { cn } from "@/lib/cn";
-import { useCreateRating } from "@/server/use/rating/useCreateRating";
-import { useDeleteRating } from "@/server/use/rating/useDeleteRating";
-import { useRating } from "@/server/use/rating/useRating";
+import { useCreateRating } from "@/convex/use/rating/useCreateRating";
+import { useDeleteRating } from "@/convex/use/rating/useDeleteRating";
+import { useRating } from "@/convex/use/rating/useRating";
 import type { Book } from "@/type/Book";
-import type { QueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import type { MouseEvent, TouchEvent } from "react";
 import { useEffect, useRef, useState } from "react";
@@ -15,7 +14,6 @@ interface Props {
     book: Book;
     tooltipSide?: "top" | "right" | "bottom" | "left";
     userId: string;
-    queryClient: QueryClient;
 }
 
 interface State {
@@ -24,7 +22,7 @@ interface State {
     delete: boolean;
 }
 
-const Rating = ({ book, tooltipSide = "top", userId, queryClient }: Props) => {
+const Rating = ({ book, tooltipSide = "top", userId }: Props) => {
     const currentRating = useRating({ bookId: book.id, userId });
     const createRating = useCreateRating();
     const deleteRating = useDeleteRating();
@@ -33,14 +31,14 @@ const Rating = ({ book, tooltipSide = "top", userId, queryClient }: Props) => {
     const [state, setState] = useState<State>({ rating: null, interacting: false, delete: false });
 
     useEffect(() => {
-        currentRating.data && setState((prev) => ({ ...prev, rating: currentRating.data }));
+        currentRating.data && setState((prev) => ({ ...prev, rating: currentRating.data ?? null }));
     }, [currentRating.data]);
 
     useEffect(() => {
         if (currentRating.isLoading) return;
 
         if (state.delete) {
-            deleteRating.mutate({ bookId: book.id, userId, queryClient });
+            deleteRating.mutate({ bookId: book.id, userId });
             setState((prev) => ({ ...prev, delete: false }));
             return;
         }
@@ -49,7 +47,7 @@ const Rating = ({ book, tooltipSide = "top", userId, queryClient }: Props) => {
 
         // Ensure rating is a valid number before calling createRating
         if (typeof state.rating === "number" && state.rating >= 1 && state.rating <= 10) {
-            createRating.mutate({ bookId: book.id, rating: state.rating, userId, queryClient });
+            createRating.mutate({ bookId: book.id, rating: state.rating, userId });
         }
 
         const isMouse = window.matchMedia("(hover: hover)").matches;

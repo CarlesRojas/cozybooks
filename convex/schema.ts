@@ -30,9 +30,9 @@ export const bookFields = {
 };
 
 export default defineSchema({
-    // ─── Auth (counterparts of `src/server/db/schema/auth.ts`) ───────────────────
-    // `authId` keeps the original better-auth row id so phase 2 (data migration) can
-    // copy rows 1:1 and domain tables can keep referencing users by that same id.
+    // ─── Auth (better-auth's live storage, via `betterAuth.ts`) ──────────────────
+    // `authId` is the better-auth row id (imported 1:1 from Postgres), so domain
+    // tables keep referencing users by that same id.
     users: defineTable({
         authId: v.string(),
         name: v.string(),

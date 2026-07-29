@@ -4,7 +4,7 @@
 // because their own reactive queries stay live everywhere.
 
 import { fromWireVolumesResult } from "@/convex/map";
-import type { VolumesResult } from "@/convex/type";
+import type { VolumesResult } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
 import { api } from "@convex/_generated/api";
 import { useQuery } from "convex/react";

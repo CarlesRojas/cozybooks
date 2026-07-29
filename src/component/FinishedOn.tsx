@@ -2,14 +2,13 @@ import { Button } from "@/component/ui/button";
 import type { ComboboxItem } from "@/component/ui/combobox";
 import { Combobox } from "@/component/ui/combobox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
-import { useCreateFinishedDate } from "@/server/use/finished/useCreateFinishedDate";
-import { useDeleteFinishedDate } from "@/server/use/finished/useDeleteFinishedDate";
-import { useFinishedDates } from "@/server/use/finished/useFinishedDates";
-import { useUpdateFinishedDate } from "@/server/use/finished/useUpdateFinishedDate";
-import { useRemoveBookFromFinished } from "@/server/use/status/useRemoveBookFromFinished";
+import { useCreateFinishedDate } from "@/convex/use/finished/useCreateFinishedDate";
+import { useDeleteFinishedDate } from "@/convex/use/finished/useDeleteFinishedDate";
+import { useFinishedDates } from "@/convex/use/finished/useFinishedDates";
+import { useUpdateFinishedDate } from "@/convex/use/finished/useUpdateFinishedDate";
+import { useRemoveBookFromFinished } from "@/convex/use/status/useRemoveBookFromFinished";
 
 import type { Book } from "@/type/Book";
-import type { QueryClient } from "@tanstack/react-query";
 import { Plus, Trash2, Upload } from "lucide-react";
 import type { ReactElement } from "react";
 import { useState } from "react";
@@ -17,7 +16,6 @@ import { useState } from "react";
 interface Props {
     book: Book;
     userId: string;
-    queryClient: QueryClient;
     googleToken: string;
 }
 
@@ -36,7 +34,7 @@ const months: Record<number, string> = {
     11: "December",
 };
 
-const FinishedOn = ({ book, userId, queryClient, googleToken }: Props) => {
+const FinishedOn = ({ book, userId, googleToken }: Props) => {
     const finishedDates = useFinishedDates({ bookId: book.id, userId });
 
     const removeBookFromFinished = useRemoveBookFromFinished();
@@ -45,16 +43,12 @@ const FinishedOn = ({ book, userId, queryClient, googleToken }: Props) => {
     const createFinishedDate = useCreateFinishedDate();
 
     const isPending =
-        finishedDates.isPending ||
-        finishedDates.isFetching ||
-        updateFinishedDate.isPending ||
-        createFinishedDate.isPending ||
-        deleteFinishedDate.isPending;
+        finishedDates.isLoading || updateFinishedDate.isPending || createFinishedDate.isPending || deleteFinishedDate.isPending;
 
     const [selectedYear, setSelectedYear] = useState<string>();
     const [selectedMonth, setSelectedMonth] = useState<string>();
 
-    const [editPopoverOpen, setEditPopoverOpen] = useState<number>();
+    const [editPopoverOpen, setEditPopoverOpen] = useState<string>();
     const [newDatePopoverOpen, setNewDatePopoverOpen] = useState(false);
 
     if (!finishedDates.data || finishedDates.data.length === 0) return null;
@@ -151,7 +145,6 @@ const FinishedOn = ({ book, userId, queryClient, googleToken }: Props) => {
                                         bookId: book.id,
                                         timestamp: newDate,
                                         userId,
-                                        queryClient,
                                     });
                                     setEditPopoverOpen(undefined);
                                 },
@@ -169,9 +162,8 @@ const FinishedOn = ({ book, userId, queryClient, googleToken }: Props) => {
                             <Button
                                 variant="destructive"
                                 onClick={() => {
-                                    deleteFinishedDate.mutate({ id: finishedDate.id, bookId: book.id, userId, queryClient });
-                                    if (finishedDates.data!.length === 1)
-                                        removeBookFromFinished.mutate({ book, userId, queryClient, googleToken });
+                                    deleteFinishedDate.mutate({ id: finishedDate.id, bookId: book.id, userId });
+                                    if (finishedDates.data!.length === 1) removeBookFromFinished.mutate({ book, userId, googleToken });
                                     setEditPopoverOpen(undefined);
                                 }}
                             >
@@ -201,7 +193,7 @@ const FinishedOn = ({ book, userId, queryClient, googleToken }: Props) => {
                         {updateForm({
                             date: new Date(),
                             onUpdate: (newDate) => {
-                                createFinishedDate.mutate({ bookId: book.id, timestamp: newDate, userId, queryClient });
+                                createFinishedDate.mutate({ bookId: book.id, timestamp: newDate, userId });
                                 setNewDatePopoverOpen(false);
                             },
                             submit: (

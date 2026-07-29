@@ -1,3 +1,4 @@
+import { ConvexClientProvider } from "@/convex/provider";
 import { DefaultCatchBoundary } from "@/component/error/DefaultCatchBoundary";
 import { NotFound } from "@/component/error/NotFound";
 import * as Provider from "@/lib/context";
@@ -5,7 +6,7 @@ import { routeTree } from "@/routeTree.gen";
 import { createRouter as createTanstackRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
-export const createRouter = () => {
+export const getRouter = () => {
     if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
         const registerServiceWorker = () => {
             navigator.serviceWorker.register("/service-worker.js");
@@ -18,6 +19,10 @@ export const createRouter = () => {
     const router = createTanstackRouter({
         routeTree,
         context: { ...Provider.getContext() },
+        // Mounts the Convex reactive client above every route match, so the `useQuery`
+        // hooks in `src/convex/use/**` find a client. `Wrap` is the router-wide
+        // provider slot; ConvexProvider renders no DOM, so it can't skew hydration.
+        Wrap: ConvexClientProvider,
         scrollRestoration: true,
         defaultPreloadStaleTime: 0,
         defaultPreload: "intent",
@@ -33,6 +38,6 @@ export const createRouter = () => {
 
 declare module "@tanstack/react-router" {
     interface Register {
-        router: ReturnType<typeof createRouter>;
+        router: ReturnType<typeof getRouter>;
     }
 }

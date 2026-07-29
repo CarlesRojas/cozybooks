@@ -1,6 +1,6 @@
 // Counterpart of `src/server/use/status/useRemoveBookFromFinished.ts`.
 
-import type { Book } from "@/convex/type";
+import type { Book } from "@/type/Book";
 import { useTrackedMutation } from "@/convex/use/util";
 import { api } from "@convex/_generated/api";
 import { useMutation } from "convex/react";

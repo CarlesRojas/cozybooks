@@ -5,10 +5,12 @@ export const env = createEnv({
     server: {
         GOOGLE_CLIENT_ID: z.string().min(1),
         GOOGLE_CLIENT_SECRET: z.string().min(1),
-        GOOGLE_BOOKS_API_KEY: z.string().min(1),
-        BETTER_AUTH_SECRET: z.string().min(1), // Create using `openssl rand -base64 32`
+        // Lives on the Convex deployment now; only the legacy src/server code reads it here.
+        GOOGLE_BOOKS_API_KEY: z.string().min(1).optional(),
+        BETTER_AUTH_SECRET: z.string().min(1), // Create using `openssl rand -base64 32`. Must also be set on the Convex deployment.
         BETTER_AUTH_URL: z.string().url(),
-        DATABASE_URL: z.string().url(),
+        // Only needed for the legacy src/server code and `pnpm convex:export`.
+        DATABASE_URL: z.string().url().optional(),
     },
 
     client: {},

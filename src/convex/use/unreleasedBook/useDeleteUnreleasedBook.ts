@@ -6,7 +6,7 @@ import type { Id } from "@convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 
 interface Props {
-    unreleasedBookId: Id<"unreleasedBooks">;
+    unreleasedBookId: string;
     userId: string;
 }
 
@@ -22,5 +22,5 @@ export const useDeleteUnreleasedBook = () => {
         );
     });
 
-    return useTrackedMutation(({ unreleasedBookId, userId }: Props) => remove({ id: unreleasedBookId, userId }));
+    return useTrackedMutation(({ unreleasedBookId, userId }: Props) => remove({ id: unreleasedBookId as Id<"unreleasedBooks">, userId }));
 };

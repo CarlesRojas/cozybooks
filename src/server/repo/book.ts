@@ -54,7 +54,7 @@ export const parseGoogleBook = (googleBook: any) => {
 export const getGoogleBook = async (bookId: string) => {
     const url = new URL(`${GOOGLE_BOOKS_URL}/volumes/${bookId}`);
     const params = new URLSearchParams({
-        key: env.GOOGLE_BOOKS_API_KEY,
+        key: env.GOOGLE_BOOKS_API_KEY ?? "",
         projection: "full",
     });
     url.search = params.toString();

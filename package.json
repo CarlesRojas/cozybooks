@@ -13,7 +13,10 @@
         "check": "prettier --write . && eslint --fix",
         "db:generate": "drizzle-kit generate",
         "db:migrate": "drizzle-kit migrate",
-        "db:studio": "drizzle-kit studio"
+        "db:studio": "drizzle-kit studio",
+        "convex:dev": "convex dev",
+        "convex:codegen": "convex codegen",
+        "convex:deploy": "convex deploy"
     },
     "dependencies": {
         "@hedgedoc/html-to-react": "^2.1.1",
@@ -45,6 +48,7 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "cmdk": "^1.1.1",
+        "convex": "^1.42.3",
         "drizzle-orm": "^0.44.5",
         "drizzle-zod": "^0.8.3",
         "framer-motion": "^12.23.12",

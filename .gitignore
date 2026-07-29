@@ -12,3 +12,4 @@ count.txt
 todos.json
 .env.local
 convex-export
+.vercel

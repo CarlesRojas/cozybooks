@@ -1,19 +1,18 @@
 import { Button } from "@/component/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
-import { useDeleteUnreleasedBook } from "@/server/use/unreleasedBook/useDeleteUnreleasedBook";
+import { useDeleteUnreleasedBook } from "@/convex/use/unreleasedBook/useDeleteUnreleasedBook";
 import type { UnreleasedBook } from "@/type/UnreleasedBook";
-import type { QueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { Book, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 interface Props {
     unreleasedBook: UnreleasedBook;
-    queryClient: QueryClient;
+    userId: string;
     isLoading?: boolean;
 }
 
-const UnreleasedBookItem = ({ unreleasedBook, queryClient, isLoading }: Props) => {
+const UnreleasedBookItem = ({ unreleasedBook, userId, isLoading }: Props) => {
     const navigate = useNavigate({ from: "/search" });
 
     const { id, name } = unreleasedBook;
@@ -45,7 +44,7 @@ const UnreleasedBookItem = ({ unreleasedBook, queryClient, isLoading }: Props) =
                 <Button
                     variant="destructive"
                     onClick={() => {
-                        deleteUnreleasedBook.mutate({ unreleasedBookId: id, queryClient });
+                        deleteUnreleasedBook.mutate({ unreleasedBookId: id, userId });
                         setPopoverOpen(false);
                     }}
                 >

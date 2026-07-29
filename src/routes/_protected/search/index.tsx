@@ -3,8 +3,8 @@ import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
 import { PAGE_SIZE } from "@/const";
 import { cn } from "@/lib/cn";
-import { useBookShelf } from "@/server/use/useBookShelf";
-import { useSearchedBooks } from "@/server/use/useSearchedBooks";
+import { useBookShelf } from "@/convex/use/useBookShelf";
+import { useSearchedBooks } from "@/convex/use/useSearchedBooks";
 import { BookShelfType } from "@/type/BookShelf";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
@@ -79,7 +79,7 @@ function RouteComponent() {
             <div
                 className={cn(
                     "-mt-14 flex h-10 max-h-10 w-full items-center justify-center px-6 pb-2 transition-all",
-                    searchedBooks.isPlaceholderData && "-mt-0",
+                    searchedBooks.isLoading && "-mt-0",
                 )}
             >
                 <Loader className="size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50 duration-2000" />
@@ -97,7 +97,7 @@ function RouteComponent() {
                         totalItems={searchedBooks.data.totalItems}
                         stickyClassName="top-[5rem] pt-2"
                         pageSize={PAGE_SIZE}
-                        isLoading={searchedBooks.isPlaceholderData}
+                        isLoading={searchedBooks.isLoading}
                         type="search"
                         noBooksChildren={<p className="font-medium tracking-wide opacity-80">No results found</p>}
                     />
@@ -114,7 +114,7 @@ function RouteComponent() {
                         totalItems={recommendedBooks.data.totalItems}
                         stickyClassName="top-[5rem] pt-2"
                         pageSize={PAGE_SIZE}
-                        isLoading={recommendedBooks.isPending}
+                        isLoading={recommendedBooks.isLoading}
                         type="recommendedBooks"
                     />
                 )}

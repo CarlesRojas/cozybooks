@@ -6,7 +6,7 @@ import type { Id } from "@convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 
 interface Props {
-    id: Id<"finished">;
+    id: string;
     bookId: string;
     timestamp: Date;
     userId: string;
@@ -26,5 +26,7 @@ export const useUpdateFinishedDate = () => {
         );
     });
 
-    return useTrackedMutation(({ id, bookId, timestamp, userId }: Props) => update({ id, userId, bookId, timestamp: timestamp.getTime() }));
+    return useTrackedMutation(({ id, bookId, timestamp, userId }: Props) =>
+        update({ id: id as Id<"finished">, userId, bookId, timestamp: timestamp.getTime() }),
+    );
 };

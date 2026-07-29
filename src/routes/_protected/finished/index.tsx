@@ -3,7 +3,7 @@ import { Sort } from "@/component/SortMenu";
 import Star from "@/component/Star";
 import Stats from "@/component/Stats";
 import { cn } from "@/lib/cn";
-import { useLibraryBooks } from "@/server/use/useLibraryBooks";
+import { useLibraryBooks } from "@/convex/use/useLibraryBooks";
 import type { Book } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
 import { createFileRoute } from "@tanstack/react-router";
@@ -25,7 +25,7 @@ function RouteComponent() {
     const { sort: sortUrl } = Route.useSearch();
     const sort = sortUrl as Sort;
 
-    const finishedBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.FINISHED, queryClient: context.queryClient });
+    const finishedBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.FINISHED });
 
     const sortedBooks = useMemo(
         () =>
@@ -40,8 +40,8 @@ function RouteComponent() {
                     if (!bFinishedDate) return -1;
                     return bFinishedDate.getTime() - aFinishedDate.getTime();
                 } else {
-                    const aRating = a.rating && a.rating?.length > 0 ? a.rating[0].rating : null;
-                    const bRating = b.rating && b.rating?.length > 0 ? b.rating[0].rating : null;
+                    const aRating = a.rating && a.rating.length > 0 ? a.rating[0].rating : null;
+                    const bRating = b.rating && b.rating.length > 0 ? b.rating[0].rating : null;
                     if (!aRating) return 1;
                     if (!bRating) return -1;
                     return bRating - aRating;
@@ -87,7 +87,7 @@ function RouteComponent() {
             suppressHydrationWarning
             className={cn("relative mb-20 flex h-fit min-h-[calc(100vh_-_5rem)] w-full flex-col gap-5 pb-6", isIOS && "mb-24")}
         >
-            {finishedBooks.isPending && (
+            {finishedBooks.isLoading && (
                 <div className="flex w-full grow items-center justify-center px-6 transition-all">
                     <Loader className="size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50 duration-2000" />
                 </div>

@@ -2,8 +2,8 @@ import BookList from "@/component/BookList";
 import { Button } from "@/component/ui/button";
 import UnreleasedBookList from "@/component/UnreleasedBookList";
 import { cn } from "@/lib/cn";
-import { useUnreleasedBooks } from "@/server/use/unreleasedBook/useUnreleasedBooks";
-import { useLibraryBooks } from "@/server/use/useLibraryBooks";
+import { useUnreleasedBooks } from "@/convex/use/unreleasedBook/useUnreleasedBooks";
+import { useLibraryBooks } from "@/convex/use/useLibraryBooks";
 import { LibraryType } from "@/type/Library";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { Book, Loader } from "lucide-react";
@@ -13,11 +13,11 @@ export const Route = createFileRoute("/_protected/reading/")({ component: Readin
 
 function Reading() {
     const context = Route.useRouteContext();
-    const readingBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.READING, queryClient: context.queryClient });
-    const toReadBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.TO_READ, queryClient: context.queryClient });
+    const readingBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.READING });
+    const toReadBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.TO_READ });
     const unreleasedBooks = useUnreleasedBooks(context.user!.id);
 
-    const isPending = readingBooks.isPending || toReadBooks.isPending || unreleasedBooks.isPending;
+    const isPending = readingBooks.isLoading || toReadBooks.isLoading || unreleasedBooks.isLoading;
 
     return (
         <main
@@ -60,12 +60,7 @@ function Reading() {
                     )}
 
                     {unreleasedBooks.data && (
-                        <UnreleasedBookList
-                            unreleasedBooks={unreleasedBooks.data}
-                            stickyClassName="top-0 pt-3"
-                            queryClient={context.queryClient}
-                            userId={context.user!.id}
-                        />
+                        <UnreleasedBookList unreleasedBooks={unreleasedBooks.data} stickyClassName="top-0 pt-3" userId={context.user!.id} />
                     )}
                 </div>
             )}

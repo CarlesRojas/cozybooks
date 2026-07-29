@@ -1,5 +1,6 @@
 import { z } from "zod";
 
-export const UnreleasedBookSchema = z.object({ id: z.number(), userId: z.string(), name: z.string() });
+// `id` is a Convex document id (the old Postgres serial ids were dropped in the migration).
+export const UnreleasedBookSchema = z.object({ id: z.string(), userId: z.string(), name: z.string() });
 
 export type UnreleasedBook = z.infer<typeof UnreleasedBookSchema>;

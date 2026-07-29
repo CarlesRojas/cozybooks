@@ -3,7 +3,7 @@
 // (the old `keepPreviousData` behavior).
 
 import { fromWireBook } from "@/convex/map";
-import type { VolumesResult } from "@/convex/type";
+import type { VolumesResult } from "@/type/Book";
 import { useActionQuery } from "@/convex/use/util";
 import { api } from "@convex/_generated/api";
 import { useMemo } from "react";

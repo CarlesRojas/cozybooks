@@ -3,20 +3,18 @@ import { Input } from "@/component/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
 import UnreleasedBookItem from "@/component/UnreleasedBookItem";
 import { cn } from "@/lib/cn";
-import { useAddUnreleasedBook } from "@/server/use/unreleasedBook/useAddUnreleasedBook";
+import { useAddUnreleasedBook } from "@/convex/use/unreleasedBook/useAddUnreleasedBook";
 import type { UnreleasedBook } from "@/type/UnreleasedBook";
-import type { QueryClient } from "@tanstack/react-query";
 import { Book, Plus } from "lucide-react";
 import { useState } from "react";
 
 interface Props {
     stickyClassName?: string;
     unreleasedBooks: Array<UnreleasedBook>;
-    queryClient: QueryClient;
     userId: string;
 }
 
-const UnreleasedBookList = ({ stickyClassName, unreleasedBooks, queryClient, userId }: Props) => {
+const UnreleasedBookList = ({ stickyClassName, unreleasedBooks, userId }: Props) => {
     const addUnreleasedBook = useAddUnreleasedBook();
 
     const [popoverOpen, setPopoverOpen] = useState(false);
@@ -24,7 +22,7 @@ const UnreleasedBookList = ({ stickyClassName, unreleasedBooks, queryClient, use
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        addUnreleasedBook.mutate({ name: newBookName, userId, queryClient });
+        addUnreleasedBook.mutate({ name: newBookName, userId });
         setPopoverOpen(false);
     };
 
@@ -48,7 +46,7 @@ const UnreleasedBookList = ({ stickyClassName, unreleasedBooks, queryClient, use
                         <UnreleasedBookItem
                             key={unreleasedBook.id}
                             unreleasedBook={unreleasedBook}
-                            queryClient={queryClient}
+                            userId={userId}
                             isLoading={addUnreleasedBook.isPending}
                         />
                     ))}

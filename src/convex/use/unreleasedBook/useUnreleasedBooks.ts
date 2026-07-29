@@ -1,7 +1,7 @@
 // Counterpart of `src/server/use/unreleasedBook/useUnreleasedBooks.ts`. Reactive and
 // server-sorted by name through the `by_user_name` index.
 
-import type { UnreleasedBook } from "@/convex/type";
+import type { UnreleasedBook } from "@/type/UnreleasedBook";
 import { api } from "@convex/_generated/api";
 import { useQuery } from "convex/react";
 

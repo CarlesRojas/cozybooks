@@ -10,7 +10,7 @@ import { useMutation } from "convex/react";
 
 interface Props {
     bookId: string;
-    id: Id<"finished">;
+    id: string;
     userId: string;
 }
 
@@ -26,5 +26,5 @@ export const useDeleteFinishedDate = () => {
         );
     });
 
-    return useTrackedMutation(({ id, bookId, userId }: Props) => remove({ id, userId, bookId }));
+    return useTrackedMutation(({ id, bookId, userId }: Props) => remove({ id: id as Id<"finished">, userId, bookId }));
 };

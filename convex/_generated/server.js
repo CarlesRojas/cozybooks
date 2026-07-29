@@ -9,13 +9,13 @@
  */
 
 import {
-    actionGeneric,
-    httpActionGeneric,
-    queryGeneric,
-    mutationGeneric,
-    internalActionGeneric,
-    internalMutationGeneric,
-    internalQueryGeneric,
+  actionGeneric,
+  httpActionGeneric,
+  queryGeneric,
+  mutationGeneric,
+  internalActionGeneric,
+  internalMutationGeneric,
+  internalQueryGeneric,
 } from "convex/server";
 
 /**
@@ -91,5 +91,3 @@ export const internalAction = internalActionGeneric;
  * @returns The wrapped function. Import this function from `convex/http.js` and route it to hook it up.
  */
 export const httpAction = httpActionGeneric;
-
-export const env = process.env;

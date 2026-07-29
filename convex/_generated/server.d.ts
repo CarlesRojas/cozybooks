@@ -9,15 +9,15 @@
  */
 
 import {
-    ActionBuilder,
-    HttpActionBuilder,
-    MutationBuilder,
-    QueryBuilder,
-    GenericActionCtx,
-    GenericMutationCtx,
-    GenericQueryCtx,
-    GenericDatabaseReader,
-    GenericDatabaseWriter,
+  ActionBuilder,
+  HttpActionBuilder,
+  MutationBuilder,
+  QueryBuilder,
+  GenericActionCtx,
+  GenericMutationCtx,
+  GenericQueryCtx,
+  GenericDatabaseReader,
+  GenericDatabaseWriter,
 } from "convex/server";
 import type { DataModel } from "./dataModel.js";
 
@@ -94,8 +94,6 @@ export declare const internalAction: ActionBuilder<DataModel, "internal">;
  * @returns The wrapped function. Import this function from `convex/http.js` and route it to hook it up.
  */
 export declare const httpAction: HttpActionBuilder;
-
-export declare const env: Record<string, string | undefined>;
 
 /**
  * A set of services for use within Convex query functions.

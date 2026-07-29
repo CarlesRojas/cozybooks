@@ -40,27 +40,51 @@ interface RequestOptions {
     googleToken?: string;
 }
 
-// Single entry point for the Books API, so auth, error reporting and response handling
-// can't drift between call sites.
+// Google Books returns a genuine, well-formed request to 503 `backendFailed` ("Service
+// temporarily unavailable") a good fraction of the time when called from a datacenter IP,
+// which is every call from a Convex action. Measured from this deployment with the exact
+// same URL that answers 200 from a residential IP: roughly one in three failed. Retrying
+// with backoff is Google's own prescription for 5xx, and it's what makes search usable
+// here — a single attempt is a coin flip.
+//
+// 429 is included because the anonymous/keyless quota is shared and also recovers.
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
+const RETRY_BACKOFF_MS = [250, 750, 2000];
+
+// Single entry point for the Books API, so auth, retries, error reporting and response
+// handling can't drift between call sites.
 export const googleBooksRequest = async ({ path, params = {}, method = "GET", googleToken }: RequestOptions) => {
     const url = new URL(`${GOOGLE_BOOKS_URL}${path}`);
     url.search = new URLSearchParams(params).toString();
 
-    const response = await fetch(url.toString(), {
-        method,
-        ...(googleToken && { headers: { Authorization: `Bearer ${googleToken}` } }),
-    });
+    for (let attempt = 0; ; attempt++) {
+        const response = await fetch(url.toString(), {
+            method,
+            ...(googleToken && { headers: { Authorization: `Bearer ${googleToken}` } }),
+        });
 
-    if (!response.ok) {
+        if (response.ok) {
+            // addVolume/removeVolume answer 204 with an empty body.
+            const body = await response.text();
+            return body ? JSON.parse(body) : {};
+        }
+
+        if (RETRYABLE_STATUS.has(response.status) && attempt < RETRY_BACKOFF_MS.length) {
+            await new Promise((resolve) => setTimeout(resolve, RETRY_BACKOFF_MS[attempt]));
+            continue;
+        }
+
         // Google puts the actual reason in the body; a bare status code can't tell a geo
-        // rejection from an expired token, so keep the body in the error.
+        // rejection from an expired token, so keep the body in the error. The params go in
+        // too (minus the API key) because several distinct failures share one reason code —
+        // `backendFailed`, for one, is also what a request missing `country` comes back as.
         const body = await response.text().catch(() => "");
-        throw new Error(`Google Books ${method} ${path} failed with status ${response.status}: ${body.slice(0, 300)}`);
+        const safeParams = new URLSearchParams(url.search);
+        safeParams.delete("key");
+        throw new Error(
+            `Google Books ${method} ${path}?${safeParams.toString()} failed with status ${response.status} after ${attempt + 1} attempt(s): ${body.slice(0, 300)}`,
+        );
     }
-
-    // addVolume/removeVolume answer 204 with an empty body.
-    const body = await response.text();
-    return body ? JSON.parse(body) : {};
 };
 
 // Google bookshelf ids (see `src/type/BookShelf.ts`). These three are the writable

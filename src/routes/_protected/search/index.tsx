@@ -40,7 +40,6 @@ function RouteComponent() {
         query,
         booksPerPage: PAGE_SIZE,
         offset: (searchPage - 1) * PAGE_SIZE,
-        googleToken: context.googleToken!,
     });
     const recommendedBooks = useBookShelf({
         type: BookShelfType.BOOKS_FOR_YOU,

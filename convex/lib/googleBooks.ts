@@ -1,29 +1,70 @@
 // Google Books API helpers shared by the actions in `googleBooks.ts` and `books.ts`.
-// Counterpart of the parsing logic in `src/server/repo/book.ts` / `src/lib/util.tsx`.
+//
+// The Books API is at v1 — there is no newer version — so "latest" here means using it
+// the way it is currently documented: the OAuth token in the `Authorization` header
+// rather than the deprecated `access_token` query parameter, and an explicit `country`
+// on catalogue reads.
 
 export const GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1";
 
-// Google Books answers 503 when it can't geolocate the caller, which is every
-// request from a datacenter IP — so every request from a Convex action, where these
-// calls now run (they used to go out from the app server on the developer's own
-// machine). Sending an explicit `country` is the documented way around it.
+// Google Books answers 503 when it can't geolocate the caller by IP, which is every
+// request from a datacenter — so every request from a Convex action, where these calls
+// now run (they used to go out from the app server on the developer's own machine).
+// An explicit ISO 3166-1 alpha-2 `country` replaces that geolocation.
 // Override per deployment with `npx convex env set GOOGLE_BOOKS_COUNTRY ES`.
 export const googleBooksCountry = () => process.env.GOOGLE_BOOKS_COUNTRY ?? "US";
 
-// Google puts the actual reason in the response body; a bare status code can't tell
-// a geo rejection from an expired token, so keep the body in the error.
-export const googleBooksFetch = async (url: URL, init?: RequestInit) => {
-    const response = await fetch(url.toString(), init);
-
-    if (!response.ok) {
-        const body = await response.text().catch(() => "");
-        throw new Error(`Google Books request to ${url.pathname} failed with status ${response.status}: ${body.slice(0, 300)}`);
-    }
-
-    return response.json();
+// Params every catalogue read (`/volumes`, `/volumes/{id}`, `/mylibrary/.../volumes`)
+// needs. Spread this into the per-endpoint params.
+//
+// The API key is omitted rather than sent empty when it isn't configured: `volumes.list`
+// and `volumes.get` serve anonymous callers (on a lower quota), whereas `key=` is a
+// malformed key and gets rejected outright.
+export const catalogueParams = () => {
+    const key = process.env.GOOGLE_BOOKS_API_KEY;
+    return { ...(key && { key }), country: googleBooksCountry() };
 };
 
-// Google bookshelf ids (see `src/type/BookShelf.ts`).
+// Google caps `maxResults` at 40 and rejects anything larger with a 400.
+export const MAX_RESULTS = 40;
+
+export const clampMaxResults = (maxResults: number | undefined) => Math.min(Math.max(maxResults ?? 8, 1), MAX_RESULTS);
+
+interface RequestOptions {
+    path: string;
+    params?: Record<string, string>;
+    method?: "GET" | "POST";
+    // Required by every `mylibrary` endpoint (scope `.../auth/books`). The public
+    // `/volumes` endpoints take the API key instead, so browsing the catalogue keeps
+    // working when a user's Google token has expired.
+    googleToken?: string;
+}
+
+// Single entry point for the Books API, so auth, error reporting and response handling
+// can't drift between call sites.
+export const googleBooksRequest = async ({ path, params = {}, method = "GET", googleToken }: RequestOptions) => {
+    const url = new URL(`${GOOGLE_BOOKS_URL}${path}`);
+    url.search = new URLSearchParams(params).toString();
+
+    const response = await fetch(url.toString(), {
+        method,
+        ...(googleToken && { headers: { Authorization: `Bearer ${googleToken}` } }),
+    });
+
+    if (!response.ok) {
+        // Google puts the actual reason in the body; a bare status code can't tell a geo
+        // rejection from an expired token, so keep the body in the error.
+        const body = await response.text().catch(() => "");
+        throw new Error(`Google Books ${method} ${path} failed with status ${response.status}: ${body.slice(0, 300)}`);
+    }
+
+    // addVolume/removeVolume answer 204 with an empty body.
+    const body = await response.text();
+    return body ? JSON.parse(body) : {};
+};
+
+// Google bookshelf ids (see `src/type/BookShelf.ts`). These three are the writable
+// shelves `mylibrary.bookshelves.addVolume`/`removeVolume` accept.
 export const BOOKSHELF = {
     TO_READ: 2,
     READING_NOW: 3,

@@ -1,11 +1,6 @@
-// Counterparts of the book-status flows in `src/server/use/status/*` and
-// `src/server/use/useBookStatus.ts`.
-//
-// The old flows orchestrated 2-5 sequential server calls from the browser (add/remove
-// library rows, insert finished dates, sync Google bookshelves). Each flow is now a
-// single transactional mutation; the Google Bookshelf sync (best-effort in the old
-// code too — errors were swallowed) is scheduled server-side so it never blocks the
-// user-facing write.
+// Book-status flows. Each one is a single transactional mutation over the library rows
+// and finished dates; mirroring the change onto the user's Google "My Library" shelves is
+// scheduled server-side so it never blocks the user-facing write.
 
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
@@ -27,7 +22,6 @@ const scheduleBookshelfSync = async (
     await ctx.scheduler.runAfter(0, internal.googleBooks.syncBookshelves, { googleToken, volumeId, ops });
 };
 
-// Counterpart of `addToWantToRead` (`useAddToWantToRead.ts`).
 export const addToWantToRead = mutation({
     args: { book: v.object(bookArgs), userId: v.string(), ...googleTokenArg },
     handler: async (ctx, { book, userId, googleToken }) => {
@@ -37,7 +31,6 @@ export const addToWantToRead = mutation({
     },
 });
 
-// Counterpart of `removeFromWantToRead` (`useRemoveFromWantToRead.ts`).
 export const removeFromWantToRead = mutation({
     args: { bookId: v.string(), userId: v.string(), ...googleTokenArg },
     handler: async (ctx, { bookId, userId, googleToken }) => {
@@ -46,7 +39,7 @@ export const removeFromWantToRead = mutation({
     },
 });
 
-// Counterpart of `startReading` (`useStartReading.ts`): leaves TO_READ, enters READING.
+// Leaves TO_READ, enters READING.
 export const startReading = mutation({
     args: { book: v.object(bookArgs), userId: v.string(), ...googleTokenArg },
     handler: async (ctx, { book, userId, googleToken }) => {
@@ -64,7 +57,7 @@ export const startReading = mutation({
     },
 });
 
-// Counterpart of `stopReading` (`useStopReading.ts`): leaves READING, back to TO_READ.
+// Leaves READING, back to TO_READ.
 export const stopReading = mutation({
     args: { book: v.object(bookArgs), userId: v.string(), ...googleTokenArg },
     handler: async (ctx, { book, userId, googleToken }) => {
@@ -82,8 +75,7 @@ export const stopReading = mutation({
     },
 });
 
-// Counterpart of `finishBook` (`useFinishBook.ts`): leaves READING, enters FINISHED
-// and records a finished date.
+// Leaves READING, enters FINISHED and records a finished date.
 export const finishBook = mutation({
     args: { book: v.object(bookArgs), userId: v.string(), ...googleTokenArg },
     handler: async (ctx, { book, userId, googleToken }) => {
@@ -102,7 +94,6 @@ export const finishBook = mutation({
     },
 });
 
-// Counterpart of `removeFromFinished` (`useRemoveBookFromFinished.ts`).
 export const removeFromFinished = mutation({
     args: { bookId: v.string(), userId: v.string(), ...googleTokenArg },
     handler: async (ctx, { bookId, userId, googleToken }) => {
@@ -111,8 +102,7 @@ export const removeFromFinished = mutation({
     },
 });
 
-// Counterpart of `getBookStatus` (`useBookStatus.ts`). Two point reads instead of two
-// sequential server calls, and reactive: status buttons update live after mutations.
+// Two point reads, and reactive: status buttons update live after mutations.
 export const getBookStatus = query({
     args: { bookId: v.string(), userId: v.string() },
     handler: async (ctx, { bookId, userId }) => {

@@ -21,7 +21,7 @@
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import { action, internalMutation, internalQuery } from "./_generated/server";
-import { BOOKSHELF, MAX_RESULTS, catalogueParams, googleBooksRequest, parseGoogleVolume } from "./lib/googleBooks";
+import { BOOKSHELF, MAX_RESULTS, catalogueParams, googleBooksCountry, googleBooksRequest, parseGoogleVolume } from "./lib/googleBooks";
 import type { BookInput, LibraryType } from "./lib/model";
 import { addBookToLibrary, getFinishedForBook, upsertBook } from "./lib/model";
 import { bookArgs } from "./lib/validators";
@@ -197,7 +197,7 @@ export const run = action({
                     try {
                         await googleBooksRequest({
                             path: `/mylibrary/bookshelves/${bookshelf}/addVolume`,
-                            params: { volumeId: bookId },
+                            params: { volumeId: bookId, country: googleBooksCountry() },
                             method: "POST",
                             googleToken,
                         });
@@ -220,7 +220,7 @@ export const run = action({
                     try {
                         await googleBooksRequest({
                             path: `/mylibrary/bookshelves/${bookshelf}/removeVolume`,
-                            params: { volumeId: bookId },
+                            params: { volumeId: bookId, country: googleBooksCountry() },
                             method: "POST",
                             googleToken,
                         });

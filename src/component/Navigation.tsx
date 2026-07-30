@@ -44,6 +44,24 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
         >
+            <div className="mr-3 hidden items-center gap-3 lg:flex">
+                <div
+                    className="size-9 min-h-9 min-w-9 bg-neutral-950 dark:bg-white"
+                    style={{
+                        maskImage: 'url("/icon/logoTransparent.png")',
+                        maskSize: "240%",
+                        maskRepeat: "no-repeat",
+                        maskPosition: "center",
+                        WebkitMaskImage: 'url("/icon/logoTransparent.png")',
+                        WebkitMaskSize: "240%",
+                        WebkitMaskRepeat: "no-repeat",
+                        WebkitMaskPosition: "center",
+                    }}
+                />
+
+                <p className="text-xl font-bold tracking-wide">CozyBooks</p>
+            </div>
+
             <div className="flex h-fit items-center rounded-full bg-neutral-300/70 p-1 backdrop-blur-md dark:bg-neutral-700/60">
                 {routes.map((route) => (
                     <Button
@@ -51,7 +69,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                         key={route}
                         variant="navigation"
                         className={cn(
-                            "group relative px-3 hover:text-black hover:dark:text-white",
+                            "group relative px-3 hover:text-black lg:px-5 hover:dark:text-white",
                             route === location.pathname && "!text-neutral-50",
                         )}
                     >

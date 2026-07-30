@@ -24,7 +24,7 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
         const id = imageParams.get("id");
         if (!id) return null;
 
-        return `https://books.google.com/books/publisher/content/images/frontcover/${id}?fife=w400-h600&source=gbs_api`;
+        return `https://books.google.com/books/publisher/content/images/frontcover/${id}?fife=w400-h640&source=gbs_api`;
     }, [biggestImage]);
 
     const [src, setSrc] = useState(scaledImage ?? biggestImage.current);
@@ -61,7 +61,7 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
                     )}
                     style={{ viewTransitionName: `bookCover-blur-${book.id}` }}
                     width={200}
-                    height={200 * 1.5}
+                    height={200 * 1.6}
                     src={src}
                     alt={book.title}
                     onError={() => setSrc(biggestImage.current)}
@@ -76,7 +76,7 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
                     width={maxWidth ?? 400}
-                    height={(maxWidth ?? 400) * 1.5}
+                    height={(maxWidth ?? 400) * 1.6}
                     src={src}
                     alt={book.title}
                     onError={() => setSrc(biggestImage.current)}

@@ -40,8 +40,10 @@
     --color-neutral-850: #1b1b1b;
 
     /* Tailwind v4 aspect utilities read from the --aspect-* namespace;
-       --aspect-ratio-book generated no CSS, silently disabling `aspect-book`. */
-    --aspect-book: 2 / 3;
+       --aspect-ratio-book generated no CSS, silently disabling `aspect-book`.
+       5:8 (1:1.6) is the common book cover ratio (ebook standard, close to
+       mass-market paperbacks), slightly taller than the 2:3 of trade print. */
+    --aspect-book: 5 / 8;
 
     --transition-duration-2000: 2000ms;
 

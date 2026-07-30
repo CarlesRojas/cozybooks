@@ -83,8 +83,10 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
     // Two books per slide, stacked vertically, so the list reads in column pairs:
     // 1 3 5 7
     // 2 4 6 8
+    // Exception: exactly two books sit side by side in a single row instead.
     const columns: Array<Array<Book>> = [];
-    for (let index = 0; index < books.length; index += 2) columns.push(books.slice(index, index + 2));
+    if (books.length === 2) books.forEach((book) => columns.push([book]));
+    else for (let index = 0; index < books.length; index += 2) columns.push(books.slice(index, index + 2));
 
     // Slide changes don't auto-reInit embla (`watchSlides: false`); reInit here
     // whenever the rendered slides change, preserving the scroll position.

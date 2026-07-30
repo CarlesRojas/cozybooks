@@ -11,6 +11,7 @@ interface BaseProps {
     stickyClassName?: string;
     isLoading?: boolean;
     noBooksChildren?: ReactNode;
+    wantToRead?: { userId: string; googleToken: string };
 }
 
 interface PaginationProps {
@@ -31,7 +32,7 @@ type Props = BaseProps & (PaginationProps | NoPaginationProps);
 
 const BookList = (props: Props) => {
     const navigate = useNavigate();
-    const { title, books, stickyClassName, isLoading, noBooksChildren, showPagination } = props;
+    const { title, books, stickyClassName, isLoading, noBooksChildren, showPagination, wantToRead } = props;
 
     const numberOfPages = showPagination ? Math.ceil((props.totalItems || 1) / props.pageSize) : 1;
     const currentPage = showPagination
@@ -59,7 +60,7 @@ const BookList = (props: Props) => {
             {books.length > 0 && (
                 <div className="mx-auto grid w-full max-w-screen-lg grid-cols-2 grid-rows-1 gap-4 px-6 sm:grid-cols-3 md:grid-cols-4">
                     {books.map((book) => (
-                        <BookCover key={book.id} book={book} linkToBook maxWidth={300} />
+                        <BookCover key={book.id} book={book} linkToBook maxWidth={300} wantToRead={wantToRead} />
                     ))}
                 </div>
             )}

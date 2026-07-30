@@ -118,18 +118,18 @@ const Stats = ({ books, stickyClassName }: Props) => {
     const tile = (value: number, name: string, colorClassName: string, className?: string) => (
         <div
             className={cn(
-                "bg-neutral-150 dark:bg-neutral-850 flex flex-col gap-2 rounded-[22px] border border-neutral-500/25 p-6 dark:border-neutral-500/40",
+                "bg-neutral-150 dark:bg-neutral-850 flex flex-col gap-2 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 dark:border-neutral-500/40",
                 className,
             )}
         >
             <div className="relative isolate h-fit w-fit">
-                <span aria-hidden className={cn("absolute inset-0 text-4xl font-bold opacity-90 blur-lg", colorClassName)}>
+                <span aria-hidden className={cn("absolute inset-0 text-3xl font-bold opacity-90 blur-lg sm:text-4xl", colorClassName)}>
                     {formatStat(value)}
                 </span>
-                <span className={cn("relative z-10 text-4xl font-bold", colorClassName)}>{formatStat(value)}</span>
+                <span className={cn("relative z-10 text-3xl font-bold sm:text-4xl", colorClassName)}>{formatStat(value)}</span>
             </div>
 
-            <span className="text-sm font-medium text-neutral-500 dark:text-neutral-400">{name}</span>
+            <span className="text-xs font-medium text-neutral-500 sm:text-sm dark:text-neutral-400">{name}</span>
         </div>
     );
 
@@ -142,12 +142,11 @@ const Stats = ({ books, stickyClassName }: Props) => {
             </div>
 
             <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-3 px-6 sm:gap-4">
-                <div className="grid w-full grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+                <div className="grid w-full grid-cols-3 gap-3 sm:gap-4">
                     {tile(
                         statType === StatType.BOOKS ? totalBooks : totalPages,
                         statType === StatType.BOOKS ? "Books Read" : "Pages Read",
                         "text-sky-500",
-                        "col-span-2",
                     )}
 
                     {tile(
@@ -162,7 +161,7 @@ const Stats = ({ books, stickyClassName }: Props) => {
                         "text-amber-500",
                     )}
 
-                    <div className="bg-neutral-150 dark:bg-neutral-850 relative col-span-2 overflow-x-auto overflow-y-hidden rounded-[22px] border border-neutral-500/25 p-6 lg:col-span-4 dark:border-neutral-500/40">
+                    <div className="bg-neutral-150 dark:bg-neutral-850 relative col-span-3 overflow-x-auto overflow-y-hidden rounded-[22px] border border-neutral-500/25 p-6 dark:border-neutral-500/40">
                         <div className="flex h-40 w-fit flex-row gap-1.5">
                             <div className="items-left mr-8 flex h-full w-fit flex-col justify-end">
                                 <p className="min-w-fit text-xl leading-tight font-bold text-nowrap text-neutral-950/90 dark:text-neutral-50/90">

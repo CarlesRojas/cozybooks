@@ -36,7 +36,7 @@ const Settings = ({ user, queryClient }: Props) => {
 
     return (
         <DropdownMenu modal={true}>
-            <Button size="icon" variant="glass" className="size-15 min-h-15 min-w-15" asChild>
+            <Button size="icon" variant="glass" className="size-14 min-h-14 min-w-14" asChild>
                 <DropdownMenuTrigger>
                     <User2 className="icon" />
                 </DropdownMenuTrigger>

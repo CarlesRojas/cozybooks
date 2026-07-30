@@ -10,6 +10,7 @@ import type { User } from "better-auth";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import type { ReactElement } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { isIOS } from "react-device-detect";
 
 interface Props {
@@ -31,11 +32,35 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
 
     const showSortButton = location.pathname === Route.FINISHED;
 
+    // The indicator is positioned from DOM measurements local to the pill instead
+    // of a framer-motion shared layout animation: shared layouts measure in page
+    // coordinates, and the scroll reset on navigation made the indicator animate
+    // vertically. Local offsets are immune to page scroll.
+    const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+    const pillRef = useRef<HTMLDivElement | null>(null);
+    const [indicator, setIndicator] = useState<{ left: number; top: number; width: number; height: number } | null>(null);
+
+    useLayoutEffect(() => {
+        const active = linkRefs.current[location.pathname];
+        if (!active || !pillRef.current) {
+            setIndicator(null);
+            return;
+        }
+
+        const update = () =>
+            setIndicator({ left: active.offsetLeft, top: active.offsetTop, width: active.offsetWidth, height: active.offsetHeight });
+        update();
+
+        const observer = new ResizeObserver(update);
+        observer.observe(pillRef.current);
+        observer.observe(active);
+        return () => observer.disconnect();
+    }, [location.pathname]);
+
     if (NO_NAVBAR_ROUTES.includes(location.pathname as Route) || !user) return null;
 
     return (
         <motion.nav
-            layoutRoot
             className={cn(
                 "fixed inset-x-0 bottom-0 z-40 flex h-20 w-full items-center justify-center gap-2 px-4",
                 "lg:top-6 lg:bottom-auto lg:h-fit lg:justify-normal lg:gap-3 lg:px-6",
@@ -44,7 +69,10 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
         >
-            <div className="flex h-fit grow items-center justify-evenly rounded-full bg-neutral-300/70 p-1 backdrop-blur-md lg:justify-start dark:bg-neutral-700/60">
+            <div
+                ref={pillRef}
+                className="relative flex h-fit grow items-center gap-1 rounded-full bg-neutral-300/70 p-1 backdrop-blur-md sm:grow-0 dark:bg-neutral-700/60"
+            >
                 <div className="hidden items-center gap-3 pr-5 pl-10 text-neutral-600 lg:flex dark:text-neutral-200">
                     <div
                         className="size-5 min-h-5 min-w-5 bg-neutral-600 dark:bg-neutral-200"
@@ -63,25 +91,32 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                     <p className="text-base font-semibold whitespace-nowrap">CozyBooks</p>
                 </div>
 
+                {indicator && (
+                    <motion.div
+                        className="pointer-events-none absolute z-30 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"
+                        initial={false}
+                        animate={{ left: indicator.left, top: indicator.top, width: indicator.width, height: indicator.height }}
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                )}
+
                 {routes.map((route) => (
                     <Button
                         asChild
                         key={route}
                         variant="navigation"
                         className={cn(
-                            "group relative px-3 hover:text-black lg:px-5 hover:dark:text-white",
+                            "group relative grow px-3 hover:text-black sm:grow-0 lg:px-5 hover:dark:text-white",
                             route === location.pathname && "!text-neutral-50",
                         )}
                     >
-                        <Link to={route} search={{ sort }}>
-                            {route === location.pathname && (
-                                <motion.div
-                                    className="pointer-events-none absolute inset-0 z-30 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"
-                                    layoutId="activeSection"
-                                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                                />
-                            )}
-
+                        <Link
+                            to={route}
+                            search={{ sort }}
+                            ref={(element) => {
+                                linkRefs.current[route] = element;
+                            }}
+                        >
                             {routeTitle[route]}
                         </Link>
                     </Button>

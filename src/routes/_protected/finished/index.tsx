@@ -2,13 +2,14 @@ import BookCarousel from "@/component/BookCarousel";
 import { Sort } from "@/component/SortMenu";
 import Star from "@/component/Star";
 import Stats from "@/component/Stats";
+import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
 import { useLibraryBooks } from "@/convex/use/useLibraryBooks";
 import type { Book } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
 import { createFileRoute } from "@tanstack/react-router";
-import { Loader } from "lucide-react";
-import { useMemo } from "react";
+import { Loader, Repeat } from "lucide-react";
+import { useMemo, useState } from "react";
 import { isIOS } from "react-device-detect";
 
 export const Route = createFileRoute("/_protected/finished/")({
@@ -23,6 +24,8 @@ interface Group {
 function RouteComponent() {
     const context = Route.useRouteContext();
     const { sort } = Route.useSearch();
+
+    const [showRepeats, setShowRepeats] = useState(false);
 
     const finishedBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.FINISHED });
 
@@ -53,7 +56,21 @@ function RouteComponent() {
         if (!sortedBooks) return [];
 
         const result: Array<Group> = [];
+        const addToGroup = (key: string, book: Book) => {
+            const keyIndex = result.findIndex((group) => group.key === key);
+
+            if (keyIndex === -1) result.push({ key, books: [book] });
+            else if (!result[keyIndex].books.some((existing) => existing.id === book.id)) result[keyIndex].books.push(book);
+        };
+
         sortedBooks.forEach((book) => {
+            // With repeats on, a book shows in every year it was finished (once per
+            // year); otherwise only in the year of its first read.
+            if (sort === Sort.DATE && showRepeats && book.finished && book.finished.length > 0) {
+                book.finished.forEach((finished) => addToGroup(finished.timestamp.toLocaleDateString("en", { year: "numeric" }), book));
+                return;
+            }
+
             const keyMap: Record<Sort, string> = {
                 [Sort.BOOK]: book.title.length > 0 && /^[a-zA-Z]/.test(book.title[0]) ? book.title[0].toUpperCase() : "#",
                 [Sort.DATE]:
@@ -63,15 +80,14 @@ function RouteComponent() {
                 [Sort.RATING]: (book.rating?.[0]?.rating ?? "Unrated").toString(),
             };
 
-            const key = keyMap[sort];
-            const keyIndex = result.findIndex((group) => group.key === key);
-
-            if (keyIndex === -1) result.push({ key, books: [book] });
-            else result[keyIndex].books.push(book);
+            addToGroup(keyMap[sort], book);
         });
 
+        if (sort === Sort.DATE)
+            result.sort((a, b) => (b.key === "Unknown" ? -1 : a.key === "Unknown" ? 1 : parseInt(b.key) - parseInt(a.key)));
+
         return result;
-    }, [sort, sortedBooks]);
+    }, [sort, sortedBooks, showRepeats]);
 
     const ratingTitle = (rating: number) => (
         <div className="relative flex w-fit items-center justify-center">
@@ -94,6 +110,16 @@ function RouteComponent() {
 
             <div className="flex h-fit w-full grow flex-col gap-6 py-4">
                 {finishedBooks.data && <Stats books={finishedBooks.data.items} />}
+
+                {finishedBooks.data && sort === Sort.DATE && (
+                    <div className="mx-auto flex w-full max-w-screen-lg px-6">
+                        <Button variant="glass" size="small" onClick={() => setShowRepeats(!showRepeats)}>
+                            <Repeat className="icon mr-2" />
+
+                            <p className="text-sm font-bold tracking-wide">{showRepeats ? "Hide repeat reads" : "Show repeat reads"}</p>
+                        </Button>
+                    </div>
+                )}
 
                 {groups.map(({ key, books }) => (
                     <BookCarousel

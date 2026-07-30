@@ -29,7 +29,7 @@ const SortMenu = ({ className, sort, repeats }: Props) => {
 
     return (
         <DropdownMenu modal={true}>
-            <Button size="icon" variant="glass" className={cn(className)} asChild>
+            <Button size="icon" variant="glass" className={cn("size-15 min-h-15 min-w-15", className)} asChild>
                 <DropdownMenuTrigger>
                     <SlidersHorizontal className="icon" />
                 </DropdownMenuTrigger>

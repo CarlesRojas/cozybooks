@@ -52,7 +52,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                             key={route}
                             variant="navigation"
                             className={cn(
-                                "group relative px-4 hover:text-black hover:dark:text-white",
+                                "group relative px-3 hover:text-black hover:dark:text-white",
                                 route === location.pathname && "!text-neutral-50",
                             )}
                         >

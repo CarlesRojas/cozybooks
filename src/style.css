@@ -40,8 +40,10 @@
     --color-neutral-850: #1b1b1b;
 
     /* Tailwind v4 aspect utilities read from the --aspect-* namespace;
-       --aspect-ratio-book generated no CSS, silently disabling `aspect-book`. */
-    --aspect-book: 2 / 3;
+       --aspect-ratio-book generated no CSS, silently disabling `aspect-book`.
+       13:20 (0.65) sits between trade print (2:3) and the ebook standard
+       (5:8), matching the typical Google Books cover scan. */
+    --aspect-book: 13 / 20;
 
     --transition-duration-2000: 2000ms;
 

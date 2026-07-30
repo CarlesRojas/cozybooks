@@ -117,7 +117,10 @@ const Stats = ({ books }: Props) => {
     const tile = (value: number, namePrimary: string, nameSecondary: string, colorClassName: string, className?: string) => (
         <div
             className={cn(
-                "bg-neutral-150 dark:bg-neutral-850 flex flex-col gap-1 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 dark:border-neutral-500/40",
+                // On desktop the row's height (set by the chart) stretches the tiles, and
+                // aspect-square turns that height into a minimum width — content can
+                // still widen a tile past square.
+                "bg-neutral-150 dark:bg-neutral-850 flex flex-col justify-center gap-1 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 lg:aspect-square lg:h-full lg:w-auto lg:shrink-0 dark:border-neutral-500/40",
                 className,
             )}
         >
@@ -158,7 +161,9 @@ const Stats = ({ books }: Props) => {
             </div>
 
             <div className="flex w-full flex-col gap-3 px-6 sm:gap-4">
-                <div className="grid w-full grid-cols-3 gap-3 sm:gap-4">
+                {/* The fixed lg height makes the row's cross size definite, which is what
+                    lets aspect-square transfer it into the tiles' width. */}
+                <div className="grid w-full grid-cols-3 gap-3 sm:gap-4 lg:flex lg:h-52">
                     {tile(
                         statType === StatType.BOOKS ? totalBooks : totalPages,
                         statType === StatType.BOOKS ? "Books" : "Pages",
@@ -180,14 +185,14 @@ const Stats = ({ books }: Props) => {
                         "text-amber-500",
                     )}
 
-                    <div className="bg-neutral-150 dark:bg-neutral-850 relative col-span-3 flex flex-col gap-4 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 dark:border-neutral-500/40">
-                        <p className="text-xl leading-tight font-bold text-neutral-950/90 dark:text-neutral-50/90">
+                    <div className="bg-neutral-150 dark:bg-neutral-850 relative col-span-3 flex flex-col gap-1 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 lg:min-w-0 lg:flex-1 dark:border-neutral-500/40">
+                        <p className="text-base leading-tight font-bold text-neutral-950/90 sm:text-xl dark:text-neutral-50/90">
                             {statType === StatType.BOOKS ? "Books" : "Pages"}{" "}
                             <span className="text-neutral-500 dark:text-neutral-400">Per Year</span>
                         </p>
 
-                        <div className="max-h-32 [scrollbar-width:none] [scrollbar-color:rgba(115,115,115,0.4)_transparent] overflow-y-auto [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-3">
+                        <div className="max-h-32 [scrollbar-width:none] [scrollbar-color:rgba(115,115,115,0.4)_transparent] overflow-y-auto [-ms-overflow-style:none] lg:max-h-none lg:min-h-0 lg:flex-1 [&::-webkit-scrollbar]:hidden">
+                            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-2">
                                 {sortedGroups.map((group) => {
                                     const value = statType === StatType.BOOKS ? group.books : group.pages;
                                     const max = statType === StatType.BOOKS ? maxBooksPerYear : maxPagesPerYear;

@@ -1,4 +1,4 @@
-import BookList from "@/component/BookList";
+import BookCarousel from "@/component/BookCarousel";
 import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
 import { PAGE_SIZE } from "@/const";
@@ -14,8 +14,6 @@ import { z } from "zod";
 
 const searchSearchParamsSchema = z.object({
     query: z.string().default(""),
-    searchPage: z.coerce.number().default(1),
-    recommendedPage: z.coerce.number().default(1),
 });
 
 export const Route = createFileRoute("/_protected/search/")({
@@ -24,7 +22,7 @@ export const Route = createFileRoute("/_protected/search/")({
 });
 
 function RouteComponent() {
-    const { query, searchPage, recommendedPage } = Route.useSearch();
+    const { query } = Route.useSearch();
     const context = Route.useRouteContext();
     const navigate = useNavigate();
 
@@ -33,23 +31,20 @@ function RouteComponent() {
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        navigate({ to: "/search", search: { query: internalQuery, searchPage: 1, recommendedPage: 1 } });
+        navigate({ to: "/search", search: { query: internalQuery } });
     };
 
-    const searchedBooks = useSearchedBooks({
-        query,
-        booksPerPage: PAGE_SIZE,
-        offset: (searchPage - 1) * PAGE_SIZE,
-    });
+    const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE });
     const recommendedBooks = useBookShelf({
         type: BookShelfType.BOOKS_FOR_YOU,
         booksPerPage: PAGE_SIZE,
-        offset: (recommendedPage - 1) * PAGE_SIZE,
         googleToken: context.googleToken!,
     });
 
+    const wantToRead = { userId: context.user!.id, googleToken: context.googleToken! };
+
     return (
-        <main suppressHydrationWarning className={cn("relative mb-20 flex h-fit w-full flex-col gap-5 pb-6", isIOS && "mb-24")}>
+        <main suppressHydrationWarning className={cn("relative mb-20 flex h-fit w-full flex-col gap-5 pb-12", isIOS && "mb-24")}>
             <section className="sticky top-0 z-40 h-fit w-full bg-neutral-50 pt-6 pb-3 dark:bg-neutral-950">
                 <form className="mx-auto flex h-fit w-full max-w-screen-lg px-6" onSubmit={onSubmit}>
                     <Input
@@ -61,11 +56,7 @@ function RouteComponent() {
                         icon={
                             <Search className="icon stroke-2 text-neutral-500 transition-colors group-focus-within:text-neutral-950 group-focus-within:dark:text-neutral-50" />
                         }
-                        onClear={
-                            internalQuery.length > 0
-                                ? () => navigate({ to: "/search", search: { query: "", searchPage: 1, recommendedPage: 1 } })
-                                : undefined
-                        }
+                        onClear={internalQuery.length > 0 ? () => navigate({ to: "/search", search: { query: "" } }) : undefined}
                     />
 
                     <Button size="icon" variant="input" className="ml-3" type="submit" disabled={internalQuery.length === 0}>
@@ -84,38 +75,28 @@ function RouteComponent() {
             </div>
 
             <div className="flex h-fit w-full flex-col gap-12">
-                {searchedBooks.data && query.length > 0 && (
-                    <BookList
+                {query.length > 0 && (
+                    <BookCarousel
                         title="Results"
-                        books={searchedBooks.data.items}
-                        showPagination
-                        query={query}
-                        searchPage={searchPage}
-                        recommendedPage={recommendedPage}
-                        totalItems={searchedBooks.data.totalItems}
-                        stickyClassName="top-[5rem] pt-2"
-                        pageSize={PAGE_SIZE}
+                        books={searchedBooks.data?.items ?? []}
                         isLoading={searchedBooks.isLoading}
-                        type="search"
                         noBooksChildren={<p className="font-medium tracking-wide opacity-80">No results found</p>}
-                        wantToRead={{ userId: context.user!.id, googleToken: context.googleToken! }}
+                        wantToRead={wantToRead}
+                        hasNextPage={searchedBooks.hasNextPage}
+                        isFetchingNextPage={searchedBooks.isFetchingNextPage}
+                        onLoadMore={searchedBooks.fetchNextPage}
                     />
                 )}
 
-                {recommendedBooks.data && recommendedBooks.data.items.length > 0 && (
-                    <BookList
+                {!(recommendedBooks.data && recommendedBooks.data.items.length === 0) && (
+                    <BookCarousel
                         title="Recommended for you"
-                        books={recommendedBooks.data.items}
-                        showPagination
-                        query={query}
-                        searchPage={searchPage}
-                        recommendedPage={recommendedPage}
-                        totalItems={recommendedBooks.data.totalItems}
-                        stickyClassName="top-[5rem] pt-2"
-                        pageSize={PAGE_SIZE}
+                        books={recommendedBooks.data?.items ?? []}
                         isLoading={recommendedBooks.isLoading}
-                        type="recommendedBooks"
-                        wantToRead={{ userId: context.user!.id, googleToken: context.googleToken! }}
+                        wantToRead={wantToRead}
+                        hasNextPage={recommendedBooks.hasNextPage}
+                        isFetchingNextPage={recommendedBooks.isFetchingNextPage}
+                        onLoadMore={recommendedBooks.fetchNextPage}
                     />
                 )}
             </div>

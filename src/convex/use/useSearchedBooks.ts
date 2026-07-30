@@ -1,30 +1,48 @@
-// The Google Books search runs in a Convex action; previous results stay visible while
-// the next page loads. It searches the public catalogue, so unlike `useBookShelf` it
-// needs no Google token.
+// The Google Books search runs in a Convex action, so it can't use Convex's reactive
+// `usePaginatedQuery` (database queries only). Pages are accumulated with
+// `useInfiniteActionQuery` for infinite scrolling instead; previous results stay
+// visible while the first page of a new query loads. It searches the public
+// catalogue, so unlike `useBookShelf` it needs no Google token.
 
 import { fromWireBook } from "@/convex/map";
-import type { VolumesResult } from "@/type/Book";
-import { useActionQuery } from "@/convex/use/util";
+import type { Book, VolumesResult } from "@/type/Book";
+import { useInfiniteActionQuery } from "@/convex/use/util";
 import { api } from "@convex/_generated/api";
 import { useMemo } from "react";
 
 interface Props {
     query: string;
     booksPerPage?: number;
-    offset?: number;
 }
 
-export const useSearchedBooks = ({ query, booksPerPage, offset }: Props) => {
-    const result = useActionQuery(
-        api.googleBooks.search,
-        query.trim() ? { query, maxResults: booksPerPage ?? 8, startIndex: offset ?? 0 } : "skip",
-    );
+export const useSearchedBooks = ({ query, booksPerPage }: Props) => {
+    const result = useInfiniteActionQuery(api.googleBooks.search, query.trim() ? { query } : "skip", booksPerPage ?? 8);
 
     const data: VolumesResult | undefined = useMemo(() => {
         if (!query.trim()) return { totalItems: 0, items: [] };
-        if (!result.data) return undefined;
-        return { totalItems: result.data.totalItems, items: result.data.items.map(fromWireBook) };
-    }, [query, result.data]);
+        if (result.pages.length === 0) return undefined;
 
-    return { data, isLoading: query.trim() ? result.isLoading : false, isError: result.isError };
+        // Google Books pagination can repeat volumes across pages; dedupe so ids stay
+        // unique in the accumulated list.
+        const seen = new Set<string>();
+        const items: Array<Book> = [];
+        for (const page of result.pages)
+            for (const wireBook of page.items) {
+                const book = fromWireBook(wireBook);
+                if (seen.has(book.id)) continue;
+                seen.add(book.id);
+                items.push(book);
+            }
+
+        return { totalItems: result.pages[0].totalItems, items };
+    }, [query, result.pages]);
+
+    return {
+        data,
+        isLoading: query.trim() ? result.isLoading : false,
+        isError: result.isError,
+        hasNextPage: result.hasNextPage,
+        isFetchingNextPage: result.isFetchingNextPage,
+        fetchNextPage: result.fetchNextPage,
+    };
 };

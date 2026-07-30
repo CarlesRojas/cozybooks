@@ -55,17 +55,21 @@ const Settings = ({ user, queryClient }: Props) => {
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem onClick={logout}>
-                    <LogOut className="mr-3 h-4 w-4" />
-                    <p className="font-medium">Sign out</p>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-
                 <DropdownMenuRadioGroup value={theme} onValueChange={(value) => setTheme(value as Theme)}>
                     <DropdownMenuRadioItem value="dark">Dark theme</DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value="light">Light theme</DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value="system">System theme</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem
+                    className="text-red-600/80 focus:text-red-600 dark:text-red-400/80 dark:focus:text-red-400"
+                    onClick={logout}
+                >
+                    <LogOut className="mr-3 h-4 w-4" />
+                    <p className="font-medium">Sign out</p>
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );

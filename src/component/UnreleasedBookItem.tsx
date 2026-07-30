@@ -33,7 +33,7 @@ const UnreleasedBookItem = ({ unreleasedBook, userId, isLoading }: Props) => {
                 <Button
                     variant="glass"
                     onClick={() => {
-                        navigate({ to: "/search", search: { query: name, searchPage: 1, recommendedPage: 1 } });
+                        navigate({ to: "/search", search: { query: name } });
                         setPopoverOpen(false);
                     }}
                 >

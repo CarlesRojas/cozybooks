@@ -3,6 +3,7 @@
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant mouse (@media (hover: hover) and (pointer: fine));
 
 @theme {
     --font-montserrat: "Montserrat", sans-serif;

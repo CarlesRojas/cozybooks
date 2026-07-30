@@ -180,8 +180,8 @@ const Stats = ({ books }: Props) => {
                         "text-amber-500",
                     )}
 
-                    <div className="bg-neutral-150 dark:bg-neutral-850 relative col-span-3 flex flex-col gap-4 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 dark:border-neutral-500/40">
-                        <p className="text-xl leading-tight font-bold text-neutral-950/90 dark:text-neutral-50/90">
+                    <div className="bg-neutral-150 dark:bg-neutral-850 relative col-span-3 flex flex-col gap-1 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 dark:border-neutral-500/40">
+                        <p className="text-base leading-tight font-bold text-neutral-950/90 sm:text-xl dark:text-neutral-50/90">
                             {statType === StatType.BOOKS ? "Books" : "Pages"}{" "}
                             <span className="text-neutral-500 dark:text-neutral-400">Per Year</span>
                         </p>

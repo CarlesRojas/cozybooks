@@ -79,7 +79,6 @@ function RouteComponent() {
                     <BookCarousel
                         title="Results"
                         books={searchedBooks.data?.items ?? []}
-                        stickyClassName="top-[5rem] pt-2"
                         isLoading={searchedBooks.isLoading}
                         noBooksChildren={<p className="font-medium tracking-wide opacity-80">No results found</p>}
                         wantToRead={wantToRead}
@@ -93,7 +92,6 @@ function RouteComponent() {
                     <BookCarousel
                         title="Recommended for you"
                         books={recommendedBooks.data?.items ?? []}
-                        stickyClassName="top-[5rem] pt-2"
                         isLoading={recommendedBooks.isLoading}
                         wantToRead={wantToRead}
                         hasNextPage={recommendedBooks.hasNextPage}

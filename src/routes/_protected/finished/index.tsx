@@ -100,7 +100,6 @@ function RouteComponent() {
                         key={key}
                         title={sort === Sort.RATING ? (key === "Unrated" ? key : ratingTitle(parseInt(key))) : key}
                         books={books}
-                        stickyClassName="top-0 pt-3"
                     />
                 ))}
             </div>

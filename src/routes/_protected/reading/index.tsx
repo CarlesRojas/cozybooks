@@ -34,7 +34,6 @@ function Reading() {
                         <BookCarousel
                             title="Reading"
                             books={readingBooks.data.items}
-                            stickyClassName="top-0 pt-3"
                             noBooksChildren={
                                 <div className="flex flex-col gap-4">
                                     <p className="font-medium tracking-wide opacity-80">
@@ -55,7 +54,7 @@ function Reading() {
                     )}
 
                     {toReadBooks.data && toReadBooks.data.items.length > 0 && (
-                        <BookCarousel title="Want to read" books={toReadBooks.data.items} stickyClassName="top-0 pt-3" />
+                        <BookCarousel title="Want to read" books={toReadBooks.data.items} />
                     )}
 
                     {unreleasedBooks.data && (

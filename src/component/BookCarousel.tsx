@@ -8,7 +8,6 @@ import { useEffect, useRef } from "react";
 interface Props {
     title: string | ReactElement;
     books: Array<Book>;
-    stickyClassName?: string;
     isLoading?: boolean;
     noBooksChildren?: ReactNode;
     wantToRead?: { userId: string; googleToken: string };
@@ -27,17 +26,7 @@ const itemClassName = cn(
     "first:ml-[max(0.5rem,calc(50vw-32rem+0.5rem))] last:mr-[max(1.5rem,calc(50vw-32rem+1.5rem))]",
 );
 
-const BookCarousel = ({
-    title,
-    books,
-    stickyClassName,
-    isLoading,
-    noBooksChildren,
-    wantToRead,
-    hasNextPage,
-    isFetchingNextPage,
-    onLoadMore,
-}: Props) => {
+const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, hasNextPage, isFetchingNextPage, onLoadMore }: Props) => {
     const sentinelRef = useRef<HTMLDivElement | null>(null);
 
     const loadMoreRef = useRef({ onLoadMore, hasNextPage, isFetchingNextPage });
@@ -65,17 +54,14 @@ const BookCarousel = ({
 
     return (
         <section className="flex h-fit w-full flex-col gap-4">
-            {(books.length > 0 || !isLoading) && (
-                <div className={cn("sticky top-0 z-30 bg-neutral-50 pb-2 dark:bg-neutral-950", stickyClassName)}>
-                    {typeof title === "string" ? (
-                        <h2 className="mx-auto max-w-screen-lg px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">
-                            {title}
-                        </h2>
-                    ) : (
-                        <div className="mx-auto max-w-screen-lg px-6">{title}</div>
-                    )}
-                </div>
-            )}
+            {(books.length > 0 || !isLoading) &&
+                (typeof title === "string" ? (
+                    <h2 className="mx-auto w-full max-w-screen-lg px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">
+                        {title}
+                    </h2>
+                ) : (
+                    <div className="mx-auto w-full max-w-screen-lg px-6">{title}</div>
+                ))}
 
             {!isLoading && books.length === 0 && (
                 <div className="mx-auto w-full max-w-screen-lg px-6">{!!noBooksChildren && noBooksChildren}</div>

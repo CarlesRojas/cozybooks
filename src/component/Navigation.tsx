@@ -45,16 +45,16 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
             animate={{ opacity: 1 }}
         >
             <div className="flex h-fit items-center rounded-full bg-neutral-300/70 p-1 backdrop-blur-md dark:bg-neutral-700/60">
-                <div className="hidden items-center gap-2 pr-2 pl-5 text-neutral-600 lg:flex dark:text-neutral-200">
+                <div className="hidden items-center gap-3 pr-5 pl-5 text-neutral-600 lg:flex dark:text-neutral-200">
                     <div
                         className="size-5 min-h-5 min-w-5 bg-neutral-600 dark:bg-neutral-200"
                         style={{
                             maskImage: 'url("/icon/logoTransparent.png")',
-                            maskSize: "240%",
+                            maskSize: "200%",
                             maskRepeat: "no-repeat",
                             maskPosition: "center",
                             WebkitMaskImage: 'url("/icon/logoTransparent.png")',
-                            WebkitMaskSize: "240%",
+                            WebkitMaskSize: "200%",
                             WebkitMaskRepeat: "no-repeat",
                             WebkitMaskPosition: "center",
                         }}

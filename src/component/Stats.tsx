@@ -181,15 +181,12 @@ const Stats = ({ books, stickyClassName }: Props) => {
                     )}
 
                     <div className="bg-neutral-150 dark:bg-neutral-850 relative col-span-3 flex flex-col gap-4 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 dark:border-neutral-500/40">
-                        <div className="flex flex-col">
-                            <p className="text-xl leading-tight font-bold text-neutral-950/90 dark:text-neutral-50/90">
-                                {statType === StatType.BOOKS ? "Books" : "Pages"}
-                            </p>
+                        <p className="text-xl leading-tight font-bold text-neutral-950/90 dark:text-neutral-50/90">
+                            {statType === StatType.BOOKS ? "Books" : "Pages"}{" "}
+                            <span className="text-neutral-500 dark:text-neutral-400">Per Year</span>
+                        </p>
 
-                            <p className="text-xl leading-tight font-bold text-neutral-500 dark:text-neutral-400">Per Year</p>
-                        </div>
-
-                        <div className="max-h-40 [scrollbar-width:none] [scrollbar-color:rgba(115,115,115,0.4)_transparent] overflow-y-auto [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                        <div className="max-h-32 [scrollbar-width:none] [scrollbar-color:rgba(115,115,115,0.4)_transparent] overflow-y-auto [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                             <div className="grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-3">
                                 {sortedGroups.map((group) => {
                                     const value = statType === StatType.BOOKS ? group.books : group.pages;

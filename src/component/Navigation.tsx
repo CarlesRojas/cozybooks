@@ -34,34 +34,32 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
     if (NO_NAVBAR_ROUTES.includes(location.pathname as Route) || !user) return null;
 
     return (
-        <>
-            <motion.nav
-                className={cn(
-                    "fixed inset-x-0 bottom-0 z-40 mx-auto flex h-20 max-w-screen-lg items-center justify-evenly",
-                    isIOS && "bottom-4",
-                )}
-                initial={{ opacity: 0, y: 100 }}
-                animate={{ opacity: 1, y: 0 }}
-            >
-                {/* <div className="pointer-events-none absolute inset-0 -bottom-10 -top-10 bg-gradient-to-t from-black/20 to-black/0 dark:from-black/50" /> */}
-
-                <SortMenu className={cn(!showSortButton && "pointer-events-none opacity-0")} user={user} sort={sort} repeats={repeats} />
-
-                <div className="flex h-fit items-center rounded-full bg-neutral-300/70 backdrop-blur-md dark:bg-neutral-700/60">
+        <motion.nav
+            layoutRoot
+            className={cn(
+                "fixed inset-x-0 bottom-0 z-40 mx-auto flex h-20 w-full max-w-screen-lg items-center px-4",
+                "lg:top-6 lg:bottom-auto lg:h-fit lg:px-6",
+                isIOS && "bottom-4 lg:bottom-auto",
+            )}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+        >
+            <div className="flex w-full items-center justify-between lg:rounded-full lg:bg-neutral-300/70 lg:p-2 lg:backdrop-blur-md lg:dark:bg-neutral-700/60">
+                <div className="flex h-fit items-center rounded-full bg-neutral-300/70 p-1.5 backdrop-blur-md lg:bg-transparent lg:backdrop-blur-none dark:bg-neutral-700/60 lg:dark:bg-transparent">
                     {routes.map((route) => (
                         <Button
                             asChild
                             key={route}
                             variant="navigation"
                             className={cn(
-                                "group relative hover:text-black hover:dark:text-white",
+                                "group relative px-4 hover:text-black hover:dark:text-white",
                                 route === location.pathname && "!text-neutral-50",
                             )}
                         >
                             <Link to={route} search={{ sort }}>
                                 {route === location.pathname && (
                                     <motion.div
-                                        className="pointer-events-none absolute inset-1 z-30 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"
+                                        className="pointer-events-none absolute inset-0 z-30 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"
                                         layoutId="activeSection"
                                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                     />
@@ -73,9 +71,13 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                     ))}
                 </div>
 
-                <Settings user={user} queryClient={queryClient} />
-            </motion.nav>
-        </>
+                <div className="flex items-center gap-2 lg:gap-3">
+                    <SortMenu className={cn(!showSortButton && "pointer-events-none opacity-0")} user={user} sort={sort} repeats={repeats} />
+
+                    <Settings user={user} queryClient={queryClient} />
+                </div>
+            </div>
+        </motion.nav>
     );
 };
 

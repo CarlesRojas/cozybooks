@@ -37,12 +37,13 @@ function RouteComponent() {
     const wantToRead = { userId: context.user!.id };
 
     return (
-        <main suppressHydrationWarning className={cn("relative mb-20 flex h-fit w-full flex-col gap-5 pb-12", isIOS && "mb-24")}>
-            <section className="sticky top-0 z-40 h-fit w-full bg-neutral-50 pt-6 pb-3 dark:bg-neutral-950">
+        <main suppressHydrationWarning className={cn("relative mb-20 flex h-fit w-full flex-col gap-5 pb-12 lg:pt-25", isIOS && "mb-24")}>
+            <section className="sticky top-0 z-30 h-fit w-full bg-neutral-50 pt-6 pb-3 lg:top-25 dark:bg-neutral-950">
                 <form className="mx-auto flex h-fit w-full max-w-screen-lg px-6" onSubmit={onSubmit}>
                     <Input
                         placeholder="Search"
                         type="text"
+                        autoFocus
                         autoComplete="off"
                         value={internalQuery}
                         onChange={(event) => setInternalQuery(event.target.value)}

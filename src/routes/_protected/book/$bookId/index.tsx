@@ -34,7 +34,7 @@ function RouteComponent() {
     return (
         <main
             suppressHydrationWarning
-            className={cn("relative mx-auto mb-24 flex h-fit w-full max-w-screen-lg flex-col gap-6 p-6", isIOS && "mb-28")}
+            className={cn("relative mx-auto mb-24 flex h-fit w-full max-w-screen-lg flex-col gap-6 p-6 lg:pt-25", isIOS && "mb-28")}
         >
             <BackButton className="top-6" />
 

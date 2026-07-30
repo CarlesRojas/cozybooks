@@ -80,6 +80,12 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
 
     const showSkeletons = !!isLoading && books.length === 0;
 
+    // Two books per slide, stacked vertically, so the list reads in column pairs:
+    // 1 3 5 7
+    // 2 4 6 8
+    const columns: Array<Array<Book>> = [];
+    for (let index = 0; index < books.length; index += 2) columns.push(books.slice(index, index + 2));
+
     // Slide changes don't auto-reInit embla (`watchSlides: false`); reInit here
     // whenever the rendered slides change, preserving the scroll position.
     useEffect(() => {
@@ -111,22 +117,32 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
                         <CarouselPrevious className="mouse:inline-flex z-10 hidden" />
 
                         <CarouselContent className="pt-1 pb-2">
-                            {books.map((book) => (
-                                <CarouselItem key={book.id} className={itemClassName}>
-                                    <BookCover book={book} linkToBook maxWidth={300} wantToRead={wantToRead} />
+                            {columns.map((column) => (
+                                <CarouselItem key={column[0].id} className={itemClassName}>
+                                    <div className="flex flex-col gap-4">
+                                        {column.map((book) => (
+                                            <BookCover key={book.id} book={book} linkToBook maxWidth={300} wantToRead={wantToRead} />
+                                        ))}
+                                    </div>
                                 </CarouselItem>
                             ))}
 
                             {showSkeletons &&
-                                Array.from({ length: 6 }, (_, index) => (
+                                Array.from({ length: 4 }, (_, index) => (
                                     <CarouselItem key={`skeleton-${index}`} className={itemClassName}>
-                                        <div className="skeleton aspect-book w-full rounded-[22px]" />
+                                        <div className="flex flex-col gap-4">
+                                            <div className="skeleton aspect-book w-full rounded-[22px]" />
+                                            <div className="skeleton aspect-book w-full rounded-[22px]" />
+                                        </div>
                                     </CarouselItem>
                                 ))}
 
                             {books.length > 0 && hasNextPage && (
                                 <CarouselItem key="load-more" className={itemClassName}>
-                                    <div ref={sentinelRef} className="skeleton aspect-book w-full rounded-[22px]" />
+                                    <div className="flex flex-col gap-4">
+                                        <div ref={sentinelRef} className="skeleton aspect-book w-full rounded-[22px]" />
+                                        <div className="skeleton aspect-book w-full rounded-[22px]" />
+                                    </div>
                                 </CarouselItem>
                             )}
                         </CarouselContent>

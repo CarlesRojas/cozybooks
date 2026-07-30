@@ -145,6 +145,7 @@ const Stats = ({ books }: Props) => {
                     <Button
                         variant="glass"
                         size="small"
+                        className="h-12 min-h-12"
                         onClick={() => setStatType(statType === StatType.BOOKS ? StatType.PAGES : StatType.BOOKS)}
                     >
                         {statType === StatType.BOOKS ? <GalleryHorizontalEnd className="icon mr-2" /> : <BookOpen className="icon mr-2" />}

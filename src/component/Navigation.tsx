@@ -73,7 +73,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                 ref={pillRef}
                 className="relative flex h-fit grow items-center gap-1 rounded-full bg-neutral-300/70 p-1 backdrop-blur-md sm:grow-0 dark:bg-neutral-700/60"
             >
-                <div className="hidden items-center gap-3 pr-5 pl-10 text-neutral-600 lg:flex dark:text-neutral-200">
+                <div className="hidden items-center gap-3 pr-10 pl-5 text-neutral-600 lg:flex dark:text-neutral-200">
                     <div
                         className="size-5 min-h-5 min-w-5 bg-neutral-600 dark:bg-neutral-200"
                         style={{

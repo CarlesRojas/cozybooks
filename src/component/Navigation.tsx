@@ -73,7 +73,11 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                 ref={pillRef}
                 className="relative flex h-fit grow items-center gap-1 rounded-full bg-neutral-300/70 p-1 backdrop-blur-md sm:grow-0 dark:bg-neutral-700/60"
             >
-                <div className="hidden items-center gap-3 pr-10 pl-5 text-neutral-600 lg:flex dark:text-neutral-200">
+                <Link
+                    to={Route.READING}
+                    search={{ sort }}
+                    className="hidden items-center gap-3 pr-10 pl-5 text-neutral-600 select-none hover:text-black lg:flex dark:text-neutral-200 hover:dark:text-white"
+                >
                     <div
                         className="size-5 min-h-5 min-w-5 bg-neutral-600 dark:bg-neutral-200"
                         style={{
@@ -89,7 +93,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                     />
 
                     <p className="text-base font-semibold whitespace-nowrap">CozyBooks</p>
-                </div>
+                </Link>
 
                 {indicator && (
                     <motion.div

@@ -61,6 +61,10 @@ export const syncBookshelves = internalAction({
         }
 
         if (failures.length > 0) throw new Error(`Google bookshelf sync failed for volume ${volumeId} — ${failures.join("; ")}`);
+
+        // Success is logged too so `npx convex logs` shows the mirror actually ran —
+        // a function with no output is invisible there.
+        console.info(`Google bookshelf sync for volume ${volumeId}: ${ops.map(({ op, bookshelf }) => `${op}@${bookshelf}`).join(", ")} ok`);
     },
 });
 

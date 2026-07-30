@@ -11,11 +11,10 @@ const queryClient = new QueryClient({
 });
 
 export const getContext = () => {
-    return { queryClient, user: null, googleToken: null };
+    return { queryClient, user: null };
 };
 
 export type Context = {
     queryClient: QueryClient;
     user: NonNullable<Awaited<ReturnType<typeof getUser>>>["user"] | null;
-    googleToken: NonNullable<Awaited<ReturnType<typeof getUser>>>["googleToken"] | null;
 };

@@ -9,7 +9,6 @@ import { useMutation } from "convex/react";
 interface Props {
     book: Book;
     userId: string;
-    googleToken: string;
 }
 
 export const useRemoveFromWantToRead = () => {
@@ -17,5 +16,5 @@ export const useRemoveFromWantToRead = () => {
         setOptimisticBookStatus(localStore, { bookId, userId, status: "NONE" });
     });
 
-    return useTrackedMutation(({ book, userId, googleToken }: Props) => removeFromWantToRead({ bookId: book.id, userId, googleToken }));
+    return useTrackedMutation(({ book, userId }: Props) => removeFromWantToRead({ bookId: book.id, userId }));
 };

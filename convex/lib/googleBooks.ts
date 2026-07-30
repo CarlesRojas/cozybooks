@@ -1,9 +1,9 @@
 // Google Books API helpers shared by the actions in `googleBooks.ts` and `books.ts`.
 //
-// The Books API is at v1 — there is no newer version — so "latest" here means using it
-// the way it is currently documented: the OAuth token in the `Authorization` header
-// rather than the deprecated `access_token` query parameter, and an explicit `country`
-// on catalogue reads.
+// The Books API is at v1 — there is no newer version. Only the public catalogue
+// endpoints (`/volumes`, `/volumes/{id}`) are used: the authenticated `mylibrary`
+// surface is deprecated on Google's side and was dropped from the app, so no request
+// here ever carries a user OAuth token.
 
 export const GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1";
 
@@ -14,15 +14,20 @@ export const GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1";
 // Override per deployment with `npx convex env set GOOGLE_BOOKS_COUNTRY ES`.
 export const googleBooksCountry = () => process.env.GOOGLE_BOOKS_COUNTRY ?? "US";
 
-// Params every catalogue read (`/volumes`, `/volumes/{id}`, `/mylibrary/.../volumes`)
-// needs. Spread this into the per-endpoint params.
+// Params every catalogue read (`/volumes`, `/volumes/{id}`) needs. Spread this into
+// the per-endpoint params.
 //
-// The API key is omitted rather than sent empty when it isn't configured: `volumes.list`
-// and `volumes.get` serve anonymous callers (on a lower quota), whereas `key=` is a
-// malformed key and gets rejected outright.
+// The API key is required: Google throttles keyless callers against a shared global
+// quota that is routinely exhausted (every request then answers 429), so running
+// without a key just fails slowly. Failing fast here turns a misconfigured deployment
+// into one clear error instead of intermittent empty search results.
 export const catalogueParams = () => {
     const key = process.env.GOOGLE_BOOKS_API_KEY;
-    return { ...(key && { key }), country: googleBooksCountry() };
+    if (!key)
+        throw new Error(
+            "GOOGLE_BOOKS_API_KEY is not set on the Convex deployment — set it with `npx convex env set GOOGLE_BOOKS_API_KEY <key>` (add --prod for production)",
+        );
+    return { key, country: googleBooksCountry() };
 };
 
 // Google caps `maxResults` at 40 and rejects anything larger with a 400.
@@ -34,10 +39,6 @@ interface RequestOptions {
     path: string;
     params?: Record<string, string>;
     method?: "GET" | "POST";
-    // Required by every `mylibrary` endpoint (scope `.../auth/books`). The public
-    // `/volumes` endpoints take the API key instead, so browsing the catalogue keeps
-    // working when a user's Google token has expired.
-    googleToken?: string;
 }
 
 // Google Books returns a genuine, well-formed request to 503 `backendFailed` ("Service
@@ -47,24 +48,20 @@ interface RequestOptions {
 // with backoff is Google's own prescription for 5xx, and it's what makes search usable
 // here — a single attempt is a coin flip.
 //
-// 429 is included because the anonymous/keyless quota is shared and also recovers.
+// 429 is included because the per-key daily quota also recovers.
 const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
 const RETRY_BACKOFF_MS = [250, 750, 2000];
 
 // Single entry point for the Books API, so auth, retries, error reporting and response
 // handling can't drift between call sites.
-export const googleBooksRequest = async ({ path, params = {}, method = "GET", googleToken }: RequestOptions) => {
+export const googleBooksRequest = async ({ path, params = {}, method = "GET" }: RequestOptions) => {
     const url = new URL(`${GOOGLE_BOOKS_URL}${path}`);
     url.search = new URLSearchParams(params).toString();
 
     for (let attempt = 0; ; attempt++) {
-        const response = await fetch(url.toString(), {
-            method,
-            ...(googleToken && { headers: { Authorization: `Bearer ${googleToken}` } }),
-        });
+        const response = await fetch(url.toString(), { method });
 
         if (response.ok) {
-            // addVolume/removeVolume answer 204 with an empty body.
             const body = await response.text();
             return body ? JSON.parse(body) : {};
         }
@@ -75,7 +72,7 @@ export const googleBooksRequest = async ({ path, params = {}, method = "GET", go
         }
 
         // Google puts the actual reason in the body; a bare status code can't tell a geo
-        // rejection from an expired token, so keep the body in the error. The params go in
+        // rejection from a quota problem, so keep the body in the error. The params go in
         // too (minus the API key) because several distinct failures share one reason code —
         // `backendFailed`, for one, is also what a request missing `country` comes back as.
         const body = await response.text().catch(() => "");
@@ -86,14 +83,6 @@ export const googleBooksRequest = async ({ path, params = {}, method = "GET", go
         );
     }
 };
-
-// Google bookshelf ids (see `src/type/BookShelf.ts`). These three are the writable
-// shelves `mylibrary.bookshelves.addVolume`/`removeVolume` accept.
-export const BOOKSHELF = {
-    TO_READ: 2,
-    READING_NOW: 3,
-    HAVE_READ: 4,
-} as const;
 
 const optionalString = (value: unknown) => (typeof value === "string" ? value : undefined);
 const optionalNumber = (value: unknown) => (typeof value === "number" && Number.isFinite(value) ? value : undefined);

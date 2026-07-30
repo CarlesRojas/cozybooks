@@ -8,11 +8,10 @@ import { useMutation } from "convex/react";
 interface Props {
     book: Book;
     userId: string;
-    googleToken: string;
 }
 
 export const useRemoveBookFromFinished = () => {
     const removeFromFinished = useMutation(api.status.removeFromFinished);
 
-    return useTrackedMutation(({ book, userId, googleToken }: Props) => removeFromFinished({ bookId: book.id, userId, googleToken }));
+    return useTrackedMutation(({ book, userId }: Props) => removeFromFinished({ bookId: book.id, userId }));
 };

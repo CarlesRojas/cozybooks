@@ -11,7 +11,7 @@ export interface Props {
     book: Book;
     maxWidth?: number;
     linkToBook?: boolean;
-    wantToRead?: { userId: string; googleToken: string };
+    wantToRead?: { userId: string };
 }
 
 const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) => {
@@ -113,7 +113,7 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
                 </div>
             )}
 
-            {wantToRead && <WantToReadButton book={book} userId={wantToRead.userId} googleToken={wantToRead.googleToken} />}
+            {wantToRead && <WantToReadButton book={book} userId={wantToRead.userId} />}
         </>,
     );
 };

@@ -1,6 +1,5 @@
 // Counterpart of `src/server/use/status/useFinishBook.ts`. The old flow was five
-// sequential server calls (remove from reading, google sync, check finished library,
-// add library row, insert finished date); now it's one transactional mutation.
+// sequential server calls; now it's one transactional mutation.
 
 import { toWireBook } from "@/convex/map";
 import type { Book } from "@/type/Book";
@@ -12,7 +11,6 @@ import { useMutation } from "convex/react";
 interface Props {
     book: Book;
     userId: string;
-    googleToken: string;
 }
 
 export const useFinishBook = () => {
@@ -20,5 +18,5 @@ export const useFinishBook = () => {
         setOptimisticBookStatus(localStore, { bookId: book.id, userId, status: "NONE" });
     });
 
-    return useTrackedMutation(({ book, userId, googleToken }: Props) => finishBook({ book: toWireBook(book), userId, googleToken }));
+    return useTrackedMutation(({ book, userId }: Props) => finishBook({ book: toWireBook(book), userId }));
 };

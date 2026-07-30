@@ -11,7 +11,7 @@ interface Props {
     books: Array<Book>;
     isLoading?: boolean;
     noBooksChildren?: ReactNode;
-    wantToRead?: { userId: string; googleToken: string };
+    wantToRead?: { userId: string };
 
     hasNextPage?: boolean;
     isFetchingNextPage?: boolean;

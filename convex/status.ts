@@ -18,7 +18,12 @@ const scheduleBookshelfSync = async (
     ctx: MutationCtx,
     { googleToken, volumeId, ops }: { googleToken?: string; volumeId: string; ops: Array<BookshelfOp> },
 ) => {
-    if (!googleToken) return;
+    // Loud on purpose: a missing token means the change will never reach Google, and
+    // a silent skip here is indistinguishable from a Google-side failure in the logs.
+    if (!googleToken) {
+        console.warn(`Google shelf sync skipped for volume ${volumeId}: no Google token was provided`);
+        return;
+    }
     await ctx.scheduler.runAfter(0, internal.googleBooks.syncBookshelves, { googleToken, volumeId, ops });
 };
 

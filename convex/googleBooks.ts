@@ -3,7 +3,7 @@
 
 import { v } from "convex/values";
 import { action, internalAction } from "./_generated/server";
-import { catalogueParams, clampMaxResults, googleBooksRequest, parseGoogleVolume } from "./lib/googleBooks";
+import { catalogueParams, clampMaxResults, googleBooksCountry, googleBooksRequest, parseGoogleVolume } from "./lib/googleBooks";
 
 const publishVolume = (volume: ReturnType<typeof parseGoogleVolume>) => {
     if (!volume) return null;
@@ -49,7 +49,9 @@ export const syncBookshelves = internalAction({
             try {
                 await googleBooksRequest({
                     path: `/mylibrary/bookshelves/${bookshelf}/${endpoint}`,
-                    params: { volumeId },
+                    // `country` matters on writes too: without it Google has to geolocate
+                    // the caller's IP, which fails from a datacenter (see lib/googleBooks).
+                    params: { volumeId, country: googleBooksCountry() },
                     method: "POST",
                     googleToken,
                 });
@@ -59,6 +61,10 @@ export const syncBookshelves = internalAction({
         }
 
         if (failures.length > 0) throw new Error(`Google bookshelf sync failed for volume ${volumeId} — ${failures.join("; ")}`);
+
+        // Success is logged too so `npx convex logs` shows the mirror actually ran —
+        // a function with no output is invisible there.
+        console.info(`Google bookshelf sync for volume ${volumeId}: ${ops.map(({ op, bookshelf }) => `${op}@${bookshelf}`).join(", ")} ok`);
     },
 });
 

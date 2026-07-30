@@ -24,7 +24,7 @@ interface Props {
 // carousel bleed to the screen edge.
 const itemClassName = cn(
     "basis-auto",
-    "w-[40vw] max-w-[40vw] min-w-[40vw] sm:w-44 sm:max-w-44 sm:min-w-44 lg:w-48 lg:max-w-48 lg:min-w-48 xl:w-52 xl:max-w-52 xl:min-w-52",
+    "w-[42vw] max-w-[42vw] min-w-[42vw] sm:w-48 sm:max-w-48 sm:min-w-48 lg:w-52 lg:max-w-52 lg:min-w-52 xl:w-56 xl:max-w-56 xl:min-w-56",
     "first:ml-[max(0.5rem,calc(50vw-32rem+0.5rem))] last:mr-[max(1.5rem,calc(50vw-32rem+1.5rem))]",
 );
 

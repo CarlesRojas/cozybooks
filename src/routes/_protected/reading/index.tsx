@@ -1,4 +1,4 @@
-import BookList from "@/component/BookList";
+import BookCarousel from "@/component/BookCarousel";
 import { Button } from "@/component/ui/button";
 import UnreleasedBookList from "@/component/UnreleasedBookList";
 import { cn } from "@/lib/cn";
@@ -31,10 +31,9 @@ function Reading() {
             ) : (
                 <div className="flex h-fit w-full grow flex-col gap-6 py-4">
                     {readingBooks.data && (
-                        <BookList
+                        <BookCarousel
                             title="Reading"
                             books={readingBooks.data.items}
-                            showPagination={false}
                             stickyClassName="top-0 pt-3"
                             noBooksChildren={
                                 <div className="flex flex-col gap-4">
@@ -56,7 +55,7 @@ function Reading() {
                     )}
 
                     {toReadBooks.data && toReadBooks.data.items.length > 0 && (
-                        <BookList title="Want to read" books={toReadBooks.data.items} showPagination={false} stickyClassName="top-0 pt-3" />
+                        <BookCarousel title="Want to read" books={toReadBooks.data.items} stickyClassName="top-0 pt-3" />
                     )}
 
                     {unreleasedBooks.data && (

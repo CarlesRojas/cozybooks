@@ -1,4 +1,4 @@
-import BookList from "@/component/BookList";
+import BookCarousel from "@/component/BookCarousel";
 import { Sort } from "@/component/SortMenu";
 import Star from "@/component/Star";
 import Stats from "@/component/Stats";
@@ -96,11 +96,10 @@ function RouteComponent() {
                 {finishedBooks.data && <Stats books={finishedBooks.data.items} stickyClassName="top-0 pt-3" />}
 
                 {groups.map(({ key, books }) => (
-                    <BookList
+                    <BookCarousel
                         key={key}
                         title={sort === Sort.RATING ? (key === "Unrated" ? key : ratingTitle(parseInt(key))) : key}
                         books={books}
-                        showPagination={false}
                         stickyClassName="top-0 pt-3"
                     />
                 ))}

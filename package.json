@@ -51,6 +51,7 @@
         "convex": "^1.42.3",
         "drizzle-orm": "^0.45.2",
         "drizzle-zod": "^0.8.3",
+        "embla-carousel-react": "^8.6.0",
         "framer-motion": "^12.43.0",
         "lucide-react": "^1.27.0",
         "millify": "^6.1.0",

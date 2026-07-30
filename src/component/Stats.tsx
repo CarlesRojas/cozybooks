@@ -117,7 +117,10 @@ const Stats = ({ books }: Props) => {
     const tile = (value: number, namePrimary: string, nameSecondary: string, colorClassName: string, className?: string) => (
         <div
             className={cn(
-                "bg-neutral-150 dark:bg-neutral-850 flex flex-col gap-1 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 dark:border-neutral-500/40",
+                // On desktop the row's height (set by the chart) stretches the tiles, and
+                // aspect-square turns that height into a minimum width — content can
+                // still widen a tile past square.
+                "bg-neutral-150 dark:bg-neutral-850 flex flex-col gap-1 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 lg:aspect-square lg:w-auto lg:shrink-0 dark:border-neutral-500/40",
                 className,
             )}
         >
@@ -158,7 +161,7 @@ const Stats = ({ books }: Props) => {
             </div>
 
             <div className="flex w-full flex-col gap-3 px-6 sm:gap-4">
-                <div className="grid w-full grid-cols-3 gap-3 sm:gap-4">
+                <div className="grid w-full grid-cols-3 gap-3 sm:gap-4 lg:flex">
                     {tile(
                         statType === StatType.BOOKS ? totalBooks : totalPages,
                         statType === StatType.BOOKS ? "Books" : "Pages",
@@ -180,7 +183,7 @@ const Stats = ({ books }: Props) => {
                         "text-amber-500",
                     )}
 
-                    <div className="bg-neutral-150 dark:bg-neutral-850 relative col-span-3 flex flex-col gap-1 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 dark:border-neutral-500/40">
+                    <div className="bg-neutral-150 dark:bg-neutral-850 relative col-span-3 flex flex-col gap-1 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 lg:min-w-0 lg:flex-1 dark:border-neutral-500/40">
                         <p className="text-base leading-tight font-bold text-neutral-950/90 sm:text-xl dark:text-neutral-50/90">
                             {statType === StatType.BOOKS ? "Books" : "Pages"}{" "}
                             <span className="text-neutral-500 dark:text-neutral-400">Per Year</span>

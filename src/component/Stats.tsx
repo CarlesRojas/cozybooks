@@ -2,7 +2,7 @@ import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
 import type { Book } from "@/type/Book";
 import { BookOpen, GalleryHorizontalEnd } from "lucide-react";
-import millify from "millify";
+import { millify } from "millify";
 import { useMemo, useState } from "react";
 
 interface Props {

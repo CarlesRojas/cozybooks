@@ -28,7 +28,7 @@ const SortMenu = ({ className, sort, repeats }: Props) => {
     const navigate = useNavigate();
 
     return (
-        <DropdownMenu modal={true}>
+        <DropdownMenu modal={false}>
             <Button size="icon" variant="glass" className={cn("size-14 min-h-14 min-w-14", className)} asChild>
                 <DropdownMenuTrigger>
                     <SlidersHorizontal className="icon" />

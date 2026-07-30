@@ -56,13 +56,7 @@ function Reading() {
                     )}
 
                     {toReadBooks.data && toReadBooks.data.items.length > 0 && (
-                        <BookList
-                            title="Want to read"
-                            books={toReadBooks.data.items}
-                            showPagination={false}
-                            stickyClassName="top-0 pt-3"
-                            wantToRead={{ userId: context.user!.id, googleToken: context.googleToken! }}
-                        />
+                        <BookList title="Want to read" books={toReadBooks.data.items} showPagination={false} stickyClassName="top-0 pt-3" />
                     )}
 
                     {unreleasedBooks.data && (

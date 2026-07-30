@@ -29,19 +29,17 @@ const UnreleasedBookList = ({ stickyClassName, unreleasedBooks, userId }: Props)
     return (
         <section className="flex h-fit w-full flex-col gap-4">
             <div className={cn("sticky top-0 z-30 bg-neutral-50 pb-2 dark:bg-neutral-950", stickyClassName)}>
-                <h2 className="mx-auto max-w-screen-lg px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">
-                    Unreleased Books
-                </h2>
+                <h2 className="px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">Unreleased Books</h2>
             </div>
 
             {unreleasedBooks.length <= 0 && (
-                <p className="mx-auto w-full max-w-screen-lg px-6 opacity-50">
+                <p className="w-full px-6 opacity-50">
                     {"Some books will not show on search results until they are released. You can add them here as a reminder."}
                 </p>
             )}
 
             {unreleasedBooks.length > 0 && (
-                <div className="mx-auto flex w-full max-w-screen-lg flex-wrap gap-3 px-6">
+                <div className="flex w-full flex-wrap gap-3 px-6">
                     {unreleasedBooks.map((unreleasedBook) => (
                         <UnreleasedBookItem
                             key={unreleasedBook.id}

@@ -139,7 +139,7 @@ const Stats = ({ books }: Props) => {
     return (
         <section className="flex h-fit w-full flex-col gap-4">
             <div className="pb-2">
-                <div className="mx-auto flex w-full max-w-screen-lg items-center justify-between gap-4 px-6">
+                <div className="flex w-full items-center justify-between gap-4 px-6">
                     <h2 className="text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">Stats</h2>
 
                     <Button
@@ -156,7 +156,7 @@ const Stats = ({ books }: Props) => {
                 </div>
             </div>
 
-            <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-3 px-6 sm:gap-4">
+            <div className="flex w-full flex-col gap-3 px-6 sm:gap-4">
                 <div className="grid w-full grid-cols-3 gap-3 sm:gap-4">
                     {tile(
                         statType === StatType.BOOKS ? totalBooks : totalPages,

@@ -19,15 +19,15 @@ interface Props {
 }
 
 // Slides are fixed-width — sized on phones so two covers fit with a sliver of the
-// third peeking in. The first/last margins line the row up with the
-// `max-w-screen-lg px-6` column the rest of the page uses while letting the
-// carousel bleed to the screen edge.
+// third peeking in. The first/last margins line the row up with the `px-6`
+// gutter the rest of the page uses while letting the carousel bleed to the
+// screen edge.
 const itemClassName = cn(
     "basis-auto",
     "w-[44vw] max-w-[44vw] min-w-[44vw] sm:w-52 sm:max-w-52 sm:min-w-52 lg:w-56 lg:max-w-56 lg:min-w-56 xl:w-60 xl:max-w-60 xl:min-w-60",
     // The row is shifted -ml-4 by CarouselContent, which cancels the first slide's
     // pl-4 gap — so the first margin needs the full gutter width.
-    "first:ml-[max(1.5rem,calc(50vw-32rem+1.5rem))] last:mr-[max(1.5rem,calc(50vw-32rem+1.5rem))]",
+    "first:ml-6 last:mr-6",
 );
 
 // Embla's automatic reInit when slides are added snaps to the nearest snap point and
@@ -98,16 +98,12 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
         <section className="flex h-fit w-full flex-col gap-4">
             {(books.length > 0 || !isLoading) &&
                 (typeof title === "string" ? (
-                    <h2 className="mx-auto w-full max-w-screen-lg px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">
-                        {title}
-                    </h2>
+                    <h2 className="w-full px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">{title}</h2>
                 ) : (
-                    <div className="mx-auto w-full max-w-screen-lg px-6">{title}</div>
+                    <div className="w-full px-6">{title}</div>
                 ))}
 
-            {!isLoading && books.length === 0 && (
-                <div className="mx-auto w-full max-w-screen-lg px-6">{!!noBooksChildren && noBooksChildren}</div>
-            )}
+            {!isLoading && books.length === 0 && <div className="w-full px-6">{!!noBooksChildren && noBooksChildren}</div>}
 
             {(books.length > 0 || showSkeletons) && (
                 <div className="relative w-full overflow-hidden">

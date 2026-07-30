@@ -32,10 +32,7 @@ function RouteComponent() {
     const categorySet = new Set(categories?.flatMap((c) => c.split("/").map((category) => category.trim())) ?? []);
 
     return (
-        <main
-            suppressHydrationWarning
-            className={cn("relative mx-auto mb-24 flex h-fit w-full max-w-screen-lg flex-col gap-6 p-6 lg:pt-25", isIOS && "mb-28")}
-        >
+        <main suppressHydrationWarning className={cn("relative mb-24 flex h-fit w-full flex-col gap-6 p-6 lg:pt-25", isIOS && "mb-28")}>
             <BackButton className="top-6" />
 
             <div className="relative flex w-full flex-col items-center gap-6 sm:gap-8">

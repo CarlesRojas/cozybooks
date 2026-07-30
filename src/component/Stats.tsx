@@ -140,9 +140,21 @@ const Stats = ({ books, stickyClassName }: Props) => {
     return (
         <section className="flex h-fit w-full flex-col gap-4">
             <div className={cn("sticky top-0 z-30 bg-neutral-50 pb-2 dark:bg-neutral-950", stickyClassName)}>
-                <h2 className="mx-auto max-w-screen-lg px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">
-                    Stats
-                </h2>
+                <div className="mx-auto flex w-full max-w-screen-lg items-center justify-between gap-4 px-6">
+                    <h2 className="text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">Stats</h2>
+
+                    <Button
+                        variant="glass"
+                        size="small"
+                        onClick={() => setStatType(statType === StatType.BOOKS ? StatType.PAGES : StatType.BOOKS)}
+                    >
+                        {statType === StatType.BOOKS ? <GalleryHorizontalEnd className="icon mr-2" /> : <BookOpen className="icon mr-2" />}
+
+                        <p className="text-sm font-bold tracking-wide">
+                            {statType === StatType.BOOKS ? "View page stats" : "View book stats"}
+                        </p>
+                    </Button>
+                </div>
             </div>
 
             <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-3 px-6 sm:gap-4">
@@ -208,16 +220,6 @@ const Stats = ({ books, stickyClassName }: Props) => {
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div className="relative flex flex-wrap gap-2">
-                    <Button variant="glass" onClick={() => setStatType(statType === StatType.BOOKS ? StatType.PAGES : StatType.BOOKS)}>
-                        {statType === StatType.BOOKS ? <GalleryHorizontalEnd className="icon mr-3" /> : <BookOpen className="icon mr-3" />}
-
-                        <p className="text-lg font-bold tracking-wide">
-                            {statType === StatType.BOOKS ? "View page stats" : "View book stats"}
-                        </p>
-                    </Button>
                 </div>
             </div>
         </section>

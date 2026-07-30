@@ -77,7 +77,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                 <Link
                     to={homeRoute}
                     search={{ sort }}
-                    className="hidden items-center gap-3 pr-10 pl-5 text-neutral-600 select-none hover:text-black lg:flex dark:text-neutral-200 hover:dark:text-white"
+                    className="mr-5 hidden h-12 items-center gap-3 px-5 text-neutral-600 select-none hover:text-black lg:flex dark:text-neutral-200 hover:dark:text-white"
                 >
                     <div
                         className="size-5 min-h-5 min-w-5 bg-neutral-600 dark:bg-neutral-200"
@@ -111,7 +111,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                         key={route}
                         variant="navigation"
                         className={cn(
-                            "group relative grow px-3 hover:text-black sm:grow-0 lg:px-5 hover:dark:text-white",
+                            "group relative grow px-3 hover:text-black sm:grow-0 sm:px-4 lg:px-5 hover:dark:text-white",
                             route === location.pathname && "!text-neutral-50",
                         )}
                     >

@@ -10,6 +10,7 @@ import type { User } from "better-auth";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import type { ReactElement } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { isIOS } from "react-device-detect";
 
 interface Props {
@@ -22,6 +23,7 @@ interface Props {
 const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
     const location = useLocation();
 
+    const homeRoute: string = Route.READING;
     const routes: Array<string> = [Route.READING, Route.FINISHED, Route.SEARCH];
     const routeTitle: Partial<Record<string, ReactElement>> = {
         [Route.READING]: <p className="z-40 transition-colors">Reading</p>,
@@ -31,51 +33,105 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
 
     const showSortButton = location.pathname === Route.FINISHED;
 
+    // The indicator is positioned from DOM measurements local to the pill instead
+    // of a framer-motion shared layout animation: shared layouts measure in page
+    // coordinates, and the scroll reset on navigation made the indicator animate
+    // vertically. Local offsets are immune to page scroll.
+    const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+    const pillRef = useRef<HTMLDivElement | null>(null);
+    const [indicator, setIndicator] = useState<{ left: number; top: number; width: number; height: number } | null>(null);
+
+    useLayoutEffect(() => {
+        const active = linkRefs.current[location.pathname];
+        if (!active || !pillRef.current) {
+            setIndicator(null);
+            return;
+        }
+
+        const update = () =>
+            setIndicator({ left: active.offsetLeft, top: active.offsetTop, width: active.offsetWidth, height: active.offsetHeight });
+        update();
+
+        const observer = new ResizeObserver(update);
+        observer.observe(pillRef.current);
+        observer.observe(active);
+        return () => observer.disconnect();
+    }, [location.pathname]);
+
     if (NO_NAVBAR_ROUTES.includes(location.pathname as Route) || !user) return null;
 
     return (
-        <>
-            <motion.nav
-                className={cn(
-                    "fixed inset-x-0 bottom-0 z-40 mx-auto flex h-20 max-w-screen-lg items-center justify-evenly",
-                    isIOS && "bottom-4",
-                )}
-                initial={{ opacity: 0, y: 100 }}
-                animate={{ opacity: 1, y: 0 }}
+        <motion.nav
+            className={cn(
+                "fixed inset-x-0 bottom-0 z-40 flex h-20 w-full items-center justify-center gap-2 px-4",
+                "lg:top-6 lg:bottom-auto lg:h-fit lg:justify-normal lg:gap-3 lg:px-6",
+                isIOS && "bottom-4 lg:bottom-auto",
+            )}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+        >
+            <div
+                ref={pillRef}
+                className="relative flex h-fit grow items-center gap-1 rounded-full bg-neutral-300/70 p-1 backdrop-blur-md sm:grow-0 dark:bg-neutral-700/60"
             >
-                {/* <div className="pointer-events-none absolute inset-0 -bottom-10 -top-10 bg-gradient-to-t from-black/20 to-black/0 dark:from-black/50" /> */}
+                <Link
+                    to={homeRoute}
+                    search={{ sort }}
+                    className="mr-5 hidden h-12 items-center gap-3 px-5 text-neutral-600 select-none hover:text-black lg:flex dark:text-neutral-200 hover:dark:text-white"
+                >
+                    <div
+                        className="size-5 min-h-5 min-w-5 bg-neutral-600 dark:bg-neutral-200"
+                        style={{
+                            maskImage: 'url("/icon/logoTransparent.png")',
+                            maskSize: "200%",
+                            maskRepeat: "no-repeat",
+                            maskPosition: "center",
+                            WebkitMaskImage: 'url("/icon/logoTransparent.png")',
+                            WebkitMaskSize: "200%",
+                            WebkitMaskRepeat: "no-repeat",
+                            WebkitMaskPosition: "center",
+                        }}
+                    />
 
-                <SortMenu className={cn(!showSortButton && "pointer-events-none opacity-0")} user={user} sort={sort} repeats={repeats} />
+                    <p className="text-base font-semibold whitespace-nowrap">CozyBooks</p>
+                </Link>
 
-                <div className="flex h-fit items-center rounded-full bg-neutral-300/70 backdrop-blur-md dark:bg-neutral-700/60">
-                    {routes.map((route) => (
-                        <Button
-                            asChild
-                            key={route}
-                            variant="navigation"
-                            className={cn(
-                                "group relative hover:text-black hover:dark:text-white",
-                                route === location.pathname && "!text-neutral-50",
-                            )}
+                {indicator && (
+                    <motion.div
+                        className="pointer-events-none absolute z-30 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"
+                        initial={false}
+                        animate={{ left: indicator.left, top: indicator.top, width: indicator.width, height: indicator.height }}
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                )}
+
+                {routes.map((route) => (
+                    <Button
+                        asChild
+                        key={route}
+                        variant="navigation"
+                        className={cn(
+                            "group relative grow px-3 hover:text-black sm:grow-0 sm:px-4 lg:px-5 hover:dark:text-white",
+                            route === location.pathname && "!text-neutral-50",
+                        )}
+                    >
+                        <Link
+                            to={route}
+                            search={{ sort }}
+                            ref={(element) => {
+                                linkRefs.current[route] = element;
+                            }}
                         >
-                            <Link to={route} search={{ sort }}>
-                                {route === location.pathname && (
-                                    <motion.div
-                                        className="pointer-events-none absolute inset-1 z-30 rounded-full bg-neutral-600/60 dark:bg-neutral-400/50"
-                                        layoutId="activeSection"
-                                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                                    />
-                                )}
+                            {routeTitle[route]}
+                        </Link>
+                    </Button>
+                ))}
+            </div>
 
-                                {routeTitle[route]}
-                            </Link>
-                        </Button>
-                    ))}
-                </div>
+            <SortMenu className={cn("lg:ml-auto", !showSortButton && "pointer-events-none opacity-0")} sort={sort} repeats={repeats} />
 
-                <Settings user={user} queryClient={queryClient} />
-            </motion.nav>
-        </>
+            <Settings user={user} queryClient={queryClient} />
+        </motion.nav>
     );
 };
 

@@ -70,6 +70,10 @@
 
     html {
         @apply relative min-h-dvh w-full text-[14px] antialiased;
+
+        /* Reserve the scrollbar gutter so switching between pages that do and
+           don't scroll doesn't change the viewport width and shift the layout. */
+        scrollbar-gutter: stable;
     }
 
     body {

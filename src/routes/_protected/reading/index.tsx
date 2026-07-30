@@ -22,7 +22,7 @@ function Reading() {
     return (
         <main
             suppressHydrationWarning
-            className={cn("relative mb-20 flex h-fit min-h-[calc(100vh_-_5rem)] w-full flex-col gap-5 pb-12", isIOS && "mb-24")}
+            className={cn("relative mb-20 flex h-fit min-h-[calc(100vh_-_5rem)] w-full flex-col gap-5 pb-12 lg:pt-25", isIOS && "mb-24")}
         >
             {isPending ? (
                 <div className="flex w-full grow items-center justify-center px-6 transition-all">
@@ -58,7 +58,11 @@ function Reading() {
                     )}
 
                     {unreleasedBooks.data && (
-                        <UnreleasedBookList unreleasedBooks={unreleasedBooks.data} stickyClassName="top-0 pt-3" userId={context.user!.id} />
+                        <UnreleasedBookList
+                            unreleasedBooks={unreleasedBooks.data}
+                            stickyClassName="top-0 pt-3 lg:top-25"
+                            userId={context.user!.id}
+                        />
                     )}
                 </div>
             )}

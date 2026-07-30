@@ -19,7 +19,10 @@ export const Route = createRootRouteWithContext<Context>()({
     head: () => ({
         meta: [
             { charSet: "utf-8" },
-            { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" },
+            {
+                name: "viewport",
+                content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, interactive-widget=resizes-content",
+            },
             { name: "theme-color", media: "(prefers-color-scheme: light)", content: "#fafafa" },
             { name: "theme-color", media: "(prefers-color-scheme: dark)", content: "#0a0a0a" },
             { name: "apple-mobile-web-app-capable", content: "yes" },

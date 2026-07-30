@@ -84,7 +84,7 @@ function RouteComponent() {
     return (
         <main
             suppressHydrationWarning
-            className={cn("relative mb-20 flex h-fit min-h-[calc(100vh_-_5rem)] w-full flex-col gap-5 pb-6", isIOS && "mb-24")}
+            className={cn("relative mb-20 flex h-fit min-h-[calc(100vh_-_5rem)] w-full flex-col gap-5 pb-12", isIOS && "mb-24")}
         >
             {finishedBooks.isLoading && (
                 <div className="flex w-full grow items-center justify-center px-6 transition-all">

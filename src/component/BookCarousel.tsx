@@ -25,7 +25,9 @@ interface Props {
 const itemClassName = cn(
     "basis-auto",
     "w-[42vw] max-w-[42vw] min-w-[42vw] sm:w-48 sm:max-w-48 sm:min-w-48 lg:w-52 lg:max-w-52 lg:min-w-52 xl:w-56 xl:max-w-56 xl:min-w-56",
-    "first:ml-[max(0.5rem,calc(50vw-32rem+0.5rem))] last:mr-[max(1.5rem,calc(50vw-32rem+1.5rem))]",
+    // The row is shifted -ml-4 by CarouselContent, which cancels the first slide's
+    // pl-4 gap — so the first margin needs the full gutter width.
+    "first:ml-[max(1.5rem,calc(50vw-32rem+1.5rem))] last:mr-[max(1.5rem,calc(50vw-32rem+1.5rem))]",
 );
 
 // Embla's automatic reInit when slides are added snaps to the nearest snap point and

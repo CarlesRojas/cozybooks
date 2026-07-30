@@ -22,14 +22,14 @@ function Reading() {
     return (
         <main
             suppressHydrationWarning
-            className={cn("relative mb-20 flex h-fit min-h-[calc(100vh_-_5rem)] w-full flex-col gap-5 pb-6", isIOS && "mb-24")}
+            className={cn("relative mb-20 flex h-fit min-h-[calc(100vh_-_5rem)] w-full flex-col gap-5 pb-12", isIOS && "mb-24")}
         >
             {isPending ? (
                 <div className="flex w-full grow items-center justify-center px-6 transition-all">
                     <Loader className="size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50 duration-2000" />
                 </div>
             ) : (
-                <div className="flex h-fit w-full grow flex-col gap-6 py-4">
+                <div className="flex h-fit w-full grow flex-col gap-6 pt-8 pb-4">
                     {readingBooks.data && (
                         <BookCarousel
                             title="Reading"

@@ -44,7 +44,7 @@ function RouteComponent() {
     const wantToRead = { userId: context.user!.id, googleToken: context.googleToken! };
 
     return (
-        <main suppressHydrationWarning className={cn("relative mb-20 flex h-fit w-full flex-col gap-5 pb-6", isIOS && "mb-24")}>
+        <main suppressHydrationWarning className={cn("relative mb-20 flex h-fit w-full flex-col gap-5 pb-12", isIOS && "mb-24")}>
             <section className="sticky top-0 z-40 h-fit w-full bg-neutral-50 pt-6 pb-3 dark:bg-neutral-950">
                 <form className="mx-auto flex h-fit w-full max-w-screen-lg px-6" onSubmit={onSubmit}>
                     <Input

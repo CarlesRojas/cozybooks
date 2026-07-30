@@ -44,7 +44,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
         >
-            <div className="flex h-fit items-center rounded-full bg-neutral-300/70 p-1 backdrop-blur-md dark:bg-neutral-700/60">
+            <div className="flex h-fit grow items-center justify-evenly rounded-full bg-neutral-300/70 p-1 backdrop-blur-md lg:justify-start dark:bg-neutral-700/60">
                 <div className="hidden items-center gap-3 pr-5 pl-10 text-neutral-600 lg:flex dark:text-neutral-200">
                     <div
                         className="size-5 min-h-5 min-w-5 bg-neutral-600 dark:bg-neutral-200"

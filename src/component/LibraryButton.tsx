@@ -14,10 +14,9 @@ import type { ReactNode } from "react";
 interface Props {
     book: Book;
     userId: string;
-    googleToken: string;
 }
 
-const LibraryButton = ({ book, userId, googleToken }: Props) => {
+const LibraryButton = ({ book, userId }: Props) => {
     const bookStatus = useBookStatus({ bookId: book.id, userId });
     const finishedDates = useFinishedDates({ bookId: book.id, userId });
 
@@ -58,7 +57,7 @@ const LibraryButton = ({ book, userId, googleToken }: Props) => {
 
     const map: Record<BookStatus, ReactNode> = {
         [BookStatus.NONE]: (
-            <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book, userId, googleToken })}>
+            <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book, userId })}>
                 {addToWantToRead.isPending ? <Loader className="icon mr-3 animate-spin" /> : <Plus className="icon mr-3" />}
                 <p>{finishedDates.data.length > 0 ? "I want to read this again" : "I want to read this"}</p>
             </Button>
@@ -66,12 +65,12 @@ const LibraryButton = ({ book, userId, googleToken }: Props) => {
 
         [BookStatus.WANT_TO_READ]: (
             <>
-                <Button disabled={isLoading} onClick={() => startReading.mutate({ book, userId, googleToken })}>
+                <Button disabled={isLoading} onClick={() => startReading.mutate({ book, userId })}>
                     {startReading.isPending ? <Loader className="icon mr-3 animate-spin" /> : <BookOpen className="icon mr-3" />}
                     <p>Start reading</p>
                 </Button>
 
-                <Button disabled={isLoading} variant="glass" onClick={() => removeFromWantToRead.mutate({ book, userId, googleToken })}>
+                <Button disabled={isLoading} variant="glass" onClick={() => removeFromWantToRead.mutate({ book, userId })}>
                     {removeFromWantToRead.isPending ? <Loader className="icon mr-3 animate-spin" /> : <X className="icon mr-3" />}
                     <p>{finishedDates.data.length > 0 ? "I no longer want to read this again" : "I no longer want to read this"}</p>
                 </Button>
@@ -80,12 +79,12 @@ const LibraryButton = ({ book, userId, googleToken }: Props) => {
 
         [BookStatus.READING_NOW]: (
             <>
-                <Button disabled={isLoading} onClick={() => finishBook.mutate({ book, userId, googleToken })}>
+                <Button disabled={isLoading} onClick={() => finishBook.mutate({ book, userId })}>
                     {finishBook.isPending ? <Loader className="icon mr-3 animate-spin" /> : <BookMarked className="icon mr-3" />}
                     <p>Finish book</p>
                 </Button>
 
-                <Button disabled={isLoading} variant="glass" onClick={() => stopReading.mutate({ book, userId, googleToken })}>
+                <Button disabled={isLoading} variant="glass" onClick={() => stopReading.mutate({ book, userId })}>
                     {stopReading.isPending ? <Loader className="icon mr-3 animate-spin" /> : <X className="icon mr-3" />}
                     <p>Stop reading</p>
                 </Button>

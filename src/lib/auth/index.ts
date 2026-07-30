@@ -13,21 +13,9 @@ export const auth = betterAuth({
         google: {
             clientId: env.GOOGLE_CLIENT_ID,
             clientSecret: env.GOOGLE_CLIENT_SECRET,
-
-            // The app mirrors library changes onto the user's Google "My Library" shelves
-            // and reads the "Books for you" shelf. Both need the Books scope: Google's
-            // default `openid`/`email`/`profile` token is identity-only, and every
-            // `mylibrary` endpoint rejects it.
-            scope: ["https://www.googleapis.com/auth/books"],
-
-            // Without offline access Google issues no refresh token, so the access token
-            // can't outlive its first hour and `getAccessToken` fails from then on.
-            accessType: "offline",
-
-            // Google only re-issues a refresh token when it actually re-prompts, so
-            // accounts that consented before the scope above existed would otherwise
-            // keep their old identity-only grant.
-            prompt: "consent",
+            // Identity-only: the deprecated Google "My Library" integration is gone, so
+            // no feature needs the Books scope (or the offline/consent settings that
+            // existed to keep its token refreshable).
         },
     },
 

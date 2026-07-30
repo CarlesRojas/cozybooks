@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_protected/book/$bookId/")({
 });
 
 function RouteComponent() {
-    const { book, user, googleToken } = Route.useRouteContext();
+    const { book, user } = Route.useRouteContext();
     if (!book) return <NotFound type={NotFoundType.BOOK} />;
 
     const { title, authors, description, pageCount, previewLink, categories } = book;
@@ -63,9 +63,9 @@ function RouteComponent() {
 
                 <Rating book={book} tooltipSide="top" userId={user!.id} />
 
-                <LibraryButton book={book} userId={user!.id} googleToken={googleToken!} />
+                <LibraryButton book={book} userId={user!.id} />
 
-                <FinishedOn book={book} userId={user!.id} googleToken={googleToken!} />
+                <FinishedOn book={book} userId={user!.id} />
 
                 {description && (
                     <div className="prose prose-neutral bg-neutral-150 dark:prose-invert dark:bg-neutral-850 flex w-fit flex-col items-center rounded-3xl px-4 pt-1 pb-5 sm:px-6 sm:pt-2 sm:pb-6">

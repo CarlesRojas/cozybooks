@@ -2,7 +2,7 @@
 // `usePaginatedQuery` (database queries only). Pages are accumulated with
 // `useInfiniteActionQuery` for infinite scrolling instead; previous results stay
 // visible while the first page of a new query loads. It searches the public
-// catalogue, so unlike `useBookShelf` it needs no Google token.
+// catalogue, so it needs no Google token.
 
 import { fromWireBook } from "@/convex/map";
 import type { Book, VolumesResult } from "@/type/Book";

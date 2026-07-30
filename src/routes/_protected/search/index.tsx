@@ -3,9 +3,7 @@ import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
 import { PAGE_SIZE } from "@/const";
 import { cn } from "@/lib/cn";
-import { useBookShelf } from "@/convex/use/useBookShelf";
 import { useSearchedBooks } from "@/convex/use/useSearchedBooks";
-import { BookShelfType } from "@/type/BookShelf";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Loader, Search } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -35,13 +33,8 @@ function RouteComponent() {
     };
 
     const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE });
-    const recommendedBooks = useBookShelf({
-        type: BookShelfType.BOOKS_FOR_YOU,
-        booksPerPage: PAGE_SIZE,
-        googleToken: context.googleToken!,
-    });
 
-    const wantToRead = { userId: context.user!.id, googleToken: context.googleToken! };
+    const wantToRead = { userId: context.user!.id };
 
     return (
         <main suppressHydrationWarning className={cn("relative mb-20 flex h-fit w-full flex-col gap-5 pb-12", isIOS && "mb-24")}>
@@ -85,18 +78,6 @@ function RouteComponent() {
                         hasNextPage={searchedBooks.hasNextPage}
                         isFetchingNextPage={searchedBooks.isFetchingNextPage}
                         onLoadMore={searchedBooks.fetchNextPage}
-                    />
-                )}
-
-                {!(recommendedBooks.data && recommendedBooks.data.items.length === 0) && (
-                    <BookCarousel
-                        title="Recommended for you"
-                        books={recommendedBooks.data?.items ?? []}
-                        isLoading={recommendedBooks.isLoading}
-                        wantToRead={wantToRead}
-                        hasNextPage={recommendedBooks.hasNextPage}
-                        isFetchingNextPage={recommendedBooks.isFetchingNextPage}
-                        onLoadMore={recommendedBooks.fetchNextPage}
                     />
                 )}
             </div>

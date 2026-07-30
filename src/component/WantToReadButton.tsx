@@ -11,10 +11,9 @@ import type { MouseEvent } from "react";
 interface Props {
     book: Book;
     userId: string;
-    googleToken: string;
 }
 
-const WantToReadButton = ({ book, userId, googleToken }: Props) => {
+const WantToReadButton = ({ book, userId }: Props) => {
     const bookStatus = useBookStatus({ bookId: book.id, userId });
 
     const addToWantToRead = useAddToWantToRead();
@@ -29,8 +28,8 @@ const WantToReadButton = ({ book, userId, googleToken }: Props) => {
         event.preventDefault();
         event.stopPropagation();
 
-        if (isAdded) removeFromWantToRead.mutate({ book, userId, googleToken });
-        else addToWantToRead.mutate({ book, userId, googleToken });
+        if (isAdded) removeFromWantToRead.mutate({ book, userId });
+        else addToWantToRead.mutate({ book, userId });
     };
 
     return (

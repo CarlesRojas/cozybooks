@@ -39,7 +39,7 @@ export const Route = createRootRouteWithContext<Context>()({
     beforeLoad: async ({ context }) => {
         const result = await context.queryClient.fetchQuery({ queryKey: [QueryKey.USER], queryFn: getUser });
 
-        return { user: result.user, googleToken: result.googleToken };
+        return { user: result.user };
     },
 
     shellComponent: RootDocument,

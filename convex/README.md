@@ -31,7 +31,21 @@ better-auth persists to Convex through the adapter in `convex/betterAuth.ts`.
       `accounts` and `verifications` (add `--prod` for production)
     - deploy; `src/server`, `drizzle.config.ts`, the `db:*` scripts and the
       drizzle/pg dependencies are now fully dead and safe to delete (`DATABASE_URL`
-      and `GOOGLE_BOOKS_API_KEY` are optional in `src/env.ts` already)
+      is optional in `src/env.ts` already)
+
+## Google "My Library" integration removed
+
+The authenticated `mylibrary` half of the Google Books API (bookshelf mirroring, the
+"Books for you" shelf, the daily reconciliation) was removed: Google marks those
+endpoints as deprecated and adjacent ones have already broken silently. Only the
+public catalogue endpoints (`/volumes` search, `/volumes/{id}` lookup) are still
+used, and they always send the API key — keyless access is throttled into
+uselessness by a shared global quota. The Convex tables are the sole source of truth
+for the user's library, and sign-in no longer requests the Books OAuth scope.
+
+Existing deployments: the `googleSyncState` and `libraryRemovals` tables are no
+longer in the schema, so delete them (or clear them) in the Convex dashboard before
+deploying — schema validation rejects non-empty tables that aren't declared.
 
 ## Getting started
 
@@ -41,11 +55,10 @@ npx convex dev        # creates the deployment, writes .env.local, regenerates _
 
 - Set `VITE_CONVEX_URL` (printed by `convex dev`) in `.env` so the app can connect.
 - Set `GOOGLE_BOOKS_API_KEY` on the Convex deployment (`npx convex env set ...`) —
-  used by `books.getWithGoogleFallback`.
+  required by `googleBooks.search` and `books.getWithGoogleFallback`; both throw a
+  descriptive error when it's missing.
 - Set `BETTER_AUTH_SECRET` on the Convex deployment to the same value the app server
   uses — it gates the better-auth storage functions in `betterAuth.ts`.
-- The Google OAuth token is per-user and still comes from better-auth (`getUser`);
-  hooks pass it into the functions that talk to the Google Books API.
 
 ## What maps to what
 
@@ -62,7 +75,7 @@ npx convex dev        # creates the deployment, writes .env.local, regenerates _
 | `repo/finished.ts`                                                 | `finished.ts`                                              |
 | `repo/rating.ts`                                                   | `ratings.ts`                                               |
 | `repo/unreleasedBook.ts`                                           | `unreleasedBooks.ts`                                       |
-| `repo/google.ts`, `use/useSearchedBooks.ts`, `use/useBookShelf.ts` | `googleBooks.ts` (actions)                                 |
+| `repo/google.ts`, `use/useSearchedBooks.ts`, `use/useBookShelf.ts` | `googleBooks.ts` (search only; `mylibrary` removed)        |
 | `use/status/*`, `use/useBookStatus.ts`                             | `status.ts` + `src/convex/use/status/*`                    |
 | `use/*` (React hooks)                                              | `src/convex/use/*`                                         |
 | `repo/auth.ts` (`getUser`)                                         | `src/lib/auth/getUser.ts` (storage: `betterAuth.ts`)       |
@@ -75,9 +88,6 @@ npx convex dev        # creates the deployment, writes .env.local, regenerates _
 - **One round trip per user action** — flows like _finish book_ were 4-5 sequential
   HTTP calls orchestrated by the browser; each is now a single transactional mutation
   (`status.ts`), so they're also atomic — no half-applied states.
-- **Google Bookshelf sync off the critical path** — scheduled server-side
-  (`ctx.scheduler`) instead of blocking the user-facing write; it was already
-  best-effort/fire-and-forget semantically.
 - **Reactive queries instead of cache bookkeeping** — the old hooks hand-maintained
   TanStack Query caches (optimistic updates, rollbacks, refetches, cross-seeding).
   Convex subscriptions keep every view live automatically; the remaining optimistic

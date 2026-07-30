@@ -11,7 +11,6 @@ import { useMutation } from "convex/react";
 interface Props {
     book: Book;
     userId: string;
-    googleToken: string;
 }
 
 export const useStartReading = () => {
@@ -19,5 +18,5 @@ export const useStartReading = () => {
         setOptimisticBookStatus(localStore, { bookId: book.id, userId, status: "READING_NOW" });
     });
 
-    return useTrackedMutation(({ book, userId, googleToken }: Props) => startReading({ book: toWireBook(book), userId, googleToken }));
+    return useTrackedMutation(({ book, userId }: Props) => startReading({ book: toWireBook(book), userId }));
 };

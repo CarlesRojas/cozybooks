@@ -16,7 +16,6 @@ import { useState } from "react";
 interface Props {
     book: Book;
     userId: string;
-    googleToken: string;
 }
 
 const months: Record<number, string> = {
@@ -34,7 +33,7 @@ const months: Record<number, string> = {
     11: "December",
 };
 
-const FinishedOn = ({ book, userId, googleToken }: Props) => {
+const FinishedOn = ({ book, userId }: Props) => {
     const finishedDates = useFinishedDates({ bookId: book.id, userId });
 
     const removeBookFromFinished = useRemoveBookFromFinished();
@@ -163,7 +162,7 @@ const FinishedOn = ({ book, userId, googleToken }: Props) => {
                                 variant="destructive"
                                 onClick={() => {
                                     deleteFinishedDate.mutate({ id: finishedDate.id, bookId: book.id, userId });
-                                    if (finishedDates.data!.length === 1) removeBookFromFinished.mutate({ book, userId, googleToken });
+                                    if (finishedDates.data!.length === 1) removeBookFromFinished.mutate({ book, userId });
                                     setEditPopoverOpen(undefined);
                                 }}
                             >

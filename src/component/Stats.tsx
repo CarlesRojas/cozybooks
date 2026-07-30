@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 import type { Book } from "@/type/Book";
 import { BookOpen, GalleryHorizontalEnd } from "lucide-react";
 import { millify } from "millify";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 
 interface Props {
     books: Array<Book>;
@@ -161,38 +161,44 @@ const Stats = ({ books, stickyClassName }: Props) => {
                         "text-amber-500",
                     )}
 
-                    <div className="bg-neutral-150 dark:bg-neutral-850 relative col-span-3 overflow-x-auto overflow-y-hidden rounded-[22px] border border-neutral-500/25 p-6 dark:border-neutral-500/40">
-                        <div className="flex h-40 w-fit flex-row gap-1.5">
-                            <div className="items-left mr-8 flex h-full w-fit flex-col justify-end">
-                                <p className="min-w-fit text-xl leading-tight font-bold text-nowrap text-neutral-950/90 dark:text-neutral-50/90">
-                                    {statType === StatType.BOOKS ? "Books" : "Pages"}
-                                </p>
+                    <div className="bg-neutral-150 dark:bg-neutral-850 relative col-span-3 flex flex-col gap-4 rounded-[22px] border border-neutral-500/25 p-6 dark:border-neutral-500/40">
+                        <div className="flex flex-col">
+                            <p className="text-xl leading-tight font-bold text-neutral-950/90 dark:text-neutral-50/90">
+                                {statType === StatType.BOOKS ? "Books" : "Pages"}
+                            </p>
 
-                                <p className="min-w-fit text-xl leading-tight font-bold text-nowrap text-neutral-500 dark:text-neutral-400">
-                                    Per Year
-                                </p>
+                            <p className="text-xl leading-tight font-bold text-neutral-500 dark:text-neutral-400">Per Year</p>
+                        </div>
+
+                        <div className="max-h-48 overflow-y-auto pr-2">
+                            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-3">
+                                {sortedGroups.map((group) => {
+                                    const value = statType === StatType.BOOKS ? group.books : group.pages;
+                                    const max = statType === StatType.BOOKS ? maxBooksPerYear : maxPagesPerYear;
+
+                                    return (
+                                        <Fragment key={group.year}>
+                                            <p className="text-sm font-semibold text-neutral-500 tabular-nums dark:text-neutral-400">
+                                                {group.year}
+                                            </p>
+
+                                            <div className="h-2.5 overflow-hidden rounded-full bg-neutral-500/15">
+                                                <div
+                                                    className={cn(
+                                                        "h-full rounded-full bg-purple-500",
+                                                        group.year === new Date().getFullYear() && "opacity-45",
+                                                    )}
+                                                    style={{ width: `${Math.max(3, (100 * value) / max)}%` }}
+                                                />
+                                            </div>
+
+                                            <p className="min-w-10 text-right text-sm font-bold text-neutral-950/90 tabular-nums dark:text-neutral-50/90">
+                                                {formatStat(value)}
+                                            </p>
+                                        </Fragment>
+                                    );
+                                })}
                             </div>
-
-                            {sortedGroups.map((group) => (
-                                <div key={group.year} className="flex h-full w-fit flex-col items-center gap-1">
-                                    <p className="text-center text-xs leading-tight font-semibold tracking-wide text-neutral-500 dark:text-neutral-400">
-                                        {formatStat(statType === StatType.BOOKS ? group.books : group.pages)}
-                                    </p>
-
-                                    <div className="relative flex w-2.5 grow items-end">
-                                        <div
-                                            className="w-full rounded-[3px] bg-purple-500"
-                                            style={{
-                                                height: `${(100 * (statType === StatType.BOOKS ? group.books : group.pages)) / (statType === StatType.BOOKS ? maxBooksPerYear : maxPagesPerYear)}%`,
-                                            }}
-                                        />
-                                    </div>
-
-                                    <p className="text-center text-xs leading-tight font-semibold tracking-wide text-neutral-500 dark:text-neutral-400">
-                                        {group.year}
-                                    </p>
-                                </div>
-                            ))}
                         </div>
                     </div>
                 </div>

@@ -37,7 +37,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
         <motion.nav
             layoutRoot
             className={cn(
-                "fixed inset-x-0 bottom-0 z-40 flex h-20 w-full items-center justify-between px-4",
+                "fixed inset-x-0 bottom-0 z-40 flex h-20 w-full items-center justify-center gap-2 px-4",
                 "lg:top-6 lg:bottom-auto lg:h-fit lg:justify-normal lg:gap-3 lg:px-6",
                 isIOS && "bottom-4 lg:bottom-auto",
             )}

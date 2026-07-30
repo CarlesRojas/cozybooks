@@ -72,7 +72,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                 </div>
 
                 <div className="flex items-center gap-2 lg:gap-3">
-                    <SortMenu className={cn(!showSortButton && "pointer-events-none opacity-0")} user={user} sort={sort} repeats={repeats} />
+                    <SortMenu className={cn(!showSortButton && "pointer-events-none opacity-0")} sort={sort} repeats={repeats} />
 
                     <Settings user={user} queryClient={queryClient} />
                 </div>

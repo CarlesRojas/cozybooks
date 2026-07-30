@@ -1,10 +1,8 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/component/ui/avatar";
 import { Button } from "@/component/ui/button";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
-    DropdownMenuLabel,
     DropdownMenuRadioGroup,
     DropdownMenuRadioItem,
     DropdownMenuSeparator,
@@ -12,12 +10,10 @@ import {
 } from "@/component/ui/dropdown-menu";
 import { cn } from "@/lib/cn";
 import { useNavigate } from "@tanstack/react-router";
-import type { User } from "better-auth";
 import { Repeat, SlidersHorizontal } from "lucide-react";
 
 interface Props {
     className?: string;
-    user: User;
     sort: Sort;
     repeats: boolean;
 }
@@ -28,7 +24,7 @@ export enum Sort {
     RATING = "RATING",
 }
 
-const SortMenu = ({ className, user, sort, repeats }: Props) => {
+const SortMenu = ({ className, sort, repeats }: Props) => {
     const navigate = useNavigate();
 
     return (
@@ -40,15 +36,6 @@ const SortMenu = ({ className, user, sort, repeats }: Props) => {
             </Button>
 
             <DropdownMenuContent className="mx-2 my-3">
-                <DropdownMenuLabel className="flex items-center gap-2">
-                    <Avatar>
-                        <AvatarImage src={user.image ?? undefined} />
-                        <AvatarFallback className="uppercase">{user.name[0]}</AvatarFallback>
-                    </Avatar>
-
-                    {`Hi ${user.name.split(" ").slice(0, 2).join(" ")}!`}
-                </DropdownMenuLabel>
-
                 <DropdownMenuRadioGroup
                     value={sort}
                     onValueChange={(value) => navigate({ to: `/finished`, search: { sort: value as Sort, repeats } })}

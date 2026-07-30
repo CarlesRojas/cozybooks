@@ -98,6 +98,7 @@ function RouteComponent() {
                         isLoading={searchedBooks.isLoading}
                         type="search"
                         noBooksChildren={<p className="font-medium tracking-wide opacity-80">No results found</p>}
+                        wantToRead={{ userId: context.user!.id, googleToken: context.googleToken! }}
                     />
                 )}
 
@@ -114,6 +115,7 @@ function RouteComponent() {
                         pageSize={PAGE_SIZE}
                         isLoading={recommendedBooks.isLoading}
                         type="recommendedBooks"
+                        wantToRead={{ userId: context.user!.id, googleToken: context.googleToken! }}
                     />
                 )}
             </div>

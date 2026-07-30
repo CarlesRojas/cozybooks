@@ -1,3 +1,4 @@
+import WantToReadButton from "@/component/WantToReadButton";
 import { cn } from "@/lib/cn";
 import { getBiggestBookImage } from "@/lib/util";
 import type { Book } from "@/type/Book";
@@ -10,9 +11,10 @@ export interface Props {
     book: Book;
     maxWidth?: number;
     linkToBook?: boolean;
+    wantToRead?: { userId: string; googleToken: string };
 }
 
-const BookCover = ({ book, maxWidth, linkToBook, ...props }: Props) => {
+const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) => {
     const biggestImage = useRef(getBiggestBookImage(book));
 
     const scaledImage = useMemo(() => {
@@ -45,7 +47,7 @@ const BookCover = ({ book, maxWidth, linkToBook, ...props }: Props) => {
     return container(
         <>
             <div
-                className="skeleton absolute inset-0 -z-20 h-full w-full rounded-xl"
+                className="skeleton absolute inset-0 -z-20 h-full w-full rounded-[22px]"
                 style={{ viewTransitionName: `bookCover-bg-${book.id}` }}
             />
 
@@ -69,7 +71,7 @@ const BookCover = ({ book, maxWidth, linkToBook, ...props }: Props) => {
             {src && (
                 <img
                     className={cn(
-                        "h-full w-full rounded-xl border border-neutral-500/10 object-cover object-center transition-transform select-none",
+                        "h-full w-full rounded-[22px] border border-neutral-500/25 object-cover object-center transition-transform select-none dark:border-neutral-500/40",
                         linkToBook && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
@@ -96,7 +98,7 @@ const BookCover = ({ book, maxWidth, linkToBook, ...props }: Props) => {
             {!src && (
                 <div
                     className={cn(
-                        "bg-neutral-150 dark:bg-neutral-850 flex h-full w-full flex-col items-center justify-center gap-1 rounded-xl border border-neutral-500/10 object-cover object-center p-3 transition-transform select-none",
+                        "bg-neutral-150 dark:bg-neutral-850 flex h-full w-full flex-col items-center justify-center gap-1 rounded-[22px] border border-neutral-500/25 object-cover object-center p-3 transition-transform select-none dark:border-neutral-500/40",
                         linkToBook && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
@@ -110,6 +112,8 @@ const BookCover = ({ book, maxWidth, linkToBook, ...props }: Props) => {
                     )}
                 </div>
             )}
+
+            {wantToRead && <WantToReadButton book={book} userId={wantToRead.userId} googleToken={wantToRead.googleToken} />}
         </>,
     );
 };

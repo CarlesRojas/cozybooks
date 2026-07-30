@@ -34,7 +34,7 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
             <Link
                 to={"/book/$bookId"}
                 params={{ bookId: book.id }}
-                className="aspect-book group relative w-full cursor-pointer focus-visible:outline-none"
+                className="aspect-book group relative block w-full cursor-pointer focus-visible:outline-none"
                 resetScroll
                 {...props}
             >

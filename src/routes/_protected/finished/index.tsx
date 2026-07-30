@@ -93,7 +93,7 @@ function RouteComponent() {
             )}
 
             <div className="flex h-fit w-full grow flex-col gap-6 py-4">
-                {finishedBooks.data && <Stats books={finishedBooks.data.items} stickyClassName="top-0 pt-3" />}
+                {finishedBooks.data && <Stats books={finishedBooks.data.items} />}
 
                 {groups.map(({ key, books }) => (
                     <BookCarousel

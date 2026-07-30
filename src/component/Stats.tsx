@@ -3,11 +3,10 @@ import { cn } from "@/lib/cn";
 import type { Book } from "@/type/Book";
 import { BookOpen, GalleryHorizontalEnd } from "lucide-react";
 import { millify } from "millify";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 
 interface Props {
     books: Array<Book>;
-    stickyClassName?: string;
 }
 
 enum StatType {
@@ -18,13 +17,20 @@ enum StatType {
 const AVERAGE_YEARS = 5;
 const DEFAULT_PAGES_PER_BOOK = 250;
 
+// Stat values stay at most four characters plus a decimal point ("15.5K" fits,
+// "203.5K" doesn't) — drop the decimals instead of letting the number overflow.
+const formatStat = (value: number) => {
+    const formatted = millify(value, { precision: 1 });
+    return formatted.replace(".", "").length > 4 ? formatted.replace(/\.\d+/, "") : formatted;
+};
+
 interface Group {
     year: number;
     books: number;
     pages: number;
 }
 
-const Stats = ({ books, stickyClassName }: Props) => {
+const Stats = ({ books }: Props) => {
     const [statType, setStatType] = useState(StatType.BOOKS);
 
     const totalBooks = useMemo(() => books.reduce((acc, book) => acc + (book.finished?.length ?? 1), 0), [books]);
@@ -108,100 +114,108 @@ const Stats = ({ books, stickyClassName }: Props) => {
     const maxBooksPerYear = useMemo(() => sortedGroups.reduce((acc, group) => Math.max(acc, group.books), 0), [sortedGroups]);
     const maxPagesPerYear = useMemo(() => sortedGroups.reduce((acc, group) => Math.max(acc, group.pages), 0), [sortedGroups]);
 
-    const tile = (title: string, value: number, subtitle?: string, className?: string) => (
+    const tile = (value: number, namePrimary: string, nameSecondary: string, colorClassName: string, className?: string) => (
         <div
             className={cn(
-                "flex aspect-square flex-col items-center justify-around rounded-2xl bg-gradient-to-t p-3 sm:rounded-3xl sm:p-4",
+                "bg-neutral-150 dark:bg-neutral-850 flex flex-col gap-1 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 dark:border-neutral-500/40",
                 className,
             )}
         >
-            <p className="text-center text-sm leading-tight font-semibold tracking-wide text-white opacity-80 sm:text-base md:text-lg">
-                {title}
-            </p>
+            <div className="flex flex-col">
+                <p className="text-base leading-tight font-bold text-neutral-950/90 sm:text-xl dark:text-neutral-50/90">{namePrimary}</p>
 
-            <p className="text-center text-4xl leading-tight font-bold tracking-wide text-white sm:text-6xl">{millify(value)}</p>
+                <p className="text-base leading-tight font-bold text-neutral-500 sm:text-xl dark:text-neutral-400">{nameSecondary}</p>
+            </div>
 
-            <p className="text-center text-sm leading-tight font-semibold tracking-wide text-balance text-white opacity-80 sm:text-base md:text-lg">
-                {subtitle}
-            </p>
+            <div className="relative isolate h-fit w-fit">
+                <span aria-hidden className={cn("absolute inset-0 text-3xl font-bold opacity-90 blur-lg sm:text-4xl", colorClassName)}>
+                    {formatStat(value)}
+                </span>
+                <span className={cn("relative z-10 text-3xl font-bold sm:text-4xl", colorClassName)}>{formatStat(value)}</span>
+            </div>
         </div>
     );
 
     return (
         <section className="flex h-fit w-full flex-col gap-4">
-            <div className={cn("sticky top-0 z-30 bg-neutral-50 pb-2 dark:bg-neutral-950", stickyClassName)}>
-                <h2 className="mx-auto max-w-screen-lg px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">
-                    Stats
-                </h2>
-            </div>
+            <div className="pb-2">
+                <div className="mx-auto flex w-full max-w-screen-lg items-center justify-between gap-4 px-6">
+                    <h2 className="text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">Stats</h2>
 
-            <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-3 px-6 sm:gap-4">
-                <div className="grid w-full max-w-screen-sm auto-rows-min grid-cols-3 grid-rows-2 gap-3 sm:gap-4">
-                    {tile(
-                        "Read",
-                        statType === StatType.BOOKS ? totalBooks : totalPages,
-                        statType === StatType.BOOKS ? "books in total" : "pages in total",
-                        "from-blue-900/80 to-blue-400",
-                    )}
+                    <Button
+                        variant="glass"
+                        size="small"
+                        onClick={() => setStatType(statType === StatType.BOOKS ? StatType.PAGES : StatType.BOOKS)}
+                    >
+                        {statType === StatType.BOOKS ? <GalleryHorizontalEnd className="icon mr-2" /> : <BookOpen className="icon mr-2" />}
 
-                    {tile(
-                        "Finished",
-                        statType === StatType.BOOKS ? thisYearBooks : thisYearPages,
-                        statType === StatType.BOOKS ? "books this year" : "pages this year",
-                        "from-red-900/80 to-red-400",
-                    )}
-
-                    {tile(
-                        "Average",
-                        statType === StatType.BOOKS ? averageBooksPerYear : averagePagesPerYear,
-                        statType === StatType.BOOKS ? "books per year" : "pages per year",
-                        "from-green-900/80 to-green-400",
-                    )}
-
-                    <div className="relative col-span-3 row-span-1 overflow-x-auto overflow-y-hidden rounded-2xl bg-gradient-to-t from-purple-900/80 to-purple-400 p-3 sm:rounded-3xl sm:p-4">
-                        <div className="flex h-full w-fit flex-row gap-1.5">
-                            <div className="items-left mr-8 flex h-full w-fit flex-col justify-end">
-                                <p className="min-w-fit text-xl leading-tight font-semibold text-nowrap text-white sm:text-2xl md:text-2xl">
-                                    {statType === StatType.BOOKS ? "Books" : "Pages"}
-                                </p>
-
-                                <p className="min-w-fit text-xl leading-tight font-semibold text-nowrap text-white opacity-60 sm:text-2xl md:text-2xl">
-                                    Per Year
-                                </p>
-                            </div>
-
-                            {sortedGroups.map((group) => (
-                                <div key={group.year} className="flex h-full w-fit flex-col items-center gap-1">
-                                    <p className="text-center text-xs leading-tight font-semibold tracking-wide text-white opacity-80">
-                                        {millify(statType === StatType.BOOKS ? group.books : group.pages)}
-                                    </p>
-
-                                    <div className="relative flex w-2.5 grow items-end">
-                                        <div
-                                            className="w-full rounded-[3px] bg-white"
-                                            style={{
-                                                height: `${(100 * (statType === StatType.BOOKS ? group.books : group.pages)) / (statType === StatType.BOOKS ? maxBooksPerYear : maxPagesPerYear)}%`,
-                                            }}
-                                        />
-                                    </div>
-
-                                    <p className="text-center text-xs leading-tight font-semibold tracking-wide text-white opacity-80">
-                                        {group.year}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="relative flex flex-wrap gap-2">
-                    <Button variant="glass" onClick={() => setStatType(statType === StatType.BOOKS ? StatType.PAGES : StatType.BOOKS)}>
-                        {statType === StatType.BOOKS ? <GalleryHorizontalEnd className="icon mr-3" /> : <BookOpen className="icon mr-3" />}
-
-                        <p className="text-lg font-bold tracking-wide">
+                        <p className="text-sm font-bold tracking-wide">
                             {statType === StatType.BOOKS ? "View page stats" : "View book stats"}
                         </p>
                     </Button>
+                </div>
+            </div>
+
+            <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-3 px-6 sm:gap-4">
+                <div className="grid w-full grid-cols-3 gap-3 sm:gap-4">
+                    {tile(
+                        statType === StatType.BOOKS ? totalBooks : totalPages,
+                        statType === StatType.BOOKS ? "Books" : "Pages",
+                        "Read",
+                        "text-sky-500",
+                    )}
+
+                    {tile(
+                        statType === StatType.BOOKS ? thisYearBooks : thisYearPages,
+                        statType === StatType.BOOKS ? "Books" : "Pages",
+                        "This Year",
+                        "text-lime-500",
+                    )}
+
+                    {tile(
+                        statType === StatType.BOOKS ? averageBooksPerYear : averagePagesPerYear,
+                        statType === StatType.BOOKS ? "Books" : "Pages",
+                        "Per Year",
+                        "text-amber-500",
+                    )}
+
+                    <div className="bg-neutral-150 dark:bg-neutral-850 relative col-span-3 flex flex-col gap-4 rounded-[22px] border border-neutral-500/25 p-4 sm:p-6 dark:border-neutral-500/40">
+                        <p className="text-xl leading-tight font-bold text-neutral-950/90 dark:text-neutral-50/90">
+                            {statType === StatType.BOOKS ? "Books" : "Pages"}{" "}
+                            <span className="text-neutral-500 dark:text-neutral-400">Per Year</span>
+                        </p>
+
+                        <div className="max-h-32 [scrollbar-width:none] [scrollbar-color:rgba(115,115,115,0.4)_transparent] overflow-y-auto [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-3">
+                                {sortedGroups.map((group) => {
+                                    const value = statType === StatType.BOOKS ? group.books : group.pages;
+                                    const max = statType === StatType.BOOKS ? maxBooksPerYear : maxPagesPerYear;
+
+                                    return (
+                                        <Fragment key={group.year}>
+                                            <p className="text-sm font-semibold text-neutral-500 tabular-nums dark:text-neutral-400">
+                                                {group.year}
+                                            </p>
+
+                                            <div className="h-2.5 overflow-hidden rounded-full bg-neutral-500/15">
+                                                <div
+                                                    className={cn(
+                                                        "h-full rounded-full bg-purple-500",
+                                                        group.year === new Date().getFullYear() && "opacity-45",
+                                                    )}
+                                                    style={{ width: `${Math.max(3, (100 * value) / max)}%` }}
+                                                />
+                                            </div>
+
+                                            <p className="min-w-10 text-right text-sm font-bold text-neutral-950/90 tabular-nums dark:text-neutral-50/90">
+                                                {formatStat(value)}
+                                            </p>
+                                        </Fragment>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

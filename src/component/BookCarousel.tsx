@@ -24,7 +24,7 @@ interface Props {
 // carousel bleed to the screen edge.
 const itemClassName = cn(
     "basis-auto",
-    "w-[42vw] max-w-[42vw] min-w-[42vw] sm:w-48 sm:max-w-48 sm:min-w-48 lg:w-52 lg:max-w-52 lg:min-w-52 xl:w-56 xl:max-w-56 xl:min-w-56",
+    "w-[44vw] max-w-[44vw] min-w-[44vw] sm:w-52 sm:max-w-52 sm:min-w-52 lg:w-56 lg:max-w-56 lg:min-w-56 xl:w-60 xl:max-w-60 xl:min-w-60",
     // The row is shifted -ml-4 by CarouselContent, which cancels the first slide's
     // pl-4 gap — so the first margin needs the full gutter width.
     "first:ml-[max(1.5rem,calc(50vw-32rem+1.5rem))] last:mr-[max(1.5rem,calc(50vw-32rem+1.5rem))]",
@@ -83,8 +83,10 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
     // Two books per slide, stacked vertically, so the list reads in column pairs:
     // 1 3 5 7
     // 2 4 6 8
+    // Exception: exactly two books sit side by side in a single row instead.
     const columns: Array<Array<Book>> = [];
-    for (let index = 0; index < books.length; index += 2) columns.push(books.slice(index, index + 2));
+    if (books.length === 2) books.forEach((book) => columns.push([book]));
+    else for (let index = 0; index < books.length; index += 2) columns.push(books.slice(index, index + 2));
 
     // Slide changes don't auto-reInit embla (`watchSlides: false`); reInit here
     // whenever the rendered slides change, preserving the scroll position.

@@ -34,7 +34,7 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
             <Link
                 to={"/book/$bookId"}
                 params={{ bookId: book.id }}
-                className="aspect-book group relative w-full cursor-pointer focus-visible:outline-none"
+                className="aspect-book group relative block w-full cursor-pointer focus-visible:outline-none"
                 resetScroll
                 {...props}
             >
@@ -71,7 +71,7 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
             {src && (
                 <img
                     className={cn(
-                        "h-full w-full rounded-[22px] border border-neutral-500/25 object-cover object-center transition-transform select-none dark:border-neutral-500/40",
+                        "absolute inset-0 h-full w-full rounded-[22px] border border-neutral-500/25 object-cover object-center transition-transform select-none dark:border-neutral-500/40",
                         linkToBook && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
@@ -98,17 +98,19 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
             {!src && (
                 <div
                     className={cn(
-                        "bg-neutral-150 dark:bg-neutral-850 flex h-full w-full flex-col items-center justify-center gap-1 rounded-[22px] border border-neutral-500/25 object-cover object-center p-3 transition-transform select-none dark:border-neutral-500/40",
+                        "bg-neutral-150 dark:bg-neutral-850 absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-[22px] border border-neutral-500/25 p-3 transition-transform select-none dark:border-neutral-500/40",
                         linkToBook && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
                 >
                     <BookIcon className={cn("mb-2 size-8 min-h-8 min-w-8 stroke-2", !linkToBook && "size-16 min-h-16 min-w-16 stroke-2")} />
 
-                    {linkToBook && <h3 className="text-center leading-snug font-bold tracking-wide">{book.title}</h3>}
+                    {linkToBook && <h3 className="line-clamp-4 text-center leading-snug font-bold tracking-wide">{book.title}</h3>}
 
                     {linkToBook && book.authors && book.authors.length > 0 && (
-                        <p className="text-center text-sm leading-snug font-semibold tracking-wide opacity-50">{book.authors[0]}</p>
+                        <p className="line-clamp-2 text-center text-sm leading-snug font-semibold tracking-wide opacity-50">
+                            {book.authors[0]}
+                        </p>
                     )}
                 </div>
             )}

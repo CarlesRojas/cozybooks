@@ -23,6 +23,7 @@ interface Props {
 const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
     const location = useLocation();
 
+    const homeRoute: string = Route.READING;
     const routes: Array<string> = [Route.READING, Route.FINISHED, Route.SEARCH];
     const routeTitle: Partial<Record<string, ReactElement>> = {
         [Route.READING]: <p className="z-40 transition-colors">Reading</p>,
@@ -74,7 +75,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                 className="relative flex h-fit grow items-center gap-1 rounded-full bg-neutral-300/70 p-1 backdrop-blur-md sm:grow-0 dark:bg-neutral-700/60"
             >
                 <Link
-                    to={Route.READING}
+                    to={homeRoute}
                     search={{ sort }}
                     className="hidden items-center gap-3 pr-10 pl-5 text-neutral-600 select-none hover:text-black lg:flex dark:text-neutral-200 hover:dark:text-white"
                 >

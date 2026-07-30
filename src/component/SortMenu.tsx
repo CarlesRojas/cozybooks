@@ -13,7 +13,7 @@ import {
 import { cn } from "@/lib/cn";
 import { useNavigate } from "@tanstack/react-router";
 import type { User } from "better-auth";
-import { SlidersHorizontal } from "lucide-react";
+import { Repeat, SlidersHorizontal } from "lucide-react";
 
 interface Props {
     className?: string;
@@ -65,7 +65,8 @@ const SortMenu = ({ className, user, sort, repeats }: Props) => {
                     checked={repeats}
                     onCheckedChange={(checked) => navigate({ to: `/finished`, search: { sort, repeats: checked } })}
                 >
-                    Show repeat reads
+                    <Repeat className="mr-3 h-4 w-4" />
+                    <p className="font-medium">Show repeat reads</p>
                 </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
         </DropdownMenu>

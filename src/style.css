@@ -39,7 +39,9 @@
     --color-neutral-150: #f1f1f1;
     --color-neutral-850: #1b1b1b;
 
-    --aspect-ratio-book: 2 / 3;
+    /* Tailwind v4 aspect utilities read from the --aspect-* namespace;
+       --aspect-ratio-book generated no CSS, silently disabling `aspect-book`. */
+    --aspect-book: 2 / 3;
 
     --transition-duration-2000: 2000ms;
 

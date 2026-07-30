@@ -16,9 +16,10 @@ interface Props {
     user: User | null;
     queryClient: QueryClient;
     sort: Sort;
+    repeats: boolean;
 }
 
-const Navigation = ({ user, queryClient, sort }: Props) => {
+const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
     const location = useLocation();
 
     const routes: Array<string> = [Route.READING, Route.FINISHED, Route.SEARCH];
@@ -44,7 +45,7 @@ const Navigation = ({ user, queryClient, sort }: Props) => {
             >
                 {/* <div className="pointer-events-none absolute inset-0 -bottom-10 -top-10 bg-gradient-to-t from-black/20 to-black/0 dark:from-black/50" /> */}
 
-                <SortMenu className={cn(!showSortButton && "pointer-events-none opacity-0")} user={user} sort={sort} />
+                <SortMenu className={cn(!showSortButton && "pointer-events-none opacity-0")} user={user} sort={sort} repeats={repeats} />
 
                 <div className="flex h-fit items-center rounded-full bg-neutral-300/70 backdrop-blur-md dark:bg-neutral-700/60">
                     {routes.map((route) => (

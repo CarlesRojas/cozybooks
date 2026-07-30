@@ -2,21 +2,24 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/component/ui/avatar";
 import { Button } from "@/component/ui/button";
 import {
     DropdownMenu,
+    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuLabel,
     DropdownMenuRadioGroup,
     DropdownMenuRadioItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/component/ui/dropdown-menu";
 import { cn } from "@/lib/cn";
 import { useNavigate } from "@tanstack/react-router";
 import type { User } from "better-auth";
-import { ArrowDownUp } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 
 interface Props {
     className?: string;
     user: User;
     sort: Sort;
+    repeats: boolean;
 }
 
 export enum Sort {
@@ -25,14 +28,14 @@ export enum Sort {
     RATING = "RATING",
 }
 
-const SortMenu = ({ className, user, sort }: Props) => {
+const SortMenu = ({ className, user, sort, repeats }: Props) => {
     const navigate = useNavigate();
 
     return (
         <DropdownMenu modal={true}>
             <Button size="icon" variant="glass" className={cn(className)} asChild>
                 <DropdownMenuTrigger>
-                    <ArrowDownUp className="icon" />
+                    <SlidersHorizontal className="icon" />
                 </DropdownMenuTrigger>
             </Button>
 
@@ -48,12 +51,22 @@ const SortMenu = ({ className, user, sort }: Props) => {
 
                 <DropdownMenuRadioGroup
                     value={sort}
-                    onValueChange={(value) => navigate({ to: `/finished`, search: { sort: value as Sort } })}
+                    onValueChange={(value) => navigate({ to: `/finished`, search: { sort: value as Sort, repeats } })}
                 >
                     <DropdownMenuRadioItem value={Sort.BOOK}>Sort by book name</DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value={Sort.DATE}>Sort by year finished</DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value={Sort.RATING}>Sort by your rating</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuCheckboxItem
+                    className="py-3 pr-4"
+                    checked={repeats}
+                    onCheckedChange={(checked) => navigate({ to: `/finished`, search: { sort, repeats: checked } })}
+                >
+                    Show repeat reads
+                </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );

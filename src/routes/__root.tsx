@@ -12,6 +12,7 @@ import z from "zod";
 
 const finishedSearchParamsSchema = z.object({
     sort: z.nativeEnum(Sort).default(Sort.DATE),
+    repeats: z.coerce.boolean().default(false),
 });
 
 export const Route = createRootRouteWithContext<Context>()({
@@ -49,7 +50,7 @@ export const Route = createRootRouteWithContext<Context>()({
 
 function RootDocument({ children }: { children: ReactNode }) {
     const { user, queryClient } = Route.useRouteContext();
-    const { sort } = Route.useSearch();
+    const { sort, repeats } = Route.useSearch();
 
     return (
         // The FOUC script in ThemeProvider toggles `dark` on <html> before React
@@ -62,7 +63,7 @@ function RootDocument({ children }: { children: ReactNode }) {
             <body className="font-montserrat relative overflow-y-auto bg-neutral-50 text-neutral-950 dark:bg-neutral-950 dark:text-neutral-50">
                 <ThemeProvider>
                     {children}
-                    <Navigation user={user} queryClient={queryClient} sort={sort} />
+                    <Navigation user={user} queryClient={queryClient} sort={sort} repeats={repeats} />
                 </ThemeProvider>
 
                 <Scripts />

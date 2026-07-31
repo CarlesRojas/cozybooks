@@ -26,14 +26,14 @@ const Welcome = ({ isError }: Props) => {
                 context to keep it behind. */}
             <div
                 aria-hidden
-                className="from-brand/25 to-brand-warm/25 dark:from-brand/30 dark:to-brand-warm/30 pointer-events-none absolute top-1/2 left-1/2 size-[32rem] max-w-[130vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
+                className="from-brand/25 to-brand-warm/25 dark:from-brand/30 dark:to-brand-warm/30 pointer-events-none absolute top-1/2 left-1/2 size-128 max-w-[130vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
             />
 
-            <section className="bg-neutral-150 dark:bg-neutral-850 relative flex w-full max-w-md flex-col items-center rounded-[22px] border border-neutral-500/25 px-6 py-10 shadow-xl shadow-neutral-950/5 sm:px-10 dark:border-neutral-500/40 dark:shadow-neutral-950/40">
+            <section className="bg-neutral-150 dark:bg-neutral-850 relative flex gap-16 w-full max-w-md flex-col items-center rounded-[22px] border border-neutral-500/25 px-6 py-10 shadow-xl shadow-neutral-950/5 sm:px-10 dark:border-neutral-500/40 dark:shadow-neutral-950/40">
                 {/* Mark and heading are one unit — they name the app together — so they
                     sit tight, and the gap that separates them from the action goes
                     below instead of being spread evenly down the card. */}
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center">
                     {/* Decorative: the heading right below already names the app. */}
                     <img
                         src="/logo512.png"
@@ -46,7 +46,7 @@ const Welcome = ({ isError }: Props) => {
                     <h1 className="text-center text-2xl leading-tight font-bold tracking-wide text-balance">Welcome to CozyBooks</h1>
                 </div>
 
-                <div className="mt-10 flex w-full flex-col items-center gap-3">
+                <div className="flex w-full flex-col items-center gap-3">
                     <SignInButton className="w-full" />
 
                     {isError && (

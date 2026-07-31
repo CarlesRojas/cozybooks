@@ -46,11 +46,6 @@ function RouteComponent() {
         search(value);
     };
 
-    const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        searchNow(internalQuery);
-    };
-
     const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE });
 
     const wantToRead = { userId: context.user!.id };
@@ -80,7 +75,7 @@ function RouteComponent() {
                     isEmpty && "lg:static lg:pt-0",
                 )}
             >
-                <form className="mx-auto flex h-fit w-full px-6 lg:max-w-xl" onSubmit={onSubmit}>
+                <form className="mx-auto flex h-fit w-full px-6 lg:max-w-xl">
                     <Input
                         placeholder="Search Books"
                         type="text"

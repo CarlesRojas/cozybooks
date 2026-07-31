@@ -2,13 +2,15 @@ import BookCarousel from "@/component/BookCarousel";
 import { Sort } from "@/component/SortMenu";
 import Star from "@/component/Star";
 import Stats from "@/component/Stats";
+import { REPEATS_STORAGE_KEY, SORT_STORAGE_KEY } from "@/const";
 import { cn } from "@/lib/cn";
 import { useLibraryBooks } from "@/convex/use/useLibraryBooks";
 import type { Book } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
-import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useRef } from "react";
 import { isIOS } from "react-device-detect";
+import { useLocalStorage } from "usehooks-ts";
 
 export const Route = createFileRoute("/_protected/finished/")({
     component: RouteComponent,
@@ -22,6 +24,40 @@ interface Group {
 function RouteComponent() {
     const context = Route.useRouteContext();
     const { sort, repeats } = Route.useSearch();
+    const navigate = useNavigate();
+
+    // The url stays in charge of what is rendered — it is what the sort menu writes
+    // and what a shared link carries. Storage only answers the question the url
+    // can't: which view to open when the app starts with no params at all. The
+    // schema fills in defaults, so the raw search string is the only way to tell
+    // "nothing was asked for" from "DATE was asked for".
+    const [storedSort, setStoredSort] = useLocalStorage(SORT_STORAGE_KEY, sort);
+    const [storedRepeats, setStoredRepeats] = useLocalStorage(REPEATS_STORAGE_KEY, repeats);
+    const hasRestored = useRef(false);
+
+    useEffect(() => {
+        if (!hasRestored.current) {
+            hasRestored.current = true;
+
+            const params = new URLSearchParams(window.location.search);
+            const restoreSort = !params.has("sort");
+            const restoreRepeats = !params.has("repeats");
+
+            if (restoreSort || restoreRepeats) {
+                // Storing is skipped this pass: the url is about to change, and this
+                // effect runs again with the restored values.
+                navigate({
+                    to: "/finished",
+                    search: { sort: restoreSort ? storedSort : sort, repeats: restoreRepeats ? storedRepeats : repeats },
+                    replace: true,
+                });
+                return;
+            }
+        }
+
+        setStoredSort(sort);
+        setStoredRepeats(repeats);
+    }, [sort, repeats, storedSort, storedRepeats, navigate, setStoredSort, setStoredRepeats]);
 
     const finishedBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.FINISHED });
 

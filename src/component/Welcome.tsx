@@ -26,7 +26,7 @@ const Welcome = ({ isError }: Props) => {
                 context to keep it behind. */}
             <div
                 aria-hidden
-                className="from-brand/25 to-brand-warm/25 dark:from-brand/30 dark:to-brand-warm/30 pointer-events-none absolute top-1/2 left-1/2 size-128 max-w-[130vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
+                className="from-brand/40 to-brand-warm/40 dark:from-brand/30 dark:to-brand-warm/30 pointer-events-none absolute top-1/2 left-1/2 size-128 max-w-[130vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
             />
 
             <section className="bg-neutral-150 dark:bg-neutral-850 relative flex gap-16 w-full max-w-md flex-col items-center rounded-[22px] border border-neutral-500/25 px-6 py-10 shadow-xl shadow-neutral-950/5 sm:px-10 dark:border-neutral-500/40 dark:shadow-neutral-950/40">

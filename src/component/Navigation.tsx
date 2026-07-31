@@ -9,7 +9,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { Link, useLocation, useRouterState } from "@tanstack/react-router";
 import type { User } from "better-auth";
 import { motion } from "framer-motion";
-import { faBook, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ReactElement } from "react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -100,7 +100,22 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                     to={homeRoute}
                     className="mr-5 hidden h-12 items-center gap-3 px-5 text-neutral-600 select-none hover:text-black lg:flex dark:text-neutral-200 hover:dark:text-white"
                 >
-                    <FontAwesomeIcon icon={faBook} className="size-5 min-h-5 min-w-5" />
+                    {/* The mark punched out of the link's own colour, so it follows the
+                        wordmark beside it through both themes and the hover — painted
+                        flat, a black silhouette would disappear on the dark one. */}
+                    <div
+                        className="size-5 min-h-5 min-w-5 bg-current"
+                        style={{
+                            maskImage: 'url("/logoDark.svg")',
+                            maskSize: "contain",
+                            maskRepeat: "no-repeat",
+                            maskPosition: "center",
+                            WebkitMaskImage: 'url("/logoDark.svg")',
+                            WebkitMaskSize: "contain",
+                            WebkitMaskRepeat: "no-repeat",
+                            WebkitMaskPosition: "center",
+                        }}
+                    />
 
                     <p className="text-base font-semibold whitespace-nowrap">CozyBooks</p>
                 </Link>

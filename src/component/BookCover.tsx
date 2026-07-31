@@ -73,7 +73,7 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
                 <img
                     className={cn(
                         "absolute inset-0 h-full w-full rounded-[22px] border border-neutral-500/25 object-cover object-center transition-transform select-none dark:border-neutral-500/40",
-                        linkToBook && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
+                        linkToBook && "group-hover:scale-[1.04] group-focus:scale-[1.04]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
                     width={maxWidth ?? 400}
@@ -95,7 +95,7 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
                 <div
                     className={cn(
                         "bg-neutral-150 dark:bg-neutral-850 absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-[22px] border border-neutral-500/25 p-3 transition-transform select-none dark:border-neutral-500/40",
-                        linkToBook && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
+                        linkToBook && "group-hover:scale-[1.04] group-focus:scale-[1.04]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
                 >

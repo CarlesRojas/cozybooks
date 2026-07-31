@@ -8,7 +8,7 @@ import { useStopReading } from "@/convex/use/status/useStopReading";
 import { useBookStatus } from "@/convex/use/useBookStatus";
 import type { Book } from "@/type/Book";
 import { BookStatus } from "@/type/Book";
-import { BookMarked, BookOpen, Plus, Undo2, X } from "lucide-react";
+import { Flag, Pause, Play, Plus, Repeat, X } from "lucide-react";
 import type { ReactNode } from "react";
 
 interface Props {
@@ -50,13 +50,14 @@ const LibraryButton = ({ book, userId }: Props) => {
 
     if (!bookStatus.data || !finishedDates.data) return null;
 
-    // Short imperative labels. The one to keep honest is the reading page's secondary
-    // action: it returns the book to the want-to-read shelf rather than removing it,
+    // Short imperative labels, with playback icons to match: reading is something you
+    // start, pause and finish. The one to keep honest is the reading state's secondary
+    // action — it returns the book to the want-to-read shelf rather than removing it,
     // which "Stop reading" hid and "Pause reading" doesn't.
     const map: Record<BookStatus, ReactNode> = {
         [BookStatus.NONE]: (
             <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book, userId })}>
-                <Plus className="icon mr-3" />
+                {finishedDates.data.length > 0 ? <Repeat className="icon mr-3" /> : <Plus className="icon mr-3" />}
                 <p>{finishedDates.data.length > 0 ? "Read again" : "Want to read"}</p>
             </Button>
         ),
@@ -64,7 +65,7 @@ const LibraryButton = ({ book, userId }: Props) => {
         [BookStatus.WANT_TO_READ]: (
             <>
                 <Button disabled={isLoading} onClick={() => startReading.mutate({ book, userId })}>
-                    <BookOpen className="icon mr-3" />
+                    <Play className="icon mr-3" />
                     <p>Start reading</p>
                 </Button>
 
@@ -78,12 +79,12 @@ const LibraryButton = ({ book, userId }: Props) => {
         [BookStatus.READING_NOW]: (
             <>
                 <Button disabled={isLoading} onClick={() => finishBook.mutate({ book, userId })}>
-                    <BookMarked className="icon mr-3" />
+                    <Flag className="icon mr-3" />
                     <p>Finished</p>
                 </Button>
 
                 <Button disabled={isLoading} variant="glass" onClick={() => stopReading.mutate({ book, userId })}>
-                    <Undo2 className="icon mr-3" />
+                    <Pause className="icon mr-3" />
                     <p>Pause reading</p>
                 </Button>
             </>

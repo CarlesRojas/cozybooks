@@ -119,11 +119,20 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
 
     return (
         <section className="flex h-fit w-full flex-col gap-4">
+            {/* The heading follows the covers: centring one and not the other would
+                leave the section reading as two pieces that disagree. */}
             {(books.length > 0 || !isLoading) &&
                 (typeof title === "string" ? (
-                    <h2 className="w-full px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">{title}</h2>
+                    <h2
+                        className={cn(
+                            "w-full px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90",
+                            fitsInView && "lg:text-center",
+                        )}
+                    >
+                        {title}
+                    </h2>
                 ) : (
-                    <div className="w-full px-6">{title}</div>
+                    <div className={cn("w-full px-6", fitsInView && "lg:flex lg:justify-center")}>{title}</div>
                 ))}
 
             {!isLoading && books.length === 0 && <div className="w-full px-6">{!!noBooksChildren && noBooksChildren}</div>}

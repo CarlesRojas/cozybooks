@@ -141,12 +141,14 @@ const BookCarousel = ({
     // first cover on its own: the same 1.5rem inset the first slide carries.
     return (
         <section className={cn("flex h-fit w-full flex-col gap-4", isCentered && "lg:mx-auto lg:w-fit")}>
-            {(books.length > 0 || !isLoading) &&
-                (typeof title === "string" ? (
-                    <h2 className="w-full px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">{title}</h2>
-                ) : (
-                    <div className="w-full px-6">{title}</div>
-                ))}
+            {/* Shown while loading too. Withholding it until the books arrived pushed
+                the whole row down the moment they did, which read as the covers
+                changing size rather than the section gaining a heading. */}
+            {typeof title === "string" ? (
+                <h2 className="w-full px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">{title}</h2>
+            ) : (
+                <div className="w-full px-6">{title}</div>
+            )}
 
             {!isLoading && books.length === 0 && <div className="w-full px-6">{!!noBooksChildren && noBooksChildren}</div>}
 

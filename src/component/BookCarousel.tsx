@@ -13,6 +13,11 @@ interface Props {
     noBooksChildren?: ReactNode;
     wantToRead?: { userId: string };
 
+    // Centres the section on desktop when its covers are too few to fill the row.
+    // Off by default: the library pages stack several sections down the page, and
+    // one centring itself while its neighbours stay left would break that column.
+    centerIfShort?: boolean;
+
     hasNextPage?: boolean;
     isFetchingNextPage?: boolean;
     onLoadMore?: () => void;
@@ -53,7 +58,17 @@ const preserveEmblaPosition = (api: NonNullable<CarouselApi>) => {
     newEngine.animation.start();
 };
 
-const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, hasNextPage, isFetchingNextPage, onLoadMore }: Props) => {
+const BookCarousel = ({
+    title,
+    books,
+    isLoading,
+    noBooksChildren,
+    wantToRead,
+    centerIfShort,
+    hasNextPage,
+    isFetchingNextPage,
+    onLoadMore,
+}: Props) => {
     const [emblaApi, setEmblaApi] = useState<CarouselApi>();
     const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -99,6 +114,7 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
     // what makes this exact — the answer accounts for slide widths and the viewport,
     // so it holds at any breakpoint and for any number of books.
     const [fitsInView, setFitsInView] = useState(false);
+    const isCentered = !!centerIfShort && fitsInView;
 
     useEffect(() => {
         if (!emblaApi) return;
@@ -126,13 +142,13 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
                     <h2
                         className={cn(
                             "w-full px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90",
-                            fitsInView && "lg:text-center",
+                            isCentered && "lg:text-center",
                         )}
                     >
                         {title}
                     </h2>
                 ) : (
-                    <div className={cn("w-full px-6", fitsInView && "lg:flex lg:justify-center")}>{title}</div>
+                    <div className={cn("w-full px-6", isCentered && "lg:flex lg:justify-center")}>{title}</div>
                 ))}
 
             {!isLoading && books.length === 0 && <div className="w-full px-6">{!!noBooksChildren && noBooksChildren}</div>}
@@ -146,7 +162,7 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
                     >
                         <CarouselPrevious className="mouse:inline-flex z-10 hidden" />
 
-                        <CarouselContent className={cn("pt-1 pb-2", fitsInView && "lg:justify-center")}>
+                        <CarouselContent className={cn("pt-1 pb-2", isCentered && "lg:justify-center")}>
                             {columns.map((column) => (
                                 <CarouselItem key={column[0].id} className={itemClassName}>
                                     <div className="flex flex-col gap-4">

@@ -114,6 +114,7 @@ function RouteComponent() {
                         isLoading={searchedBooks.isLoading}
                         noBooksChildren={<p className="font-medium tracking-wide opacity-80">No results found</p>}
                         wantToRead={wantToRead}
+                        centerIfShort
                         hasNextPage={searchedBooks.hasNextPage}
                         isFetchingNextPage={searchedBooks.isFetchingNextPage}
                         onLoadMore={searchedBooks.fetchNextPage}

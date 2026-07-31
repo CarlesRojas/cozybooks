@@ -21,7 +21,7 @@ const RelatedBooks = ({ book }: Props) => {
 
     return (
         <div className="-mx-6 w-[calc(100%+3rem)]">
-            <BookCarousel title="Related books" books={relatedBooks.data.items} />
+            <BookCarousel title="Related books" books={relatedBooks.data.items} centerIfShort />
         </div>
     );
 };

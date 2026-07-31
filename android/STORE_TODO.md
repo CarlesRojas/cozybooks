@@ -29,11 +29,10 @@ and `BUBBLEWRAP_KEY_PASSWORD`). Output is `app-release-bundle.aab`.
 
 Bubblewrap installs its own JDK and Android SDK on first run.
 
-## 3. Check the version code
+## 3. Version code
 
-`versionCode` is currently **10** (`app/build.gradle` and `twa-manifest.json`). It must
-be higher than the version code already live on Play. If the upload is rejected as too
-low, raise both files and rebuild.
+`versionCode` is **2** (`app/build.gradle` and `twa-manifest.json`), one above the 1
+currently live on Play. Bump both files for each subsequent release.
 
 ## 4. Verify Digital Asset Links
 

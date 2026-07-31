@@ -20,8 +20,8 @@
     "path": "/Users/carles.rojas/Documents/Repos/cozybooks/android/android.keystore",
     "alias": "cozybooks_key_store"
   },
-  "appVersionName": "10",
-  "appVersionCode": 10,
+  "appVersionName": "2",
+  "appVersionCode": 2,
   "shortcuts": [
     {
       "name": "Finished Books",
@@ -62,5 +62,5 @@
     "window-controls-overlay",
     "browser"
   ],
-  "appVersion": "10"
+  "appVersion": "2"
 }

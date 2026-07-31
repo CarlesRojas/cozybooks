@@ -52,14 +52,14 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
                 style={{ viewTransitionName: `bookCover-bg-${book.id}` }}
             />
 
-            {src && (
+            {/* The cover's light, and only on the cover's own page — in a list it would
+                fire on hover and light up whichever book the pointer crossed. Blurred
+                far enough to spill past the edges and scaled so the spill is even. It
+                carries less on the light theme, where colour bleeding onto a pale
+                background shows much more readily than it does against a dark one. */}
+            {src && !linkToBook && (
                 <img
-                    className={cn(
-                        "absolute inset-0 -z-10 h-full w-full object-cover object-center blur-[8px] transition-opacity select-none",
-                        !linkToBook && "opacity-100 dark:opacity-40",
-                        linkToBook &&
-                            "opacity-0 group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-60 dark:group-focus:opacity-60",
-                    )}
+                    className="absolute inset-0 -z-10 h-full w-full scale-105 object-cover object-center opacity-60 blur-[32px] select-none dark:opacity-100"
                     style={{ viewTransitionName: `bookCover-blur-${book.id}` }}
                     width={200}
                     height={200 * 1.54}
@@ -73,7 +73,7 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
                 <img
                     className={cn(
                         "absolute inset-0 h-full w-full rounded-[22px] border border-neutral-500/25 object-cover object-center transition-transform select-none dark:border-neutral-500/40",
-                        linkToBook && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
+                        linkToBook && "group-hover:scale-[1.04] group-focus:scale-[1.04]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
                     width={maxWidth ?? 400}
@@ -84,14 +84,9 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
                 />
             )}
 
-            {!src && (
+            {!src && !linkToBook && (
                 <div
-                    className={cn(
-                        "absolute inset-0 -z-10 h-full w-full bg-neutral-200 object-cover object-center blur-[8px] transition-opacity select-none dark:bg-neutral-800",
-                        !linkToBook && "opacity-100 dark:opacity-100",
-                        linkToBook &&
-                            "opacity-0 group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-100 dark:group-focus:opacity-100",
-                    )}
+                    className="absolute inset-0 -z-10 h-full w-full scale-105 bg-neutral-200 object-cover object-center opacity-60 blur-[32px] select-none dark:bg-neutral-800 dark:opacity-100"
                     style={{ viewTransitionName: `bookCover-blur-${book.id}` }}
                 />
             )}
@@ -100,7 +95,7 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
                 <div
                     className={cn(
                         "bg-neutral-150 dark:bg-neutral-850 absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-[22px] border border-neutral-500/25 p-3 transition-transform select-none dark:border-neutral-500/40",
-                        linkToBook && "group-hover:scale-[1.02] group-focus:scale-[1.02]",
+                        linkToBook && "group-hover:scale-[1.04] group-focus:scale-[1.04]",
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
                 >

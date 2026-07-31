@@ -86,6 +86,16 @@
         @apply m-0 box-border min-w-0 p-0;
     }
 
+    /* Tailwind v4 dropped the pointer cursor its preflight used to put on buttons,
+       leaving every button in the app with an arrow. Anything meant to be pressed
+       gets it back, except when it is disabled and pressing does nothing. */
+    a,
+    button:not(:disabled),
+    summary,
+    [role="button"]:not([aria-disabled="true"]) {
+        @apply cursor-pointer;
+    }
+
     html {
         @apply relative min-h-dvh w-full text-[14px] antialiased;
 

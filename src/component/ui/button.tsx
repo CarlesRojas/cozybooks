@@ -9,7 +9,10 @@ export const buttonVariants = cva(
     {
         variants: {
             variant: {
-                default: "bg-brand/100 hover:bg-brand/80 dark:bg-brand/50 hover:dark:bg-brand/70 rounded-full text-neutral-50",
+                // The brand gradient, on the same 45 degree axis as the washes behind
+                // the welcome card and the search field.
+                default:
+                    "from-brand to-brand-warm hover:from-brand/85 hover:to-brand-warm/85 dark:from-brand/75 dark:to-brand-warm/75 hover:dark:from-brand/90 hover:dark:to-brand-warm/90 rounded-full bg-linear-45 text-neutral-50",
                 navigation: "rounded-full text-neutral-600 dark:text-neutral-200",
                 glass: "rounded-full bg-neutral-300/70 text-neutral-600 backdrop-blur-md hover:bg-neutral-400/50 hover:text-black dark:bg-neutral-700/60 dark:text-neutral-200 hover:dark:bg-neutral-500/50 hover:dark:text-white",
                 ghost: "rounded-full bg-transparent text-neutral-500 hover:text-neutral-950 focus-visible:text-neutral-950 dark:text-neutral-300 hover:dark:text-neutral-50 focus-visible:dark:text-neutral-50",

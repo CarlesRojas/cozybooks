@@ -211,7 +211,7 @@ const Stats = ({ books }: Props) => {
                                             <div className="h-2.5 overflow-hidden rounded-full bg-neutral-500/15">
                                                 <div
                                                     className={cn(
-                                                        "h-full rounded-full bg-brand",
+                                                        "from-brand to-brand-warm h-full rounded-full bg-linear-to-r",
                                                         group.year === new Date().getFullYear() && "opacity-45",
                                                     )}
                                                     style={{ width: `${Math.max(3, (100 * value) / max)}%` }}

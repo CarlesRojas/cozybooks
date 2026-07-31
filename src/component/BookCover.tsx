@@ -55,10 +55,15 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
             {src && (
                 <img
                     className={cn(
-                        "absolute inset-0 -z-10 h-full w-full object-cover object-center blur-[8px] transition-opacity select-none",
-                        !linkToBook && "opacity-100 dark:opacity-40",
+                        "absolute inset-0 -z-10 h-full w-full object-cover object-center transition-opacity select-none",
+                        // On its own page the copy is the cover's light: blurred far
+                        // enough to spill past the edges and scaled so the spill is
+                        // even. It carries less on the light theme, where colour
+                        // bleeding onto a pale background shows much more readily than
+                        // it does against a dark one.
+                        !linkToBook && "scale-105 opacity-60 blur-[32px] dark:opacity-100",
                         linkToBook &&
-                            "opacity-0 group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-60 dark:group-focus:opacity-60",
+                            "opacity-0 blur-[8px] group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-60 dark:group-focus:opacity-60",
                     )}
                     style={{ viewTransitionName: `bookCover-blur-${book.id}` }}
                     width={200}
@@ -87,10 +92,10 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
             {!src && (
                 <div
                     className={cn(
-                        "absolute inset-0 -z-10 h-full w-full bg-neutral-200 object-cover object-center blur-[8px] transition-opacity select-none dark:bg-neutral-800",
-                        !linkToBook && "opacity-100 dark:opacity-100",
+                        "absolute inset-0 -z-10 h-full w-full bg-neutral-200 object-cover object-center transition-opacity select-none dark:bg-neutral-800",
+                        !linkToBook && "scale-105 opacity-60 blur-[32px] dark:opacity-100",
                         linkToBook &&
-                            "opacity-0 group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-100 dark:group-focus:opacity-100",
+                            "opacity-0 blur-[8px] group-hover:opacity-100 group-focus:opacity-100 dark:group-hover:opacity-100 dark:group-focus:opacity-100",
                     )}
                     style={{ viewTransitionName: `bookCover-blur-${book.id}` }}
                 />

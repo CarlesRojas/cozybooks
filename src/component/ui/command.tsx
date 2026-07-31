@@ -69,7 +69,7 @@ export const CommandItem = ({ className, ref, ...props }: ComponentProps<typeof 
     <CommandPrimitive.Item
         ref={ref}
         className={cn(
-            "text-md relative flex cursor-default items-center rounded-lg px-3 py-2 font-medium outline-none select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-neutral-100 data-[selected=true]:text-neutral-900 dark:data-[selected=true]:bg-neutral-800 dark:data-[selected=true]:text-neutral-50",
+            "text-md relative flex cursor-pointer items-center rounded-lg px-3 py-2 font-medium outline-none select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-neutral-100 data-[selected=true]:text-neutral-900 dark:data-[selected=true]:bg-neutral-800 dark:data-[selected=true]:text-neutral-50",
             className,
         )}
         {...props}

@@ -76,7 +76,7 @@ function RouteComponent() {
                     </div>
                 )}
 
-                <div className="mt-12 mb-8 flex w-full flex-wrap justify-center gap-x-4 gap-y-2">
+                <div className="mt-12 flex w-full flex-wrap justify-center gap-x-4 gap-y-2">
                     {Array.from(categorySet).map((category) => (
                         <p key={category} className="text-sm leading-snug font-medium tracking-wide opacity-60">
                             {category}
@@ -84,8 +84,12 @@ function RouteComponent() {
                     ))}
                 </div>
 
+                <RelatedBooks book={book} />
+
+                {/* The gap the tags used to carry below them, now setting the link
+                    apart from the related books instead. */}
                 {previewLink && (
-                    <Button asChild variant="ghost" className="group">
+                    <Button asChild variant="ghost" className="group mt-8">
                         <Link to={previewLink} target="_blank" rel="noopener noreferrer">
                             <div
                                 className="mr-3 mb-[2px] size-6 min-h-6 min-w-6 bg-neutral-500 transition-colors group-hover:bg-neutral-950 dark:bg-neutral-300 dark:group-hover:bg-neutral-50"
@@ -104,8 +108,6 @@ function RouteComponent() {
                         </Link>
                     </Button>
                 )}
-
-                <RelatedBooks book={book} />
             </div>
 
             {/* {renderObject(book)} */}

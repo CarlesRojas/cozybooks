@@ -141,12 +141,14 @@ const BookCarousel = ({
     // first cover on its own: the same 1.5rem inset the first slide carries.
     return (
         <section className={cn("flex h-fit w-full flex-col gap-4", isCentered && "lg:mx-auto lg:w-fit")}>
-            {(books.length > 0 || !isLoading) &&
-                (typeof title === "string" ? (
-                    <h2 className="w-full px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">{title}</h2>
-                ) : (
-                    <div className="w-full px-6">{title}</div>
-                ))}
+            {/* Shown while loading too. Withholding it until the books arrived pushed
+                the whole row down the moment they did, which read as the covers
+                changing size rather than the section gaining a heading. */}
+            {typeof title === "string" ? (
+                <h2 className="w-full px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">{title}</h2>
+            ) : (
+                <div className="w-full px-6">{title}</div>
+            )}
 
             {!isLoading && books.length === 0 && <div className="w-full px-6">{!!noBooksChildren && noBooksChildren}</div>}
 
@@ -159,7 +161,7 @@ const BookCarousel = ({
                     >
                         <CarouselPrevious className="mouse:inline-flex z-10 hidden" />
 
-                        <CarouselContent className="pt-1 pb-2">
+                        <CarouselContent className={cn("pt-1 pb-2", showSkeletons && "animate-pulse")}>
                             {columns.map((column) => (
                                 <CarouselItem key={column[0].id} className={itemClassName}>
                                     <div className="flex flex-col gap-4">
@@ -171,13 +173,15 @@ const BookCarousel = ({
                             ))}
 
                             {/* 12 columns of two covers each, so the row stays shimmering
-                                past the edge of the widest screen while results load. */}
+                                past the edge of the widest screen while results load.
+                                They take their colours here and their pulse from the
+                                row, which animates one layer rather than twenty four. */}
                             {showSkeletons &&
                                 Array.from({ length: 12 }, (_, index) => (
                                     <CarouselItem key={`skeleton-${index}`} className={itemClassName}>
                                         <div className="flex flex-col gap-4">
-                                            <div className="skeleton aspect-book w-full rounded-[22px]" />
-                                            <div className="skeleton aspect-book w-full rounded-[22px]" />
+                                            <div className="skeleton-surface aspect-book w-full rounded-[22px]" />
+                                            <div className="skeleton-surface aspect-book w-full rounded-[22px]" />
                                         </div>
                                     </CarouselItem>
                                 ))}

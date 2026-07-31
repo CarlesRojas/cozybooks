@@ -7,7 +7,6 @@ import { useLibraryBooks } from "@/convex/use/useLibraryBooks";
 import type { Book } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
 import { createFileRoute } from "@tanstack/react-router";
-import { Loader } from "lucide-react";
 import { useMemo } from "react";
 import { isIOS } from "react-device-detect";
 
@@ -99,12 +98,6 @@ function RouteComponent() {
             suppressHydrationWarning
             className={cn("relative mb-20 flex h-fit min-h-[calc(100vh_-_5rem)] w-full flex-col gap-5 pb-12 lg:pt-25", isIOS && "mb-24")}
         >
-            {finishedBooks.isLoading && (
-                <div className="flex w-full grow items-center justify-center px-6 transition-all">
-                    <Loader className="size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50 duration-2000" />
-                </div>
-            )}
-
             <div className="flex h-fit w-full grow flex-col gap-6 py-4">
                 {finishedBooks.data && <Stats books={finishedBooks.data.items} />}
 

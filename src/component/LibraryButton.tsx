@@ -8,7 +8,7 @@ import { useStopReading } from "@/convex/use/status/useStopReading";
 import { useBookStatus } from "@/convex/use/useBookStatus";
 import type { Book } from "@/type/Book";
 import { BookStatus } from "@/type/Book";
-import { BookMarked, BookOpen, Loader, Plus, X } from "lucide-react";
+import { BookMarked, BookOpen, Plus, X } from "lucide-react";
 import type { ReactNode } from "react";
 
 interface Props {
@@ -48,17 +48,12 @@ const LibraryButton = ({ book, userId }: Props) => {
         </div>
     );
 
-    if (!bookStatus.data || !finishedDates.data)
-        return container(
-            <Button disabled>
-                <Loader className="icon animate-spin" />
-            </Button>,
-        );
+    if (!bookStatus.data || !finishedDates.data) return null;
 
     const map: Record<BookStatus, ReactNode> = {
         [BookStatus.NONE]: (
             <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book, userId })}>
-                {addToWantToRead.isPending ? <Loader className="icon mr-3 animate-spin" /> : <Plus className="icon mr-3" />}
+                <Plus className="icon mr-3" />
                 <p>{finishedDates.data.length > 0 ? "I want to read this again" : "I want to read this"}</p>
             </Button>
         ),
@@ -66,12 +61,12 @@ const LibraryButton = ({ book, userId }: Props) => {
         [BookStatus.WANT_TO_READ]: (
             <>
                 <Button disabled={isLoading} onClick={() => startReading.mutate({ book, userId })}>
-                    {startReading.isPending ? <Loader className="icon mr-3 animate-spin" /> : <BookOpen className="icon mr-3" />}
+                    <BookOpen className="icon mr-3" />
                     <p>Start reading</p>
                 </Button>
 
                 <Button disabled={isLoading} variant="glass" onClick={() => removeFromWantToRead.mutate({ book, userId })}>
-                    {removeFromWantToRead.isPending ? <Loader className="icon mr-3 animate-spin" /> : <X className="icon mr-3" />}
+                    <X className="icon mr-3" />
                     <p>{finishedDates.data.length > 0 ? "I no longer want to read this again" : "I no longer want to read this"}</p>
                 </Button>
             </>
@@ -80,12 +75,12 @@ const LibraryButton = ({ book, userId }: Props) => {
         [BookStatus.READING_NOW]: (
             <>
                 <Button disabled={isLoading} onClick={() => finishBook.mutate({ book, userId })}>
-                    {finishBook.isPending ? <Loader className="icon mr-3 animate-spin" /> : <BookMarked className="icon mr-3" />}
+                    <BookMarked className="icon mr-3" />
                     <p>Finish book</p>
                 </Button>
 
                 <Button disabled={isLoading} variant="glass" onClick={() => stopReading.mutate({ book, userId })}>
-                    {stopReading.isPending ? <Loader className="icon mr-3 animate-spin" /> : <X className="icon mr-3" />}
+                    <X className="icon mr-3" />
                     <p>Stop reading</p>
                 </Button>
             </>

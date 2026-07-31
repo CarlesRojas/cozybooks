@@ -23,8 +23,6 @@
     package="app.cozybooks.pinya">
 
     
-        <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    
 
     
 
@@ -184,10 +182,6 @@
             android:exported="@bool/enableNotification">
 
             
-                <meta-data
-                    android:name="android.support.customtabs.trusted.SMALL_ICON"
-                    android:resource="@drawable/ic_notification_icon" />
-            
 
             <intent-filter>
                 <action android:name="android.support.customtabs.trusted.TRUSTED_WEB_ACTIVITY_SERVICE"/>
@@ -195,8 +189,6 @@
             </intent-filter>
         </service>
 
-        
-            <activity android:name="com.google.androidbrowserhelper.trusted.NotificationPermissionRequestActivity" />
         
 
         

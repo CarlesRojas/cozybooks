@@ -11,7 +11,7 @@ The only way to change what users see is to deploy the web app.
 | --- | --- |
 | Package | `app.cozybooks.pinya` |
 | Domain | `https://www.cozybooks.app` |
-| Keystore | `android/android.keystore`, alias `cozybooks_key_store` |
+| Keystore | `android/android.keystore`, alias `cozybook-key-alias` |
 | Min / compile / target SDK | 21 / 36 / 35 |
 | Shortcuts | Finished Books → `/finished`, Search Books → `/search` |
 

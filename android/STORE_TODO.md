@@ -9,7 +9,7 @@ these are the steps left that need your machine or the Play Console.
 `twa-manifest.json` expects:
 
 - path: `/Users/carles.rojas/Documents/Repos/cozybooks/android/android.keystore`
-- alias: `cozybooks_key_store`
+- alias: `cozybook-key-alias`
 
 Drop your existing CozyBooks keystore there, or edit those two fields to match where
 it actually lives. It must be the same key the live app was signed with (or your Play

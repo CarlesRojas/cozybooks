@@ -8,7 +8,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { Link, useLocation, useRouterState } from "@tanstack/react-router";
 import type { User } from "better-auth";
 import { motion } from "framer-motion";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ReactElement } from "react";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -84,19 +84,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                     to={homeRoute}
                     className="mr-5 hidden h-12 items-center gap-3 px-5 text-neutral-600 select-none hover:text-black lg:flex dark:text-neutral-200 hover:dark:text-white"
                 >
-                    <div
-                        className="size-5 min-h-5 min-w-5 bg-neutral-600 dark:bg-neutral-200"
-                        style={{
-                            maskImage: 'url("/icon/logoTransparent.png")',
-                            maskSize: "200%",
-                            maskRepeat: "no-repeat",
-                            maskPosition: "center",
-                            WebkitMaskImage: 'url("/icon/logoTransparent.png")',
-                            WebkitMaskSize: "200%",
-                            WebkitMaskRepeat: "no-repeat",
-                            WebkitMaskPosition: "center",
-                        }}
-                    />
+                    <FontAwesomeIcon icon={faBook} className="size-5 min-h-5 min-w-5" />
 
                     <p className="text-base font-semibold whitespace-nowrap">CozyBooks</p>
                 </Link>

@@ -1,8 +1,8 @@
 # Play Store TODO
 
 The wrapper is a Bubblewrap TWA around `https://www.cozybooks.app`, published as
-`app.cozybooks.pinya`. Everything in this folder is already pointed at CozyBooks —
-these are the steps left that need your machine or the Play Console.
+`app.cozybooks.pinya`. Everything in this folder is already pointed at CozyBooks.
+These are the steps left that need your machine or the Play Console.
 
 ## 1. Keystore
 
@@ -13,7 +13,7 @@ these are the steps left that need your machine or the Play Console.
 
 Drop your existing CozyBooks keystore there, or edit those two fields to match where
 it actually lives. It must be the same key the live app was signed with (or your Play
-upload key, if the app uses Play App Signing) — a different key means Play rejects the
+upload key, if the app uses Play App Signing). A different key means Play rejects the
 update. The keystore is gitignored, so it never gets committed.
 
 ## 2. Build
@@ -42,8 +42,8 @@ instead of fullscreen:
 
 - That fingerprint matches the **app signing certificate** in Play Console →
   Setup → App signing (with Play App Signing this is Google's cert, not your upload key).
-- `https://www.cozybooks.app/.well-known/assetlinks.json` is actually served — deploy the
-  site before rolling out.
+- `https://www.cozybooks.app/.well-known/assetlinks.json` is actually served, so deploy
+  the site before rolling out.
 
 ## 5. Upload
 
@@ -60,5 +60,5 @@ Store assets already in the repo if the listing needs refreshing:
 
 Notification delegation is on (inherited from the CueNext wrapper), which adds the
 `POST_NOTIFICATIONS` permission. CozyBooks never requests web notifications, so it is
-inert — but if you would rather not declare the permission, set `enableNotifications`
+inert, but if you would rather not declare the permission, set `enableNotifications`
 to `false` in `twa-manifest.json` and rebuild.

@@ -84,6 +84,67 @@ export const googleBooksRequest = async ({ path, params = {}, method = "GET" }: 
     }
 };
 
+// Completes a query that matched nothing, so half-typed searches ("har pot") can be
+// retried as what the user meant ("harry potter"). The Books API itself has no
+// wildcard, prefix or spelling-correction support — its `q` is whole-word only — so
+// this uses the suggestion service behind the search box on books.google.com.
+//
+// That service is not part of the documented API and carries no compatibility
+// promise, which is why every failure path here returns null: the caller then keeps
+// the original (empty) result and the search behaves exactly as it did before.
+export const suggestSearchQuery = async (query: string): Promise<string | null> => {
+    try {
+        const url = new URL("https://books.google.com/complete/search");
+        url.search = new URLSearchParams({ q: query, client: "books", hl: "en", ds: "bo" }).toString();
+
+        const response = await fetch(url.toString());
+        if (!response.ok) return null;
+
+        const suggestion = parseSuggestion(await response.text());
+        if (!suggestion) return null;
+
+        // A suggestion identical to what was searched would just repeat the same
+        // empty request.
+        return suggestion.toLowerCase() === query.toLowerCase() ? null : suggestion;
+    } catch {
+        return null;
+    }
+};
+
+// The endpoint answers in one of two shapes depending on the client parameter, and
+// which one is served has changed before; accept either.
+const parseSuggestion = (body: string): string | null => {
+    // XML: <CompleteSuggestion><suggestion data="harry potter"/></CompleteSuggestion>
+    const xml = body.match(/data="([^"]*)"/);
+    if (xml?.[1]) return decodeEntities(xml[1]);
+
+    // JSONP: window.google.ac.h(["har pot",[["harry potter",0],…]])
+    const open = body.indexOf("(");
+    const close = body.lastIndexOf(")");
+    if (open === -1 || close <= open) return null;
+
+    try {
+        const payload = JSON.parse(body.slice(open + 1, close));
+        const first = Array.isArray(payload) && Array.isArray(payload[1]) ? payload[1][0] : null;
+        const text = Array.isArray(first) ? first[0] : first;
+        if (typeof text !== "string") return null;
+
+        // Suggestions can carry <b> markup around the completed part.
+        const clean = decodeEntities(text.replace(/<[^>]*>/g, "")).trim();
+        return clean || null;
+    } catch {
+        return null;
+    }
+};
+
+const decodeEntities = (value: string) =>
+    value
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&amp;/g, "&");
+
 const optionalString = (value: unknown) => (typeof value === "string" ? value : undefined);
 const optionalNumber = (value: unknown) => (typeof value === "number" && Number.isFinite(value) ? value : undefined);
 

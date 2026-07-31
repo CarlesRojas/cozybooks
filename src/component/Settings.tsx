@@ -19,6 +19,7 @@ import { useRouter } from "@tanstack/react-router";
 import type { User } from "better-auth";
 import { faRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 
 interface Props {
     user: User;
@@ -29,8 +30,19 @@ const Settings = ({ user, queryClient }: Props) => {
     const { theme, setTheme } = useTheme();
     const router = useRouter();
 
+    const [signOutFailed, setSignOutFailed] = useState(false);
+
     const logout = async () => {
-        await authClient.signOut();
+        // better-auth resolves with an `error` instead of throwing, so ignoring the
+        // result turns any failed request into a button that silently does nothing.
+        const { error } = await authClient.signOut();
+
+        if (error) {
+            console.error("Sign out failed", error);
+            setSignOutFailed(true);
+            return;
+        }
+
         await queryClient.invalidateQueries({ queryKey: [QueryKey.USER] });
         await router.invalidate();
     };
@@ -65,10 +77,17 @@ const Settings = ({ user, queryClient }: Props) => {
 
                 <DropdownMenuItem
                     className="text-red-600/80 focus:text-red-600 dark:text-red-400/80 dark:focus:text-red-400"
-                    onClick={logout}
+                    // Keep the menu open while the request is in flight: Radix closes on
+                    // select, and a menu that vanishes before the call resolves is how a
+                    // failed sign out ends up invisible. A successful one unmounts this
+                    // whole tree via the redirect anyway.
+                    onSelect={(event) => {
+                        event.preventDefault();
+                        void logout();
+                    }}
                 >
                     <FontAwesomeIcon icon={faRightFromBracket} className="mr-3 h-4 w-4" />
-                    <p className="font-medium">Sign out</p>
+                    <p className="font-medium">{signOutFailed ? "Sign out failed — try again" : "Sign out"}</p>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

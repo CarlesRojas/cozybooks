@@ -10,9 +10,13 @@ import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/reac
 import type { ReactNode } from "react";
 import z from "zod";
 
+// The finished page's view options. No defaults: a default would be written into
+// the url of every route the moment anything navigated, and "sort=DATE" in the url
+// would be indistinguishable from having asked for nothing — which is what tells
+// the finished page whether to fall back to the last view kept in storage.
 const finishedSearchParamsSchema = z.object({
-    sort: z.nativeEnum(Sort).default(Sort.DATE),
-    repeats: z.coerce.boolean().default(false),
+    sort: z.nativeEnum(Sort).optional(),
+    repeats: z.coerce.boolean().optional(),
 });
 
 export const Route = createRootRouteWithContext<Context>()({

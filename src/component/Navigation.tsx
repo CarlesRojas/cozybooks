@@ -16,8 +16,8 @@ import { isIOS } from "react-device-detect";
 interface Props {
     user: User | null;
     queryClient: QueryClient;
-    sort: Sort;
-    repeats: boolean;
+    sort?: Sort;
+    repeats?: boolean;
 }
 
 const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
@@ -76,7 +76,6 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
             >
                 <Link
                     to={homeRoute}
-                    search={{ sort, repeats }}
                     className="mr-5 hidden h-12 items-center gap-3 px-5 text-neutral-600 select-none hover:text-black lg:flex dark:text-neutral-200 hover:dark:text-white"
                 >
                     <div
@@ -117,7 +116,6 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                     >
                         <Link
                             to={route}
-                            search={{ sort, repeats }}
                             ref={(element) => {
                                 linkRefs.current[route] = element;
                             }}

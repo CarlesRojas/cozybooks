@@ -136,22 +136,16 @@ const BookCarousel = ({
         };
     }, [emblaApi]);
 
+    // Centring shrinks the whole section — heading included — to the width of its
+    // covers and centres that, so the heading keeps its gutter and lands above the
+    // first cover on its own: the same 1.5rem inset the first slide carries.
     return (
-        <section className="flex h-fit w-full flex-col gap-4">
-            {/* The heading follows the covers: centring one and not the other would
-                leave the section reading as two pieces that disagree. */}
+        <section className={cn("flex h-fit w-full flex-col gap-4", isCentered && "lg:mx-auto lg:w-fit")}>
             {(books.length > 0 || !isLoading) &&
                 (typeof title === "string" ? (
-                    <h2
-                        className={cn(
-                            "w-full px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90",
-                            isCentered && "lg:text-center",
-                        )}
-                    >
-                        {title}
-                    </h2>
+                    <h2 className="w-full px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">{title}</h2>
                 ) : (
-                    <div className={cn("w-full px-6", isCentered && "lg:flex lg:justify-center")}>{title}</div>
+                    <div className="w-full px-6">{title}</div>
                 ))}
 
             {!isLoading && books.length === 0 && <div className="w-full px-6">{!!noBooksChildren && noBooksChildren}</div>}
@@ -165,7 +159,7 @@ const BookCarousel = ({
                     >
                         <CarouselPrevious className="mouse:inline-flex z-10 hidden" />
 
-                        <CarouselContent className={cn("pt-1 pb-2", isCentered && "lg:justify-center")}>
+                        <CarouselContent className="pt-1 pb-2">
                             {columns.map((column) => (
                                 <CarouselItem key={column[0].id} className={itemClassName}>
                                     <div className="flex flex-col gap-4">

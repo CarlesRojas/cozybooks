@@ -25,6 +25,13 @@ const parseVolumesResponse = (data: any) => {
 
 // Catalogue search. `volumes.list` is a public endpoint — it takes the API key, never
 // a user token.
+//
+// `showPreorders` defaults to false, which is why announced-but-unpublished books
+// can't be found at all — the gap the unreleased book list exists to paper over.
+//
+// `filter` is deliberately not sent: its only values that would cut down the
+// academic and scanned material (`ebooks`, `paid-ebooks`) also hide books with no
+// ebook edition, which was a worse result in practice than the noise it removed.
 export const search = action({
     args: {
         query: v.string(),
@@ -43,6 +50,7 @@ export const search = action({
                 startIndex: (startIndex ?? 0).toString(),
                 printType: "books",
                 orderBy: "relevance",
+                showPreorders: "true",
             },
         });
 

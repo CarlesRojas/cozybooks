@@ -1,8 +1,9 @@
 // The Google Books search runs in a Convex action, so it can't use Convex's reactive
 // `usePaginatedQuery` (database queries only). Pages are accumulated with
-// `useInfiniteActionQuery` for infinite scrolling instead; previous results stay
-// visible while the first page of a new query loads. It searches the public
-// catalogue, so it needs no Google token.
+// `useInfiniteActionQuery` for infinite scrolling instead; a new query reports no
+// results until its first page arrives, so the previous query's books are never
+// shown under a new search. It searches the public catalogue, so it needs no
+// Google token.
 
 import { fromWireBook } from "@/convex/map";
 import type { Book, VolumesResult } from "@/type/Book";

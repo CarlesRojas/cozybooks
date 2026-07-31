@@ -5,7 +5,7 @@ import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
 import { NO_NAVBAR_ROUTES, Route } from "@/type/Route";
 import type { QueryClient } from "@tanstack/react-query";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation, useRouterState } from "@tanstack/react-router";
 import type { User } from "better-auth";
 import { motion } from "framer-motion";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
@@ -33,6 +33,11 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
     };
 
     const showSortButton = location.pathname === Route.FINISHED;
+
+    // A tab is unclickable while another one is still loading. Routes here resolve
+    // their data before rendering, so switching again mid-load leaves two navigations
+    // racing for the same view, and the loser can win.
+    const isNavigating = useRouterState({ select: (state) => state.status === "pending" });
 
     // The indicator is positioned from DOM measurements local to the pill instead
     // of a framer-motion shared layout animation: shared layouts measure in page
@@ -113,6 +118,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                         className={cn(
                             "group relative grow px-3 hover:text-black sm:grow-0 sm:px-4 lg:px-5 hover:dark:text-white",
                             route === location.pathname && "!text-neutral-50",
+                            isNavigating && route !== location.pathname && "pointer-events-none",
                         )}
                     >
                         <Link

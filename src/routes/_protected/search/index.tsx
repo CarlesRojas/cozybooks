@@ -89,7 +89,7 @@ function RouteComponent() {
             {isEmpty && (
                 <div
                     aria-hidden
-                    className="from-brand/25 to-brand-warm/25 dark:from-brand/12 dark:to-brand-warm/12 pointer-events-none absolute top-1/2 left-1/2 size-128 max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
+                    className="from-brand/40 to-brand-warm/40 dark:from-brand/15 dark:to-brand-warm/15 pointer-events-none absolute top-1/2 left-1/2 size-128 max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
                 />
             )}
 

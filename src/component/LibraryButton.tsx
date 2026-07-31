@@ -8,7 +8,7 @@ import { useStopReading } from "@/convex/use/status/useStopReading";
 import { useBookStatus } from "@/convex/use/useBookStatus";
 import type { Book } from "@/type/Book";
 import { BookStatus } from "@/type/Book";
-import { BookMarked, BookOpen, Plus, X } from "lucide-react";
+import { BookMarked, BookOpen, Plus, Undo2, X } from "lucide-react";
 import type { ReactNode } from "react";
 
 interface Props {
@@ -50,11 +50,14 @@ const LibraryButton = ({ book, userId }: Props) => {
 
     if (!bookStatus.data || !finishedDates.data) return null;
 
+    // Each label names the shelf the book lands on, using the same words as the
+    // library sections, so pressing one has no surprise. "Stop reading" used to hide
+    // that it puts the book back on the want-to-read shelf rather than removing it.
     const map: Record<BookStatus, ReactNode> = {
         [BookStatus.NONE]: (
             <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book, userId })}>
                 <Plus className="icon mr-3" />
-                <p>{finishedDates.data.length > 0 ? "I want to read this again" : "I want to read this"}</p>
+                <p>{finishedDates.data.length > 0 ? "Read it again" : "Add to want to read"}</p>
             </Button>
         ),
 
@@ -67,7 +70,7 @@ const LibraryButton = ({ book, userId }: Props) => {
 
                 <Button disabled={isLoading} variant="glass" onClick={() => removeFromWantToRead.mutate({ book, userId })}>
                     <X className="icon mr-3" />
-                    <p>{finishedDates.data.length > 0 ? "I no longer want to read this again" : "I no longer want to read this"}</p>
+                    <p>Remove from want to read</p>
                 </Button>
             </>
         ),
@@ -76,12 +79,12 @@ const LibraryButton = ({ book, userId }: Props) => {
             <>
                 <Button disabled={isLoading} onClick={() => finishBook.mutate({ book, userId })}>
                     <BookMarked className="icon mr-3" />
-                    <p>Finish book</p>
+                    <p>Mark as finished</p>
                 </Button>
 
                 <Button disabled={isLoading} variant="glass" onClick={() => stopReading.mutate({ book, userId })}>
-                    <X className="icon mr-3" />
-                    <p>Stop reading</p>
+                    <Undo2 className="icon mr-3" />
+                    <p>Back to want to read</p>
                 </Button>
             </>
         ),

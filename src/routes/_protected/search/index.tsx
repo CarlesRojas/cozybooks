@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 import { useSearchedBooks } from "@/convex/use/useSearchedBooks";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { isIOS } from "react-device-detect";
 import { useDebounceCallback } from "usehooks-ts";
 import { z } from "zod";
@@ -25,21 +25,34 @@ function RouteComponent() {
     const navigate = useNavigate();
 
     const [internalQuery, setInternalQuery] = useState(query);
-    useEffect(() => setInternalQuery(query), [query]);
 
     // Search as you type. The debounced callback keeps its timer across renders — an
     // effect-based debounce restarts whenever a dependency identity changes, which
     // kept pushing the search back for as long as the page re-rendered. `replace`
     // keeps every keystroke out of the history stack.
-    const search = (value: string) => navigate({ to: "/search", search: { query: value }, replace: true });
+    const pushedQuery = useRef(query);
+    const search = (value: string) => {
+        pushedQuery.current = value;
+        navigate({ to: "/search", search: { query: value }, replace: true });
+    };
     const debouncedSearch = useDebounceCallback(search, SEARCH_DEBOUNCE_MS);
+
+    // The url is written from elsewhere too — the unreleased book list searches by
+    // name — so the field follows it. Never when it is only echoing back what this
+    // field pushed, though: navigation commits inside a transition, well after the
+    // debounce fired, and adopting that stale value rewound everything typed since.
+    useEffect(() => {
+        if (query === pushedQuery.current) return;
+        pushedQuery.current = query;
+        setInternalQuery(query);
+    }, [query]);
 
     const onChange = (value: string) => {
         setInternalQuery(value);
         debouncedSearch(value);
     };
 
-    // Clearing and submitting both drop the pending call and search right away.
+    // Clearing drops the pending call and searches right away.
     const searchNow = (value: string) => {
         debouncedSearch.cancel();
         setInternalQuery(value);
@@ -75,7 +88,9 @@ function RouteComponent() {
                     isEmpty && "lg:static lg:pt-0",
                 )}
             >
-                <form className="mx-auto flex h-fit w-full px-6 lg:max-w-xl">
+                {/* Searching is automatic, so Enter has nothing to submit — without this
+                    the browser submits the form itself and reloads the page. */}
+                <form className="mx-auto flex h-fit w-full px-6 lg:max-w-xl" onSubmit={(event) => event.preventDefault()}>
                     <Input
                         placeholder="Search Books"
                         type="text"

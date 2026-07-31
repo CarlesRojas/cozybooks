@@ -33,13 +33,7 @@ const Welcome = ({ isError }: Props) => {
                 {/* Decorative: the heading right below already names the app. */}
                 <img src="/logo512.png" alt="" width={256} height={256} className="size-24 rounded-3xl shadow-lg shadow-neutral-950/10" />
 
-                <div className="flex flex-col items-center gap-3">
-                    <h1 className="text-center text-3xl leading-tight font-bold tracking-wide text-balance">Welcome to CozyBooks</h1>
-
-                    <p className="text-center leading-snug font-medium tracking-wide text-pretty opacity-70">
-                        The best way to keep track of all the books you have and enjoy all the ones you want to read.
-                    </p>
-                </div>
+                <h1 className="text-center text-3xl leading-tight font-bold tracking-wide text-balance">Welcome to CozyBooks</h1>
 
                 <div className="flex w-full flex-col items-center gap-3">
                     <SignInButton className="w-full" />
@@ -49,11 +43,6 @@ const Welcome = ({ isError }: Props) => {
                             There was an error while signing in. Please try again.
                         </p>
                     )}
-
-                    <p className="text-center text-xs leading-relaxed font-semibold tracking-wide text-pretty opacity-40">
-                        Sign in with your Google account to get started. We will only use your data (email, name, and book library) to
-                        provide you with the best experience. We do not sell or share your data with anyone.
-                    </p>
                 </div>
             </section>
 

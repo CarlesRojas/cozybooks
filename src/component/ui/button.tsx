@@ -20,6 +20,10 @@ export const buttonVariants = cva(
                 input: "bg-neutral-150 dark:bg-neutral-850 rounded-xl hover:bg-neutral-200 hover:dark:bg-neutral-800",
                 frost: "rounded-full border border-neutral-500/25 bg-white/50 text-neutral-950 backdrop-blur-md hover:bg-white/80 focus-visible:bg-white/80 data-[checked=true]:bg-purple-500/80 data-[checked=true]:text-neutral-50 data-[checked=true]:hover:bg-purple-600/80 data-[checked=true]:focus-visible:bg-purple-600/80 dark:border-neutral-500/40 dark:bg-black/50 dark:text-white dark:hover:bg-black/80 dark:focus-visible:bg-black/80 dark:data-[checked=true]:bg-purple-500/80 dark:data-[checked=true]:hover:bg-purple-600/80 dark:data-[checked=true]:focus-visible:bg-purple-600/80",
                 destructive: "rounded-full bg-red-500/100 text-neutral-50 hover:bg-red-500/80 dark:bg-red-500/50 hover:dark:bg-red-500/70",
+                // Reads as the inverse of the page: near-black on the light theme,
+                // near-white on the dark one.
+                contrast:
+                    "rounded-full bg-neutral-950 text-neutral-50 hover:bg-neutral-800 dark:bg-neutral-50 dark:text-neutral-950 hover:dark:bg-neutral-200",
             },
             size: {
                 default: "h-12 w-fit px-5 py-3",

@@ -1,7 +1,5 @@
 import { Button } from "@/component/ui/button";
 import { authClient } from "@/lib/auth/client";
-import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
     className?: string;
@@ -13,9 +11,25 @@ const SignInButton = ({ className }: Props) => {
     };
 
     return (
-        <Button className={className} onClick={login}>
-            <FontAwesomeIcon icon={faRightToBracket} className="icon mr-3" />
-            <p>Sign In</p>
+        <Button variant="contrast" className={className} onClick={login}>
+            {/* The mark is punched out of the button's own colour rather than drawn in
+                Google's, the way the Google Books link elsewhere does it — a colour
+                logo would be the one bright thing on an otherwise monochrome card. */}
+            <div
+                className="mr-3 size-5 min-h-5 min-w-5 bg-current"
+                style={{
+                    maskImage: 'url("/google.png")',
+                    maskSize: "contain",
+                    maskRepeat: "no-repeat",
+                    maskPosition: "center",
+                    WebkitMaskImage: 'url("/google.png")',
+                    WebkitMaskSize: "contain",
+                    WebkitMaskRepeat: "no-repeat",
+                    WebkitMaskPosition: "center",
+                }}
+            />
+
+            <p>Sign in with Google</p>
         </Button>
     );
 };

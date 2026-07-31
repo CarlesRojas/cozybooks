@@ -76,8 +76,6 @@ function RouteComponent() {
                     </div>
                 )}
 
-                <RelatedBooks book={book} />
-
                 <div className="mt-12 mb-8 flex w-full flex-wrap justify-center gap-x-4 gap-y-2">
                     {Array.from(categorySet).map((category) => (
                         <p key={category} className="text-sm leading-snug font-medium tracking-wide opacity-60">
@@ -106,6 +104,8 @@ function RouteComponent() {
                         </Link>
                     </Button>
                 )}
+
+                <RelatedBooks book={book} />
             </div>
 
             {/* {renderObject(book)} */}

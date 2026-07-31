@@ -7,23 +7,18 @@ import { cn } from "@/lib/cn";
 import { useLibraryBooks } from "@/convex/use/useLibraryBooks";
 import type { Book } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef } from "react";
 import { isIOS } from "react-device-detect";
-
-export const Route = createFileRoute("/_protected/finished/")({
-    component: RouteComponent,
-});
 
 interface Group {
     key: string;
     books: Array<Book>;
 }
 
-// Read straight from storage rather than through a hook: the value is needed on the
-// first effect pass, and a storage hook still holds its initial value that early
-// under SSR, which restored the defaults instead of the last view used. Anything
-// unparseable or unrecognised counts as absent, so the schema default applies.
+// Read straight from storage rather than through a hook: the value is wanted before
+// the first render, earlier than a storage hook can answer. Anything unparseable or
+// unrecognised counts as absent, so the schema default applies.
 const readStored = <T,>(key: string, isValid: (value: unknown) => value is T): T | null => {
     try {
         const raw = window.localStorage.getItem(key);
@@ -47,6 +42,30 @@ const write = (key: string, value: unknown) => {
 const isSort = (value: unknown): value is Sort => Object.values(Sort).includes(value as Sort);
 const isBoolean = (value: unknown): value is boolean => typeof value === "boolean";
 
+// The stored view is applied before the page renders, so arriving from another tab
+// shows it straight away instead of rendering the defaults and correcting itself a
+// moment later. Storage only exists in the browser, so on a server-rendered first
+// load this does nothing and the component's effect restores instead — that path
+// still blinks, but it is a cold start rather than a tab switch.
+const restoreStoredView = (search: { sort?: Sort; repeats?: boolean }) => {
+    if (typeof window === "undefined") return;
+
+    const sort = search.sort === undefined ? readStored(SORT_STORAGE_KEY, isSort) : null;
+    const repeats = search.repeats === undefined ? readStored(REPEATS_STORAGE_KEY, isBoolean) : null;
+    if (sort === null && repeats === null) return;
+
+    throw redirect({
+        to: "/finished",
+        search: { sort: sort ?? search.sort, repeats: repeats ?? search.repeats },
+        replace: true,
+    });
+};
+
+export const Route = createFileRoute("/_protected/finished/")({
+    component: RouteComponent,
+    beforeLoad: ({ search }) => restoreStoredView(search),
+});
+
 function RouteComponent() {
     const context = Route.useRouteContext();
     const { sort: urlSort, repeats: urlRepeats } = Route.useSearch();
@@ -61,6 +80,9 @@ function RouteComponent() {
     const hasRestored = useRef(false);
 
     useEffect(() => {
+        // `beforeLoad` has already restored the stored view on every navigation the
+        // browser makes. It can't on a server-rendered first load, where storage
+        // doesn't exist yet, so that one case is caught here instead.
         if (!hasRestored.current) {
             hasRestored.current = true;
 

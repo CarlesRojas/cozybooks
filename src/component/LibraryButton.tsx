@@ -8,7 +8,7 @@ import { useStopReading } from "@/convex/use/status/useStopReading";
 import { useBookStatus } from "@/convex/use/useBookStatus";
 import type { Book } from "@/type/Book";
 import { BookStatus } from "@/type/Book";
-import { faFlag, faPause, faPlay, faPlus, faRepeat, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark, faFlag, faPause, faPlay, faRepeat, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ReactNode } from "react";
 
@@ -61,7 +61,7 @@ const LibraryButton = ({ book, userId }: Props) => {
                 {finishedDates.data.length > 0 ? (
                     <FontAwesomeIcon icon={faRepeat} className="icon mr-3" />
                 ) : (
-                    <FontAwesomeIcon icon={faPlus} className="icon mr-3" />
+                    <FontAwesomeIcon icon={faBookmark} className="icon mr-3" />
                 )}
                 <p>{finishedDates.data.length > 0 ? "Read again" : "Want to read"}</p>
             </Button>

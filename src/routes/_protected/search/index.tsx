@@ -89,7 +89,7 @@ function RouteComponent() {
             {isEmpty && (
                 <div
                     aria-hidden
-                    className="from-brand/40 to-brand-warm/40 dark:from-brand/15 dark:to-brand-warm/15 pointer-events-none absolute top-1/2 left-1/2 size-128 max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
+                    className="from-brand/40 to-brand-warm/40 dark:from-brand/25 dark:to-brand-warm/25 pointer-events-none absolute top-1/2 left-1/2 size-128 max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
                 />
             )}
 
@@ -102,12 +102,30 @@ function RouteComponent() {
             >
                 {/* Searching is automatic, so Enter has nothing to submit — without this
                     the browser submits the form itself and reloads the page. */}
-                <form className="mx-auto flex h-fit w-full px-6 lg:max-w-xl" onSubmit={(event) => event.preventDefault()}>
+                <form
+                    className="mx-auto flex h-fit w-full px-6 lg:max-w-xl"
+                    autoComplete="off"
+                    onSubmit={(event) => event.preventDefault()}
+                >
+                    {/* Declared a search field down to the last attribute. Android's
+                        autofill offers its password bar to anything it can't rule out,
+                        and `autocomplete="off"` alone does not rule it out — the type,
+                        the name and the mode together do. The data attributes are what
+                        the password managers themselves read. */}
                     <Input
                         placeholder="Search Books"
-                        type="text"
+                        type="search"
+                        name="search"
+                        inputMode="search"
+                        enterKeyHint="search"
                         autoFocus
                         autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="none"
+                        spellCheck={false}
+                        data-1p-ignore
+                        data-lpignore="true"
+                        data-form-type="other"
                         value={internalQuery}
                         onChange={(event) => onChange(event.target.value)}
                         icon={

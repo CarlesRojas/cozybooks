@@ -78,8 +78,17 @@
         @apply transition-transform focus-visible:z-10 focus-visible:scale-110 focus-visible:outline-none;
     }
 
+    .skeleton,
+    .skeleton-surface {
+        @apply !border-neutral-300 !bg-neutral-200 !text-transparent dark:!border-neutral-700 dark:!bg-neutral-900;
+    }
+
+    /* `skeleton` pulses itself; `skeleton-surface` is the same colours without the
+       animation, for when a whole group is pulsed from one parent instead. Animating
+       opacity promotes each element to its own composited layer, so two dozen of them
+       inside a carousel is two dozen layers — one parent is one layer. */
     .skeleton {
-        @apply animate-pulse !border-neutral-300 !bg-neutral-200 !text-transparent dark:!border-neutral-700 dark:!bg-neutral-900;
+        @apply animate-pulse;
     }
 
     * {
@@ -94,6 +103,13 @@
     summary,
     [role="button"]:not([aria-disabled="true"]) {
         @apply cursor-pointer;
+    }
+
+    /* Search fields carry a clear button of their own, next to the one WebKit adds. */
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-decoration {
+        -webkit-appearance: none;
+        appearance: none;
     }
 
     html {

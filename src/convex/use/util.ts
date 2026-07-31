@@ -109,8 +109,8 @@ const pageInfo = (pages: Array<PagedWire>): { loadedCount: number; lastPage: Pag
 // items }`. The Google Books API calls run as actions, so they can't use Convex's
 // `usePaginatedQuery` (which only works for reactive database queries); this
 // accumulates pages instead. `fetchNextPage` appends the next `pageSize` items, and
-// the list resets when the args change — previous pages stay visible while the first
-// page of the new args loads, like `useActionQuery`.
+// the list resets when the args change — nothing is reported while the first page of
+// the new args loads, so a new search never shows the previous one's results.
 export const useInfiniteActionQuery = <TAction extends FunctionReference<"action", "public">>(
     action: TAction,
     baseArgs: Omit<FunctionArgs<TAction>, "maxResults" | "startIndex"> | "skip",
@@ -178,8 +178,13 @@ export const useInfiniteActionQuery = <TAction extends FunctionReference<"action
     const { loadedCount, lastPage } = pageInfo(state.pages);
     const hasNextPage = state.key === key && !!lastPage && lastPage.items.length > 0 && loadedCount < lastPage.totalItems;
 
+    // Pages belonging to a previous set of args are never handed back: a new search
+    // reports no items while it loads, so callers show a loading state instead of
+    // the last search's results.
+    const pages = state.key === key ? state.pages : [];
+
     return {
-        pages: state.pages,
+        pages,
         isLoading: key !== null && state.key !== key,
         isError: state.isError,
         hasNextPage,

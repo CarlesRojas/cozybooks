@@ -4,7 +4,7 @@
 
 import { BookStatus } from "@/type/Book";
 import { api } from "@convex/_generated/api";
-import { useQuery } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache";
 
 interface Props {
     bookId: string;

@@ -2,7 +2,7 @@
 // pre-seeding the rating cache from the library query is no longer needed.
 
 import { api } from "@convex/_generated/api";
-import { useQuery } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache";
 
 interface Props {
     bookId: string;

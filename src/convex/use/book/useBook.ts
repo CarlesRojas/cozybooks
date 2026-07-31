@@ -8,7 +8,8 @@
 import { fromWireBook } from "@/convex/map";
 import type { Book } from "@/type/Book";
 import { api } from "@convex/_generated/api";
-import { useAction, useQuery } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache";
+import { useAction } from "convex/react";
 import { useEffect, useMemo, useState } from "react";
 
 interface Props {

@@ -4,7 +4,7 @@
 import { fromWireFinished } from "@/convex/map";
 import type { Finished } from "@/type/Finished";
 import { api } from "@convex/_generated/api";
-import { useQuery } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache";
 import { useMemo } from "react";
 
 interface Props {

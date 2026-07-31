@@ -7,6 +7,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { isIOS } from "react-device-detect";
+import { useDebounceCallback } from "usehooks-ts";
 import { z } from "zod";
 
 const searchSearchParamsSchema = z.object({
@@ -26,20 +27,28 @@ function RouteComponent() {
     const [internalQuery, setInternalQuery] = useState(query);
     useEffect(() => setInternalQuery(query), [query]);
 
-    // Search as you type: the input drives the url `query` param once typing pauses.
-    // `replace` keeps every keystroke out of the history stack.
-    useEffect(() => {
-        if (internalQuery === query) return;
+    // Search as you type. The debounced callback keeps its timer across renders — an
+    // effect-based debounce restarts whenever a dependency identity changes, which
+    // kept pushing the search back for as long as the page re-rendered. `replace`
+    // keeps every keystroke out of the history stack.
+    const search = (value: string) => navigate({ to: "/search", search: { query: value }, replace: true });
+    const debouncedSearch = useDebounceCallback(search, SEARCH_DEBOUNCE_MS);
 
-        const timeout = setTimeout(() => navigate({ to: "/search", search: { query: internalQuery }, replace: true }), SEARCH_DEBOUNCE_MS);
+    const onChange = (value: string) => {
+        setInternalQuery(value);
+        debouncedSearch(value);
+    };
 
-        return () => clearTimeout(timeout);
-    }, [internalQuery, query, navigate]);
+    // Clearing and submitting both drop the pending call and search right away.
+    const searchNow = (value: string) => {
+        debouncedSearch.cancel();
+        setInternalQuery(value);
+        search(value);
+    };
 
-    // Submitting just skips the debounce — the search itself is already automatic.
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        navigate({ to: "/search", search: { query: internalQuery }, replace: true });
+        searchNow(internalQuery);
     };
 
     const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE });
@@ -73,11 +82,11 @@ function RouteComponent() {
                         autoFocus
                         autoComplete="off"
                         value={internalQuery}
-                        onChange={(event) => setInternalQuery(event.target.value)}
+                        onChange={(event) => onChange(event.target.value)}
                         icon={
                             <Search className="icon stroke-2 text-neutral-500 transition-colors group-focus-within:text-neutral-950 group-focus-within:dark:text-neutral-50" />
                         }
-                        onClear={internalQuery.length > 0 ? () => setInternalQuery("") : undefined}
+                        onClear={internalQuery.length > 0 ? () => searchNow("") : undefined}
                     />
                 </form>
             </section>

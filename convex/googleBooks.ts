@@ -26,17 +26,12 @@ const parseVolumesResponse = (data: any) => {
 // Catalogue search. `volumes.list` is a public endpoint — it takes the API key, never
 // a user token.
 //
-// Two of the params below shape which volumes come back at all:
-//
 // `showPreorders` defaults to false, which is why announced-but-unpublished books
 // can't be found at all — the gap the unreleased book list exists to paper over.
 //
-// `filter=ebooks` keeps only volumes Google carries as an ebook, free or paid. The
-// API has no facet for genre or for "is this a real trade book", and being sold as
-// an ebook is the closest proxy: it drops library-scanned academic volumes, theses
-// and reports. The trade is recall — a book with no ebook edition at all (older
-// editions, out of print, some translations) stops being findable, so this is worth
-// re-checking against real searches.
+// `filter` is deliberately not sent: its only values that would cut down the
+// academic and scanned material (`ebooks`, `paid-ebooks`) also hide books with no
+// ebook edition, which was a worse result in practice than the noise it removed.
 export const search = action({
     args: {
         query: v.string(),
@@ -55,7 +50,6 @@ export const search = action({
                 startIndex: (startIndex ?? 0).toString(),
                 printType: "books",
                 orderBy: "relevance",
-                filter: "ebooks",
                 showPreorders: "true",
             },
         });

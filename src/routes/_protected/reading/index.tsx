@@ -6,7 +6,7 @@ import { useUnreleasedBooks } from "@/convex/use/unreleasedBook/useUnreleasedBoo
 import { useLibraryBooks } from "@/convex/use/useLibraryBooks";
 import { LibraryType } from "@/type/Library";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Book, Loader } from "lucide-react";
+import { Book } from "lucide-react";
 import { isIOS } from "react-device-detect";
 
 export const Route = createFileRoute("/_protected/reading/")({ component: Reading });
@@ -17,55 +17,47 @@ function Reading() {
     const toReadBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.TO_READ });
     const unreleasedBooks = useUnreleasedBooks(context.user!.id);
 
-    const isPending = readingBooks.isLoading || toReadBooks.isLoading || unreleasedBooks.isLoading;
-
     return (
         <main
             suppressHydrationWarning
             className={cn("relative mb-20 flex h-fit min-h-[calc(100vh_-_5rem)] w-full flex-col gap-5 pb-12 lg:pt-25", isIOS && "mb-24")}
         >
-            {isPending ? (
-                <div className="flex w-full grow items-center justify-center px-6 transition-all">
-                    <Loader className="size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50 duration-2000" />
-                </div>
-            ) : (
-                <div className="flex h-fit w-full grow flex-col gap-6 pt-8 pb-4">
-                    {readingBooks.data && (
-                        <BookCarousel
-                            title="Reading"
-                            books={readingBooks.data.items}
-                            noBooksChildren={
-                                <div className="flex flex-col gap-4">
-                                    <p className="font-medium tracking-wide opacity-80">
-                                        {toReadBooks.data && toReadBooks.data.items.length
-                                            ? "This is a little empty. Select on any of the books below and click 'Start Reading'."
-                                            : "This is a little empty. You can start by searching for books."}
-                                    </p>
+            <div className="flex h-fit w-full grow flex-col gap-6 pt-8 pb-4">
+                {readingBooks.data && (
+                    <BookCarousel
+                        title="Reading"
+                        books={readingBooks.data.items}
+                        noBooksChildren={
+                            <div className="flex flex-col gap-4">
+                                <p className="font-medium tracking-wide opacity-80">
+                                    {toReadBooks.data && toReadBooks.data.items.length
+                                        ? "This is a little empty. Select on any of the books below and click 'Start Reading'."
+                                        : "This is a little empty. You can start by searching for books."}
+                                </p>
 
-                                    <Button variant="glass" asChild>
-                                        <Link to="/search">
-                                            <Book className="icon mr-3" />
-                                            <p>Search for books</p>
-                                        </Link>
-                                    </Button>
-                                </div>
-                            }
-                        />
-                    )}
+                                <Button variant="glass" asChild>
+                                    <Link to="/search">
+                                        <Book className="icon mr-3" />
+                                        <p>Search for books</p>
+                                    </Link>
+                                </Button>
+                            </div>
+                        }
+                    />
+                )}
 
-                    {toReadBooks.data && toReadBooks.data.items.length > 0 && (
-                        <BookCarousel title="Want to read" books={toReadBooks.data.items} />
-                    )}
+                {toReadBooks.data && toReadBooks.data.items.length > 0 && (
+                    <BookCarousel title="Want to read" books={toReadBooks.data.items} />
+                )}
 
-                    {unreleasedBooks.data && (
-                        <UnreleasedBookList
-                            unreleasedBooks={unreleasedBooks.data}
-                            stickyClassName="top-0 pt-3 lg:top-25"
-                            userId={context.user!.id}
-                        />
-                    )}
-                </div>
-            )}
+                {unreleasedBooks.data && (
+                    <UnreleasedBookList
+                        unreleasedBooks={unreleasedBooks.data}
+                        stickyClassName="top-0 pt-3 lg:top-25"
+                        userId={context.user!.id}
+                    />
+                )}
+            </div>
         </main>
     );
 }

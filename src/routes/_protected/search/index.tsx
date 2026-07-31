@@ -5,7 +5,7 @@ import { PAGE_SIZE } from "@/const";
 import { cn } from "@/lib/cn";
 import { useSearchedBooks } from "@/convex/use/useSearchedBooks";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Loader, Search } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { isIOS } from "react-device-detect";
 import { z } from "zod";
@@ -58,15 +58,6 @@ function RouteComponent() {
                     </Button>
                 </form>
             </section>
-
-            <div
-                className={cn(
-                    "-mt-14 flex h-10 max-h-10 w-full items-center justify-center px-6 pb-2 transition-all",
-                    searchedBooks.isLoading && "-mt-0",
-                )}
-            >
-                <Loader className="size-8 min-h-8 min-w-8 animate-spin stroke-[3] opacity-50 duration-2000" />
-            </div>
 
             <div className="flex h-fit w-full flex-col gap-12">
                 {query.length > 0 && (

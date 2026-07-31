@@ -9,7 +9,7 @@ function TermsAndConditions() {
     return (
         <main
             suppressHydrationWarning
-            className={cn("prose prose-neutral dark:prose-invert relative mb-20 h-fit w-full max-w-none p-6", isIOS && "mb-24")}
+            className={cn("prose prose-neutral dark:prose-invert relative mx-auto mb-20 h-fit w-full max-w-3xl p-6", isIOS && "mb-24")}
         >
             <BackButton className="sticky top-6 mb-6" />
 

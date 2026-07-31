@@ -16,7 +16,7 @@ const SignInButton = ({ className }: Props) => {
                 Google's, the way the Google Books link elsewhere does it — a colour
                 logo would be the one bright thing on an otherwise monochrome card. */}
             <div
-                className="mr-3 size-5 min-h-5 min-w-5 bg-current"
+                className="-my-1 mr-3 size-6 min-h-6 min-w-6 bg-current"
                 style={{
                     maskImage: 'url("/google.png")',
                     maskSize: "contain",

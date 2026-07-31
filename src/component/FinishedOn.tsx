@@ -9,7 +9,8 @@ import { useUpdateFinishedDate } from "@/convex/use/finished/useUpdateFinishedDa
 import { useRemoveBookFromFinished } from "@/convex/use/status/useRemoveBookFromFinished";
 
 import type { Book } from "@/type/Book";
-import { Plus, Trash2, Upload } from "lucide-react";
+import { faPlus, faTrash, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ReactElement } from "react";
 import { useState } from "react";
 
@@ -149,7 +150,7 @@ const FinishedOn = ({ book, userId }: Props) => {
                                 },
                                 submit: (
                                     <>
-                                        <Upload className="icon mr-3" />
+                                        <FontAwesomeIcon icon={faUpload} className="icon mr-3" />
                                         <p>Update</p>
                                     </>
                                 ),
@@ -166,7 +167,7 @@ const FinishedOn = ({ book, userId }: Props) => {
                                     setEditPopoverOpen(undefined);
                                 }}
                             >
-                                <Trash2 className="icon mr-3 stroke-2" />
+                                <FontAwesomeIcon icon={faTrash} className="icon mr-3 stroke-2" />
                                 <p>Delete</p>
                             </Button>
                         </PopoverContent>
@@ -184,7 +185,7 @@ const FinishedOn = ({ book, userId }: Props) => {
                 >
                     <PopoverTrigger asChild>
                         <Button variant="input" size="icon" disabled={isPending}>
-                            <Plus className="icon" />
+                            <FontAwesomeIcon icon={faPlus} className="icon" />
                         </Button>
                     </PopoverTrigger>
 
@@ -197,7 +198,7 @@ const FinishedOn = ({ book, userId }: Props) => {
                             },
                             submit: (
                                 <>
-                                    <Plus className="icon mr-3" />
+                                    <FontAwesomeIcon icon={faPlus} className="icon mr-3" />
                                     <p>Add entry</p>
                                 </>
                             ),

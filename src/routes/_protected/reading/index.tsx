@@ -6,7 +6,8 @@ import { useUnreleasedBooks } from "@/convex/use/unreleasedBook/useUnreleasedBoo
 import { useLibraryBooks } from "@/convex/use/useLibraryBooks";
 import { LibraryType } from "@/type/Library";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Book } from "lucide-react";
+import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { isIOS } from "react-device-detect";
 
 export const Route = createFileRoute("/_protected/reading/")({ component: Reading });
@@ -37,7 +38,7 @@ function Reading() {
 
                                 <Button variant="glass" asChild>
                                     <Link to="/search">
-                                        <Book className="icon mr-3" />
+                                        <FontAwesomeIcon icon={faBook} className="icon mr-3" />
                                         <p>Search for books</p>
                                     </Link>
                                 </Button>

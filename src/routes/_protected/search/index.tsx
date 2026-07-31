@@ -4,7 +4,8 @@ import { PAGE_SIZE, SEARCH_DEBOUNCE_MS } from "@/const";
 import { cn } from "@/lib/cn";
 import { useSearchedBooks } from "@/convex/use/useSearchedBooks";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Search } from "lucide-react";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { isIOS } from "react-device-detect";
 import { useDebounceCallback } from "usehooks-ts";
@@ -95,7 +96,10 @@ function RouteComponent() {
                         value={internalQuery}
                         onChange={(event) => onChange(event.target.value)}
                         icon={
-                            <Search className="icon stroke-2 text-neutral-500 transition-colors group-focus-within:text-neutral-950 group-focus-within:dark:text-neutral-50" />
+                            <FontAwesomeIcon
+                                icon={faMagnifyingGlass}
+                                className="icon stroke-2 text-neutral-500 transition-colors group-focus-within:text-neutral-950 group-focus-within:dark:text-neutral-50"
+                            />
                         }
                         onClear={internalQuery.length > 0 ? () => searchNow("") : undefined}
                     />

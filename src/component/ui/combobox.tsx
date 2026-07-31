@@ -4,7 +4,8 @@ import { Drawer, DrawerContent, DrawerTrigger } from "@/component/ui/drawer";
 import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
 import { useMediaQuery } from "@/hook/useMediaQuery";
 import { cn } from "@/lib/cn";
-import { ChevronDown } from "lucide-react";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ReactNode } from "react";
 import { useState } from "react";
 
@@ -38,7 +39,7 @@ export const Combobox = ({ value, setValue, options, text, placeholder, showInpu
                     <Button variant="input" className={cn("justify-start", triggerClassName)}>
                         {value ? (value.trigger ?? value.label) : (placeholder ?? text.select)}
 
-                        {showDropdownIcon && <ChevronDown className="ml-3 h-4 w-4 stroke-[3]" />}
+                        {showDropdownIcon && <FontAwesomeIcon icon={faChevronDown} className="ml-3 h-4 w-4 stroke-[3]" />}
                     </Button>
                 </PopoverTrigger>
 
@@ -55,7 +56,7 @@ export const Combobox = ({ value, setValue, options, text, placeholder, showInpu
                 <Button variant="input" className={cn("justify-start", triggerClassName)}>
                     {value ? (value.trigger ?? value.label) : (placeholder ?? text.select)}
 
-                    {showDropdownIcon && <ChevronDown className="ml-3 h-4 w-4 stroke-[3]" />}
+                    {showDropdownIcon && <FontAwesomeIcon icon={faChevronDown} className="ml-3 h-4 w-4 stroke-[3]" />}
                 </Button>
             </DrawerTrigger>
 

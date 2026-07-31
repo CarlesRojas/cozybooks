@@ -3,7 +3,8 @@ import { cn } from "@/lib/cn";
 import { getBiggestBookImage } from "@/lib/util";
 import type { Book } from "@/type/Book";
 import { Link } from "@tanstack/react-router";
-import { Book as BookIcon } from "lucide-react";
+import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ReactNode } from "react";
 import { useMemo, useRef, useState } from "react";
 
@@ -103,7 +104,10 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
                     )}
                     style={{ viewTransitionName: `bookCover-${book.id}` }}
                 >
-                    <BookIcon className={cn("mb-2 size-8 min-h-8 min-w-8 stroke-2", !linkToBook && "size-16 min-h-16 min-w-16 stroke-2")} />
+                    <FontAwesomeIcon
+                        icon={faBook}
+                        className={cn("mb-2 size-8 min-h-8 min-w-8 stroke-2", !linkToBook && "size-16 min-h-16 min-w-16 stroke-2")}
+                    />
 
                     {linkToBook && <h3 className="line-clamp-4 text-center leading-snug font-bold tracking-wide">{book.title}</h3>}
 

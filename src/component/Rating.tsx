@@ -6,7 +6,8 @@ import { useCreateRating } from "@/convex/use/rating/useCreateRating";
 import { useDeleteRating } from "@/convex/use/rating/useDeleteRating";
 import { useRating } from "@/convex/use/rating/useRating";
 import type { Book } from "@/type/Book";
-import { X } from "lucide-react";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { MouseEvent, TouchEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -125,7 +126,7 @@ const Rating = ({ book, tooltipSide = "top", userId }: Props) => {
                             className="absolute right-0 h-[unset] min-h-[unset] w-[unset] min-w-[unset] translate-x-full p-0 opacity-70 transition-opacity group-focus-within:opacity-70 group-hover:opacity-100 focus-visible:opacity-100"
                             onClick={onDeleteClick}
                         >
-                            <X className={cn("h-8 w-9 stroke-[3] px-2 py-1")} />
+                            <FontAwesomeIcon icon={faXmark} className={cn("h-8 w-9 stroke-[3] px-2 py-1")} />
                         </Button>
                     )}
                 </div>

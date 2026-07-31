@@ -17,7 +17,8 @@ import { QueryKey } from "@/type/QueryKey";
 import type { QueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import type { User } from "better-auth";
-import { LogOut, User2 } from "lucide-react";
+import { faRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
     user: User;
@@ -38,7 +39,7 @@ const Settings = ({ user, queryClient }: Props) => {
         <DropdownMenu modal={false}>
             <Button size="icon" variant="glass" className="size-14 min-h-14 min-w-14" asChild>
                 <DropdownMenuTrigger>
-                    <User2 className="icon" />
+                    <FontAwesomeIcon icon={faUser} className="icon" />
                 </DropdownMenuTrigger>
             </Button>
 
@@ -66,7 +67,7 @@ const Settings = ({ user, queryClient }: Props) => {
                     className="text-red-600/80 focus:text-red-600 dark:text-red-400/80 dark:focus:text-red-400"
                     onClick={logout}
                 >
-                    <LogOut className="mr-3 h-4 w-4" />
+                    <FontAwesomeIcon icon={faRightFromBracket} className="mr-3 h-4 w-4" />
                     <p className="font-medium">Sign out</p>
                 </DropdownMenuItem>
             </DropdownMenuContent>

@@ -5,7 +5,8 @@ import { useBookStatus } from "@/convex/use/useBookStatus";
 import { cn } from "@/lib/cn";
 import type { Book } from "@/type/Book";
 import { BookStatus } from "@/type/Book";
-import { Bookmark } from "lucide-react";
+import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { MouseEvent } from "react";
 
 interface Props {
@@ -42,7 +43,7 @@ const WantToReadButton = ({ book, userId }: Props) => {
             disabled={isLoading}
             onClick={onClick}
         >
-            <Bookmark className={cn("icon", isAdded && "fill-current")} />
+            <FontAwesomeIcon icon={faBookmark} className={cn("icon", isAdded && "fill-current")} />
         </Button>
     );
 };

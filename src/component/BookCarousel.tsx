@@ -94,6 +94,29 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
         if (emblaApi) preserveEmblaPosition(emblaApi);
     }, [emblaApi, books.length, showSkeletons, hasNextPage]);
 
+    // A row too short to scroll would otherwise sit against the left gutter with the
+    // rest of a wide screen empty beside it. Asking embla whether it can scroll is
+    // what makes this exact — the answer accounts for slide widths and the viewport,
+    // so it holds at any breakpoint and for any number of books.
+    const [fitsInView, setFitsInView] = useState(false);
+
+    useEffect(() => {
+        if (!emblaApi) return;
+
+        const update = () => setFitsInView(!emblaApi.canScrollPrev() && !emblaApi.canScrollNext());
+        update();
+
+        emblaApi.on("reInit", update);
+        emblaApi.on("resize", update);
+        emblaApi.on("select", update);
+
+        return () => {
+            emblaApi.off("reInit", update);
+            emblaApi.off("resize", update);
+            emblaApi.off("select", update);
+        };
+    }, [emblaApi]);
+
     return (
         <section className="flex h-fit w-full flex-col gap-4">
             {(books.length > 0 || !isLoading) &&
@@ -114,7 +137,7 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
                     >
                         <CarouselPrevious className="mouse:inline-flex z-10 hidden" />
 
-                        <CarouselContent className="pt-1 pb-2">
+                        <CarouselContent className={cn("pt-1 pb-2", fitsInView && "lg:justify-center")}>
                             {columns.map((column) => (
                                 <CarouselItem key={column[0].id} className={itemClassName}>
                                     <div className="flex flex-col gap-4">

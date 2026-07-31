@@ -1,6 +1,7 @@
 import { Button } from "@/component/ui/button";
 import { authClient } from "@/lib/auth/client";
-import { LogIn } from "lucide-react";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const SignInButton = () => {
     const login = async () => {
@@ -9,7 +10,7 @@ const SignInButton = () => {
 
     return (
         <Button onClick={login}>
-            <LogIn className="icon mr-3" />
+            <FontAwesomeIcon icon={faRightToBracket} className="icon mr-3" />
             <p>Sign In</p>
         </Button>
     );

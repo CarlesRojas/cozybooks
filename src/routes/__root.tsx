@@ -4,6 +4,7 @@ import type { Context } from "@/lib/context";
 import { seo } from "@/lib/seo";
 import { ThemeProvider } from "@/lib/theme";
 import { getUser } from "@/lib/auth/getUser";
+import "@/lib/fontAwesome";
 import appCss from "@/style.css?url";
 import { QueryKey } from "@/type/QueryKey";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";

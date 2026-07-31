@@ -8,7 +8,8 @@ import type { QueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "@tanstack/react-router";
 import type { User } from "better-auth";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ReactElement } from "react";
 import { useLayoutEffect, useRef, useState } from "react";
 import { isIOS } from "react-device-detect";
@@ -28,7 +29,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
     const routeTitle: Partial<Record<string, ReactElement>> = {
         [Route.READING]: <p className="z-40 transition-colors">Reading</p>,
         [Route.FINISHED]: <p className="z-40 transition-colors">Finished</p>,
-        [Route.SEARCH]: <Search className="icon z-40 min-w-10 transition-colors" />,
+        [Route.SEARCH]: <FontAwesomeIcon icon={faMagnifyingGlass} className="icon z-40 min-w-10 transition-colors" />,
     };
 
     const showSortButton = location.pathname === Route.FINISHED;

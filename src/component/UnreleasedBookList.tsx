@@ -5,7 +5,8 @@ import UnreleasedBookItem from "@/component/UnreleasedBookItem";
 import { cn } from "@/lib/cn";
 import { useAddUnreleasedBook } from "@/convex/use/unreleasedBook/useAddUnreleasedBook";
 import type { UnreleasedBook } from "@/type/UnreleasedBook";
-import { Book, Plus } from "lucide-react";
+import { faBook, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
 interface Props {
@@ -58,7 +59,7 @@ const UnreleasedBookList = ({ stickyClassName, unreleasedBooks, userId }: Props)
                     >
                         <PopoverTrigger asChild>
                             <Button variant="input" size="icon" disabled={addUnreleasedBook.isPending}>
-                                <Plus className="icon" />
+                                <FontAwesomeIcon icon={faPlus} className="icon" />
                             </Button>
                         </PopoverTrigger>
 
@@ -72,12 +73,15 @@ const UnreleasedBookList = ({ stickyClassName, unreleasedBooks, userId }: Props)
                                     onChange={(event) => setNewBookName(event.target.value)}
                                     onClear={newBookName.length > 0 ? () => setNewBookName("") : undefined}
                                     icon={
-                                        <Book className="icon stroke-2 text-neutral-500 transition-colors group-focus-within:text-neutral-950 group-focus-within:dark:text-neutral-50" />
+                                        <FontAwesomeIcon
+                                            icon={faBook}
+                                            className="icon stroke-2 text-neutral-500 transition-colors group-focus-within:text-neutral-950 group-focus-within:dark:text-neutral-50"
+                                        />
                                     }
                                 />
 
                                 <Button type="submit">
-                                    <Plus className="icon mr-3" />
+                                    <FontAwesomeIcon icon={faPlus} className="icon mr-3" />
                                     <p>Add</p>
                                 </Button>
                             </form>

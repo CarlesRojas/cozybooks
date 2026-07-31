@@ -40,7 +40,7 @@ const Welcome = ({ isError }: Props) => {
                         alt=""
                         width={256}
                         height={256}
-                        className="size-32 rounded-3xl shadow-lg shadow-neutral-950/10"
+                        className="size-32"
                     />
 
                     <h1 className="text-center text-2xl leading-tight font-bold tracking-wide text-balance">Welcome to CozyBooks</h1>

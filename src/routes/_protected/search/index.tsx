@@ -60,8 +60,10 @@ function RouteComponent() {
     // field re-center the page while the old results were still up.
     const isEmpty = internalQuery.length === 0;
 
-    // The url hasn't caught up with the field yet, so a search is on its way: keep
-    // the carousel in its loading state instead of briefly claiming no results.
+    // Still typing: the debounce hasn't fired, so no request is in flight yet. The
+    // covers keep showing whatever the last search returned — the loading state
+    // belongs to the request itself — but the empty state is held back, since
+    // "no results" isn't true for a search that hasn't run.
     const isSearchPending = internalQuery.trim() !== query.trim();
 
     return (
@@ -101,9 +103,11 @@ function RouteComponent() {
                 {!isEmpty && (
                     <BookCarousel
                         title="Results"
-                        books={isSearchPending ? [] : (searchedBooks.data?.items ?? [])}
-                        isLoading={searchedBooks.isLoading || isSearchPending}
-                        noBooksChildren={<p className="font-medium tracking-wide opacity-80">No results found</p>}
+                        books={searchedBooks.data?.items ?? []}
+                        isLoading={searchedBooks.isLoading}
+                        noBooksChildren={
+                            isSearchPending ? undefined : <p className="font-medium tracking-wide opacity-80">No results found</p>
+                        }
                         wantToRead={wantToRead}
                         hasNextPage={searchedBooks.hasNextPage}
                         isFetchingNextPage={searchedBooks.isFetchingNextPage}

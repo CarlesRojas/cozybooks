@@ -49,6 +49,14 @@
     --color-neutral-150: #f1f1f1;
     --color-neutral-850: #1b1b1b;
 
+    /* The app's colour, and the warm end it fades to. `brand` carries every accent —
+       the primary button, the rating stars, the per-year bars — while `brand-warm`
+       only appears where the two are shown as a gradient. `brand-dark` exists for
+       hover states, which need somewhere to go from `brand`. */
+    --color-brand: #9e4ce0;
+    --color-brand-dark: #8639c4;
+    --color-brand-warm: #db7048;
+
     /* Tailwind v4 aspect utilities read from the --aspect-* namespace;
        --aspect-ratio-book generated no CSS, silently disabling `aspect-book`.
        13:20 (0.65) sits between trade print (2:3) and the ebook standard

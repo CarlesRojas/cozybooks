@@ -63,7 +63,14 @@ const restoreStoredView = (search: { sort?: Sort; repeats?: boolean }) => {
 
 export const Route = createFileRoute("/_protected/finished/")({
     component: RouteComponent,
-    beforeLoad: ({ search }) => restoreStoredView(search),
+    // Never while preloading. Hovering a link runs this too (`defaultPreload:
+    // "intent"`), and a redirect thrown from a preload navigates on its own — the tab
+    // moves under a pointer that only passed over it, and does so while whatever the
+    // user actually clicked is still loading.
+    beforeLoad: ({ search, preload }) => {
+        if (preload) return;
+        restoreStoredView(search);
+    },
 });
 
 function RouteComponent() {

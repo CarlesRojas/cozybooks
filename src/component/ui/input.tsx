@@ -11,8 +11,8 @@ export interface InputProps extends ComponentProps<"input"> {
 
 export const Input = ({ className, type, icon, onClear, ref, ...props }: InputProps) => {
     return (
-        <div className="bg-neutral-150 dark:bg-neutral-850 relative flex w-full items-center gap-3 rounded-xl px-3 sm:max-w-[30rem]">
-            <label className={cn("group flex h-12 grow items-center gap-3 focus-within:outline-none", className)}>
+        <div className="bg-neutral-150 dark:bg-neutral-850 relative flex w-full items-center gap-3 rounded-[18px] border border-neutral-500/25 px-3 sm:max-w-[30rem] dark:border-neutral-500/40">
+            <label className={cn("group flex h-14 grow items-center gap-3 focus-within:outline-none", className)}>
                 {icon}
 
                 <input

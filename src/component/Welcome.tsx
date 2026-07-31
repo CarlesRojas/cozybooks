@@ -10,41 +10,56 @@ interface Props {
 
 const Welcome = ({ isError }: Props) => {
     return (
-        <main suppressHydrationWarning className={cn("relative flex h-dvh w-full flex-col items-center px-4 py-16", isIOS && "mb-4")}>
-            <div className="relative flex h-[90dvh] w-full flex-col items-center justify-center">
-                <section className="relative flex w-full grow flex-col items-center justify-center gap-3">
-                    <img src="/logo512.png" alt="CozyBooks" width={256} height={256} className="-m-4 size-32 rounded-3xl sm:size-44" />
+        // Clipped: the wash below is wider than a phone, and an absolutely positioned
+        // element still counts towards scrollable overflow, so it would otherwise push
+        // the page sideways.
+        <main
+            suppressHydrationWarning
+            className={cn(
+                "relative flex min-h-dvh w-full flex-col items-center justify-center gap-4 overflow-hidden px-4 py-12",
+                isIOS && "pb-16",
+            )}
+        >
+            {/* The card sits on a wash of the app's accent rather than on flat
+                background — enough to give it somewhere to sit without competing with
+                it. Painted before the card in the markup, so nothing needs a stacking
+                context to keep it behind. */}
+            <div
+                aria-hidden
+                className="from-brand/40 to-brand-warm/40 dark:from-brand/30 dark:to-brand-warm/30 pointer-events-none absolute top-1/2 left-1/2 size-128 max-w-[130vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
+            />
 
-                    <h1 className="mx-auto max-w-64 text-center text-4xl leading-tight font-bold tracking-wide text-pretty">
-                        Welcome to CozyBooks
-                    </h1>
+            <section className="bg-neutral-150 dark:bg-neutral-850 relative flex gap-16 w-full max-w-md flex-col items-center rounded-[22px] border border-neutral-500/25 px-6 py-10 shadow-xl shadow-neutral-950/5 sm:px-10 dark:border-neutral-500/40 dark:shadow-neutral-950/40">
+                {/* Mark and heading are one unit — they name the app together — so they
+                    sit tight, and the gap that separates them from the action goes
+                    below instead of being spread evenly down the card. */}
+                <div className="flex flex-col items-center">
+                    {/* Decorative: the heading right below already names the app. */}
+                    <img
+                        src="/logo512.png"
+                        alt=""
+                        width={256}
+                        height={256}
+                        className="size-32"
+                    />
 
-                    <p className="max-w-[30rem] text-center text-lg leading-snug font-medium tracking-wide text-pretty opacity-70">
-                        The best way to keep track of all the books you have and enjoy all the ones you want to read.
-                    </p>
-                </section>
+                    <h1 className="text-center text-2xl leading-tight font-bold tracking-wide text-balance">Welcome to CozyBooks</h1>
+                </div>
 
-                <section className="relative flex h-fit w-full flex-col items-center justify-center gap-4 py-8 text-center">
-                    <SignInButton />
+                <div className="flex w-full flex-col items-center gap-3">
+                    <SignInButton className="w-full" />
 
                     {isError && (
-                        <p className="max-w-[30rem] text-sm font-semibold tracking-wide text-pretty text-red-500">
+                        <p className="text-center text-sm font-semibold tracking-wide text-pretty text-red-500">
                             There was an error while signing in. Please try again.
                         </p>
                     )}
-
-                    <p className="max-w-[30rem] text-sm font-semibold tracking-wide text-pretty opacity-40">
-                        Sign in with your Google account to get started. We will only use your data (email, name, and book library) to
-                        provide you with the best experience. We do not sell or share your data with anyone.
-                    </p>
-                </section>
-
-                <div className="mt-16 flex w-full flex-wrap justify-center gap-x-4">
-                    <Button className="text-base opacity-60" variant="link" asChild>
-                        <Link to={"/legal/privacy-policy"}>Privacy Policy</Link>
-                    </Button>
                 </div>
-            </div>
+            </section>
+
+            <Button className="relative text-base opacity-60" variant="link" asChild>
+                <Link to={"/legal/privacy-policy"}>Privacy Policy</Link>
+            </Button>
         </main>
     );
 };

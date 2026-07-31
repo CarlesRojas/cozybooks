@@ -79,9 +79,24 @@ function RouteComponent() {
                 isEmpty && "lg:min-h-dvh lg:justify-center lg:pb-25",
             )}
         >
+            {/* The same wash that sits behind the welcome card, for the same reason:
+                an empty search page is one field on a blank screen. Only while it is
+                empty — once results arrive they are what the page is about, and the
+                bar goes back to being a sticky header over them. Sized against the
+                page rather than fixed, so it can never widen it: `overflow-hidden`
+                would be the other way to contain it, and that would break the sticky
+                bar below. */}
+            {isEmpty && (
+                <div
+                    aria-hidden
+                    className="from-brand/40 to-brand-warm/40 dark:from-brand/15 dark:to-brand-warm/15 pointer-events-none absolute top-1/2 left-1/2 size-128 max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
+                />
+            )}
+
             <section
                 className={cn(
-                    "sticky top-0 z-30 h-fit w-full bg-neutral-50 pt-6 pb-3 lg:top-25 dark:bg-neutral-950",
+                    "relative sticky top-0 z-30 h-fit w-full pt-6 pb-3 lg:top-25",
+                    !isEmpty && "bg-neutral-50 dark:bg-neutral-950",
                     isEmpty && "lg:static lg:pt-0",
                 )}
             >

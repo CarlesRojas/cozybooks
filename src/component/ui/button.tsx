@@ -9,8 +9,7 @@ export const buttonVariants = cva(
     {
         variants: {
             variant: {
-                default:
-                    "rounded-full bg-purple-500/100 text-neutral-50 hover:bg-purple-500/80 dark:bg-purple-500/50 hover:dark:bg-purple-500/70",
+                default: "bg-brand/100 hover:bg-brand/80 dark:bg-brand/50 hover:dark:bg-brand/70 rounded-full text-neutral-50",
                 navigation: "rounded-full text-neutral-600 dark:text-neutral-200",
                 glass: "rounded-full bg-neutral-300/70 text-neutral-600 backdrop-blur-md hover:bg-neutral-400/50 hover:text-black dark:bg-neutral-700/60 dark:text-neutral-200 hover:dark:bg-neutral-500/50 hover:dark:text-white",
                 ghost: "rounded-full bg-transparent text-neutral-500 hover:text-neutral-950 focus-visible:text-neutral-950 dark:text-neutral-300 hover:dark:text-neutral-50 focus-visible:dark:text-neutral-50",
@@ -18,8 +17,12 @@ export const buttonVariants = cva(
                 paginationActive: "focus-visible:scale-125",
                 link: "font-semibold text-neutral-900 underline-offset-4 hover:underline dark:text-neutral-50",
                 input: "bg-neutral-150 dark:bg-neutral-850 rounded-xl hover:bg-neutral-200 hover:dark:bg-neutral-800",
-                frost: "rounded-full border border-neutral-500/25 bg-white/50 text-neutral-950 backdrop-blur-md hover:bg-white/80 focus-visible:bg-white/80 data-[checked=true]:bg-purple-500/80 data-[checked=true]:text-neutral-50 data-[checked=true]:hover:bg-purple-600/80 data-[checked=true]:focus-visible:bg-purple-600/80 dark:border-neutral-500/40 dark:bg-black/50 dark:text-white dark:hover:bg-black/80 dark:focus-visible:bg-black/80 dark:data-[checked=true]:bg-purple-500/80 dark:data-[checked=true]:hover:bg-purple-600/80 dark:data-[checked=true]:focus-visible:bg-purple-600/80",
+                frost: "data-[checked=true]:bg-brand/80 data-[checked=true]:hover:bg-brand-dark/80 data-[checked=true]:focus-visible:bg-brand-dark/80 dark:data-[checked=true]:bg-brand/80 dark:data-[checked=true]:hover:bg-brand-dark/80 dark:data-[checked=true]:focus-visible:bg-brand-dark/80 rounded-full border border-neutral-500/25 bg-white/50 text-neutral-950 backdrop-blur-md hover:bg-white/80 focus-visible:bg-white/80 data-[checked=true]:text-neutral-50 dark:border-neutral-500/40 dark:bg-black/50 dark:text-white dark:hover:bg-black/80 dark:focus-visible:bg-black/80",
                 destructive: "rounded-full bg-red-500/100 text-neutral-50 hover:bg-red-500/80 dark:bg-red-500/50 hover:dark:bg-red-500/70",
+                // Reads as the inverse of the page: near-black on the light theme,
+                // near-white on the dark one.
+                contrast:
+                    "rounded-full bg-neutral-950 text-neutral-50 hover:bg-neutral-800 dark:bg-neutral-50 dark:text-neutral-950 hover:dark:bg-neutral-200",
             },
             size: {
                 default: "h-12 w-fit px-5 py-3",

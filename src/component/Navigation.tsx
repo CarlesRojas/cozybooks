@@ -3,15 +3,16 @@ import type { Sort } from "@/component/SortMenu";
 import SortMenu from "@/component/SortMenu";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
+import { NAVIGATION_BLOCK_MS } from "@/const";
 import { NO_NAVBAR_ROUTES, Route } from "@/type/Route";
 import type { QueryClient } from "@tanstack/react-query";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation, useRouterState } from "@tanstack/react-router";
 import type { User } from "better-auth";
 import { motion } from "framer-motion";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ReactElement } from "react";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { isIOS } from "react-device-detect";
 
 interface Props {
@@ -33,6 +34,26 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
     };
 
     const showSortButton = location.pathname === Route.FINISHED;
+
+    // A tab is unclickable just after another one is picked: routes resolve their data
+    // before rendering, so switching again mid-load leaves two navigations racing for
+    // the same view and the loser can win. Only for a moment though — the window that
+    // matters is a second tap arriving on top of the first, and holding the block for
+    // a whole slow load would make the navigation feel broken instead.
+    const isNavigating = useRouterState({ select: (state) => state.status === "pending" });
+    const [isBlocked, setIsBlocked] = useState(false);
+
+    useEffect(() => {
+        if (!isNavigating) {
+            setIsBlocked(false);
+            return;
+        }
+
+        setIsBlocked(true);
+        const timeout = setTimeout(() => setIsBlocked(false), NAVIGATION_BLOCK_MS);
+
+        return () => clearTimeout(timeout);
+    }, [isNavigating]);
 
     // The indicator is positioned from DOM measurements local to the pill instead
     // of a framer-motion shared layout animation: shared layouts measure in page
@@ -79,19 +100,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                     to={homeRoute}
                     className="mr-5 hidden h-12 items-center gap-3 px-5 text-neutral-600 select-none hover:text-black lg:flex dark:text-neutral-200 hover:dark:text-white"
                 >
-                    <div
-                        className="size-5 min-h-5 min-w-5 bg-neutral-600 dark:bg-neutral-200"
-                        style={{
-                            maskImage: 'url("/icon/logoTransparent.png")',
-                            maskSize: "200%",
-                            maskRepeat: "no-repeat",
-                            maskPosition: "center",
-                            WebkitMaskImage: 'url("/icon/logoTransparent.png")',
-                            WebkitMaskSize: "200%",
-                            WebkitMaskRepeat: "no-repeat",
-                            WebkitMaskPosition: "center",
-                        }}
-                    />
+                    <FontAwesomeIcon icon={faBook} className="size-5 min-h-5 min-w-5" />
 
                     <p className="text-base font-semibold whitespace-nowrap">CozyBooks</p>
                 </Link>
@@ -113,6 +122,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                         className={cn(
                             "group relative grow px-3 hover:text-black sm:grow-0 sm:px-4 lg:px-5 hover:dark:text-white",
                             route === location.pathname && "!text-neutral-50",
+                            isBlocked && route !== location.pathname && "pointer-events-none",
                         )}
                     >
                         <Link

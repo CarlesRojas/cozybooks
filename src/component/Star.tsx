@@ -31,7 +31,7 @@ const Star = ({ left, full, onClick, onFocus, rating, isLoading, disabled }: Sta
                 icon={faStar}
                 className={cn(
                     "absolute top-0 h-8 w-8 p-1",
-                    full ? "text-purple-500" : "text-neutral-200 dark:text-neutral-600",
+                    full ? "text-brand" : "text-neutral-200 dark:text-neutral-600",
                     left ? "left-0" : "right-0",
                     !!isLoading && "animate-pulse text-neutral-200 dark:text-neutral-600",
                 )}

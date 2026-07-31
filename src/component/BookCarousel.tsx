@@ -114,7 +114,10 @@ const BookCarousel = ({
     // what makes this exact — the answer accounts for slide widths and the viewport,
     // so it holds at any breakpoint and for any number of books.
     const [fitsInView, setFitsInView] = useState(false);
-    const isCentered = !!centerIfShort && fitsInView;
+
+    // More pages still to come means the row is about to outgrow the screen, so
+    // centring now only buys a jump back to the left once they arrive.
+    const isCentered = !!centerIfShort && fitsInView && !hasNextPage && !isFetchingNextPage;
 
     useEffect(() => {
         if (!emblaApi) return;

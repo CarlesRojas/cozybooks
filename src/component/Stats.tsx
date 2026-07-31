@@ -1,7 +1,8 @@
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
 import type { Book } from "@/type/Book";
-import { BookOpen, GalleryHorizontalEnd } from "lucide-react";
+import { faBookOpen, faFileLines } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { millify } from "millify";
 import { Fragment, useMemo, useState } from "react";
 
@@ -151,7 +152,11 @@ const Stats = ({ books }: Props) => {
                         className="h-12 min-h-12"
                         onClick={() => setStatType(statType === StatType.BOOKS ? StatType.PAGES : StatType.BOOKS)}
                     >
-                        {statType === StatType.BOOKS ? <GalleryHorizontalEnd className="icon mr-2" /> : <BookOpen className="icon mr-2" />}
+                        {statType === StatType.BOOKS ? (
+                            <FontAwesomeIcon icon={faFileLines} className="icon mr-2" />
+                        ) : (
+                            <FontAwesomeIcon icon={faBookOpen} className="icon mr-2" />
+                        )}
 
                         <p className="text-sm font-bold tracking-wide">
                             {statType === StatType.BOOKS ? "View page stats" : "View book stats"}

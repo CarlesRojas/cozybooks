@@ -3,7 +3,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover"
 import { useDeleteUnreleasedBook } from "@/convex/use/unreleasedBook/useDeleteUnreleasedBook";
 import type { UnreleasedBook } from "@/type/UnreleasedBook";
 import { useNavigate } from "@tanstack/react-router";
-import { Book, Search, Trash2 } from "lucide-react";
+import { faBook, faMagnifyingGlass, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
 interface Props {
@@ -24,7 +25,7 @@ const UnreleasedBookItem = ({ unreleasedBook, userId, isLoading }: Props) => {
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
                 <Button variant="input" disabled={isLoading}>
-                    <Book className="icon mr-3" />
+                    <FontAwesomeIcon icon={faBook} className="icon mr-3" />
                     <p className="text-sm font-semibold tracking-wide">{name}</p>
                 </Button>
             </PopoverTrigger>
@@ -37,7 +38,7 @@ const UnreleasedBookItem = ({ unreleasedBook, userId, isLoading }: Props) => {
                         setPopoverOpen(false);
                     }}
                 >
-                    <Search className="icon mr-3 stroke-2" />
+                    <FontAwesomeIcon icon={faMagnifyingGlass} className="icon mr-3 stroke-2" />
                     <p>Search</p>
                 </Button>
 
@@ -48,7 +49,7 @@ const UnreleasedBookItem = ({ unreleasedBook, userId, isLoading }: Props) => {
                         setPopoverOpen(false);
                     }}
                 >
-                    <Trash2 className="icon mr-3 stroke-2" />
+                    <FontAwesomeIcon icon={faTrash} className="icon mr-3 stroke-2" />
                     <p>Delete</p>
                 </Button>
             </PopoverContent>

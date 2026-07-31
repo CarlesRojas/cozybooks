@@ -2,7 +2,8 @@ import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
 import type { UseEmblaCarouselType } from "embla-carousel-react";
 import useEmblaCarousel from "embla-carousel-react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ComponentProps, KeyboardEvent } from "react";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
@@ -159,7 +160,7 @@ const CarouselPrevious = ({ className, variant = "frost", size = "icon", ...prop
             onClick={scrollPrev}
             {...props}
         >
-            <ArrowLeft className="size-4 min-h-4 min-w-4 stroke-[3]" />
+            <FontAwesomeIcon icon={faArrowLeft} className="size-4 min-h-4 min-w-4 stroke-[3]" />
             <span className="sr-only">Previous slide</span>
         </Button>
     );
@@ -182,7 +183,7 @@ const CarouselNext = ({ className, variant = "frost", size = "icon", ...props }:
             onClick={scrollNext}
             {...props}
         >
-            <ArrowRight className="size-4 min-h-4 min-w-4 stroke-[3]" />
+            <FontAwesomeIcon icon={faArrowRight} className="size-4 min-h-4 min-w-4 stroke-[3]" />
             <span className="sr-only">Next slide</span>
         </Button>
     );

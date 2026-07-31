@@ -1,7 +1,8 @@
 import { Dialog, DialogContent } from "@/component/ui/dialog";
 import { cn } from "@/lib/cn";
 import { Command as CommandPrimitive } from "cmdk";
-import { Search } from "lucide-react";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ComponentProps } from "react";
 
 export const Command = ({ className, ref, ...props }: ComponentProps<typeof CommandPrimitive>) => (
@@ -29,7 +30,7 @@ export const CommandDialog = ({ children, ...props }: ComponentProps<typeof Dial
 
 export const CommandInput = ({ className, ref, ...props }: ComponentProps<typeof CommandPrimitive.Input>) => (
     <div className="flex items-center border-b border-stone-300 px-3 dark:border-stone-700" cmdk-input-wrapper="">
-        <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+        <FontAwesomeIcon icon={faMagnifyingGlass} className="mr-2 h-4 w-4 shrink-0 opacity-50" />
         <CommandPrimitive.Input
             ref={ref}
             className={cn(

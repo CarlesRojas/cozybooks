@@ -57,3 +57,85 @@ export const search = action({
         return parseVolumesResponse(data);
     },
 });
+
+// Books to show alongside the one being viewed, sequels first.
+//
+// The API cannot express "same series". `volumeInfo` carries no series field on the
+// public endpoints, there is no series search operator, and the `seriesInfo` that
+// occasionally appears in a volume payload is undocumented and cannot be searched by
+// anyway. Same publisher is expressible (`inpublisher:`) but that is an imprint, not
+// a look — nothing in the API describes cover art or a design line.
+//
+// What is reliable is `inauthor:`, and within one author's work a series announces
+// itself in the title: instalments repeat the opening words ("Harry Potter and the
+// …", "The Wheel of Time …"). So: ask for the author's books, then rank by how much
+// of the title's opening they share with this one. Series-mates surface first,
+// everything else follows as more by the same author.
+const titleWords = (value: string) =>
+    value
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}\s]/gu, " ")
+        .split(/\s+/)
+        .filter(Boolean);
+
+const sharedOpeningWords = (a: Array<string>, b: Array<string>) => {
+    let shared = 0;
+    while (shared < a.length && shared < b.length && a[shared] === b[shared]) shared++;
+    return shared;
+};
+
+export const related = action({
+    args: {
+        bookId: v.string(),
+        title: v.string(),
+        author: v.optional(v.string()),
+        maxResults: v.optional(v.number()),
+    },
+    handler: async (_ctx, { bookId, title, author, maxResults }) => {
+        const words = titleWords(title);
+        // Without an author there is nothing dependable to relate by; the title's
+        // opening is the next best thing, and on a one-word title not even that.
+        const query = author
+            ? `inauthor:"${author.replace(/"/g, "")}"`
+            : words.length > 1
+              ? `intitle:"${words.slice(0, 2).join(" ")}"`
+              : null;
+        if (!query) return { totalItems: 0, items: [] };
+
+        const data = await googleBooksRequest({
+            path: "/volumes",
+            params: {
+                ...catalogueParams(),
+                q: query,
+                // Over-fetch: other editions of this same book are common and get
+                // dropped below, so a page's worth of candidates rarely survives whole.
+                maxResults: "40",
+                printType: "books",
+                orderBy: "relevance",
+                showPreorders: "true",
+            },
+        });
+
+        const { items } = parseVolumesResponse(data);
+        const seen = new Set<string>([titleWords(title).join(" ")]);
+
+        const candidates = items
+            .filter((item) => {
+                if (item.id === bookId) return false;
+
+                // Reprints and translations of the book being viewed are not related
+                // books, they are the same book again.
+                const key = titleWords(item.title).join(" ");
+                if (seen.has(key)) return false;
+                seen.add(key);
+
+                return true;
+            })
+            .map((item) => ({ item, shared: sharedOpeningWords(words, titleWords(item.title)) }));
+
+        candidates.sort((a, b) => b.shared - a.shared || (b.item.ratingsCount ?? 0) - (a.item.ratingsCount ?? 0));
+
+        const limit = clampMaxResults(maxResults);
+        return { totalItems: candidates.length, items: candidates.slice(0, limit).map(({ item }) => item) };
+    },
+});

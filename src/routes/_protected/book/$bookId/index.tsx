@@ -4,6 +4,7 @@ import FinishedOn from "@/component/FinishedOn";
 import LibraryButton from "@/component/LibraryButton";
 import NotFound, { NotFoundType } from "@/component/NotFound";
 import Rating from "@/component/Rating";
+import RelatedBooks from "@/component/RelatedBooks";
 import ShowMore from "@/component/ShowMore";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
@@ -33,7 +34,10 @@ function RouteComponent() {
 
     return (
         <main suppressHydrationWarning className={cn("relative mb-24 flex h-fit w-full flex-col gap-6 p-6 lg:pt-25", isIOS && "mb-28")}>
-            <BackButton className="top-6" />
+            {/* Sticky rather than fixed so it keeps its place in the column: it stays
+                exactly where it renders, and stays there while the page scrolls. Desktop
+                has the browser's own back control, so it only ships on small screens. */}
+            <BackButton className="sticky top-6 lg:hidden" />
 
             <div className="relative flex w-full flex-col items-center gap-6 sm:gap-8">
                 <div className="aspect-book relative w-full max-w-[75vw] sm:max-w-[20rem]">
@@ -100,6 +104,8 @@ function RouteComponent() {
                         </Link>
                     </Button>
                 )}
+
+                <RelatedBooks book={book} />
             </div>
 
             {/* {renderObject(book)} */}

@@ -13,6 +13,11 @@ interface Props {
     noBooksChildren?: ReactNode;
     wantToRead?: { userId: string };
 
+    // Centres the section on desktop when its covers are too few to fill the row.
+    // Off by default: the library pages stack several sections down the page, and
+    // one centring itself while its neighbours stay left would break that column.
+    centerIfShort?: boolean;
+
     hasNextPage?: boolean;
     isFetchingNextPage?: boolean;
     onLoadMore?: () => void;
@@ -53,7 +58,17 @@ const preserveEmblaPosition = (api: NonNullable<CarouselApi>) => {
     newEngine.animation.start();
 };
 
-const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, hasNextPage, isFetchingNextPage, onLoadMore }: Props) => {
+const BookCarousel = ({
+    title,
+    books,
+    isLoading,
+    noBooksChildren,
+    wantToRead,
+    centerIfShort,
+    hasNextPage,
+    isFetchingNextPage,
+    onLoadMore,
+}: Props) => {
     const [emblaApi, setEmblaApi] = useState<CarouselApi>();
     const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -94,8 +109,38 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
         if (emblaApi) preserveEmblaPosition(emblaApi);
     }, [emblaApi, books.length, showSkeletons, hasNextPage]);
 
+    // A row too short to scroll would otherwise sit against the left gutter with the
+    // rest of a wide screen empty beside it. Asking embla whether it can scroll is
+    // what makes this exact — the answer accounts for slide widths and the viewport,
+    // so it holds at any breakpoint and for any number of books.
+    const [fitsInView, setFitsInView] = useState(false);
+
+    // More pages still to come means the row is about to outgrow the screen, so
+    // centring now only buys a jump back to the left once they arrive.
+    const isCentered = !!centerIfShort && fitsInView && !hasNextPage && !isFetchingNextPage;
+
+    useEffect(() => {
+        if (!emblaApi) return;
+
+        const update = () => setFitsInView(!emblaApi.canScrollPrev() && !emblaApi.canScrollNext());
+        update();
+
+        emblaApi.on("reInit", update);
+        emblaApi.on("resize", update);
+        emblaApi.on("select", update);
+
+        return () => {
+            emblaApi.off("reInit", update);
+            emblaApi.off("resize", update);
+            emblaApi.off("select", update);
+        };
+    }, [emblaApi]);
+
+    // Centring shrinks the whole section — heading included — to the width of its
+    // covers and centres that, so the heading keeps its gutter and lands above the
+    // first cover on its own: the same 1.5rem inset the first slide carries.
     return (
-        <section className="flex h-fit w-full flex-col gap-4">
+        <section className={cn("flex h-fit w-full flex-col gap-4", isCentered && "lg:mx-auto lg:w-fit")}>
             {(books.length > 0 || !isLoading) &&
                 (typeof title === "string" ? (
                     <h2 className="w-full px-6 text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">{title}</h2>

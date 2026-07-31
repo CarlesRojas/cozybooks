@@ -1,5 +1,6 @@
 import { cn } from "@/lib/cn";
-import { Star as StarIcon } from "lucide-react";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface StarProps {
     left: boolean;
@@ -23,15 +24,16 @@ const Star = ({ left, full, onClick, onFocus, rating, isLoading, disabled }: Sta
             disabled={!!isLoading || !!disabled}
             aria-label={`Rate this game with ${rating} stars`}
         >
-            <StarIcon
+            {/* The star is drawn by a filled path taking its colour from the text
+                colour, so the fill and stroke utilities the outline icon needed are
+                gone — a half star still comes from the button clipping this in two. */}
+            <FontAwesomeIcon
+                icon={faStar}
                 className={cn(
-                    "absolute top-0 h-8 w-8 stroke-[1] p-1",
-                    full
-                        ? "fill-purple-500 stroke-purple-400 text-purple-500"
-                        : "fill-neutral-200 stroke-neutral-300 text-neutral-200 dark:fill-neutral-600 dark:stroke-neutral-500 dark:text-neutral-600",
+                    "absolute top-0 h-8 w-8 p-1",
+                    full ? "text-purple-500" : "text-neutral-200 dark:text-neutral-600",
                     left ? "left-0" : "right-0",
-                    !!isLoading &&
-                        "animate-pulse fill-neutral-200 stroke-neutral-300 text-neutral-200 dark:fill-neutral-600 dark:stroke-neutral-500 dark:text-neutral-600",
+                    !!isLoading && "animate-pulse text-neutral-200 dark:text-neutral-600",
                 )}
             />
         </button>

@@ -1,5 +1,6 @@
 import BackButton from "@/component/BackButton";
-import { BookX } from "lucide-react";
+import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ReactNode } from "react";
 
 export enum NotFoundType {
@@ -12,7 +13,7 @@ interface Props {
 
 const NotFound = ({ type }: Props) => {
     const icon: Record<NotFoundType, ReactNode> = {
-        [NotFoundType.BOOK]: <BookX className="size-12 animate-bounce" />,
+        [NotFoundType.BOOK]: <FontAwesomeIcon icon={faBook} className="size-12 animate-bounce" />,
     };
 
     const message: Record<NotFoundType, string> = {

@@ -8,7 +8,8 @@ import { useStopReading } from "@/convex/use/status/useStopReading";
 import { useBookStatus } from "@/convex/use/useBookStatus";
 import type { Book } from "@/type/Book";
 import { BookStatus } from "@/type/Book";
-import { BookMarked, BookOpen, Plus, X } from "lucide-react";
+import { faBookmark, faFlag, faPause, faPlay, faRepeat, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ReactNode } from "react";
 
 interface Props {
@@ -50,24 +51,32 @@ const LibraryButton = ({ book, userId }: Props) => {
 
     if (!bookStatus.data || !finishedDates.data) return null;
 
+    // Short imperative labels, with playback icons to match: reading is something you
+    // start, pause and finish. The one to keep honest is the reading state's secondary
+    // action — it returns the book to the want-to-read shelf rather than removing it,
+    // which "Stop reading" hid and "Pause reading" doesn't.
     const map: Record<BookStatus, ReactNode> = {
         [BookStatus.NONE]: (
             <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book, userId })}>
-                <Plus className="icon mr-3" />
-                <p>{finishedDates.data.length > 0 ? "I want to read this again" : "I want to read this"}</p>
+                {finishedDates.data.length > 0 ? (
+                    <FontAwesomeIcon icon={faRepeat} className="icon mr-3" />
+                ) : (
+                    <FontAwesomeIcon icon={faBookmark} className="icon mr-3" />
+                )}
+                <p>{finishedDates.data.length > 0 ? "Read again" : "Want to read"}</p>
             </Button>
         ),
 
         [BookStatus.WANT_TO_READ]: (
             <>
                 <Button disabled={isLoading} onClick={() => startReading.mutate({ book, userId })}>
-                    <BookOpen className="icon mr-3" />
+                    <FontAwesomeIcon icon={faPlay} className="icon mr-3" />
                     <p>Start reading</p>
                 </Button>
 
                 <Button disabled={isLoading} variant="glass" onClick={() => removeFromWantToRead.mutate({ book, userId })}>
-                    <X className="icon mr-3" />
-                    <p>{finishedDates.data.length > 0 ? "I no longer want to read this again" : "I no longer want to read this"}</p>
+                    <FontAwesomeIcon icon={faXmark} className="icon mr-3" />
+                    <p>Remove</p>
                 </Button>
             </>
         ),
@@ -75,13 +84,13 @@ const LibraryButton = ({ book, userId }: Props) => {
         [BookStatus.READING_NOW]: (
             <>
                 <Button disabled={isLoading} onClick={() => finishBook.mutate({ book, userId })}>
-                    <BookMarked className="icon mr-3" />
-                    <p>Finish book</p>
+                    <FontAwesomeIcon icon={faFlag} className="icon mr-3" />
+                    <p>Finished</p>
                 </Button>
 
                 <Button disabled={isLoading} variant="glass" onClick={() => stopReading.mutate({ book, userId })}>
-                    <X className="icon mr-3" />
-                    <p>Stop reading</p>
+                    <FontAwesomeIcon icon={faPause} className="icon mr-3" />
+                    <p>Pause reading</p>
                 </Button>
             </>
         ),

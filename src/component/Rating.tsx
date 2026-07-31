@@ -6,7 +6,8 @@ import { useCreateRating } from "@/convex/use/rating/useCreateRating";
 import { useDeleteRating } from "@/convex/use/rating/useDeleteRating";
 import { useRating } from "@/convex/use/rating/useRating";
 import type { Book } from "@/type/Book";
-import { X } from "lucide-react";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { MouseEvent, TouchEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -19,7 +20,6 @@ interface Props {
 interface State {
     rating: number | null;
     interacting: boolean;
-    delete: boolean;
 }
 
 const Rating = ({ book, tooltipSide = "top", userId }: Props) => {
@@ -28,7 +28,7 @@ const Rating = ({ book, tooltipSide = "top", userId }: Props) => {
     const deleteRating = useDeleteRating();
 
     const containerRef = useRef<HTMLDivElement>(null);
-    const [state, setState] = useState<State>({ rating: null, interacting: false, delete: false });
+    const [state, setState] = useState<State>({ rating: null, interacting: false });
 
     useEffect(() => {
         currentRating.data && setState((prev) => ({ ...prev, rating: currentRating.data ?? null }));
@@ -36,12 +36,6 @@ const Rating = ({ book, tooltipSide = "top", userId }: Props) => {
 
     useEffect(() => {
         if (currentRating.isLoading) return;
-
-        if (state.delete) {
-            deleteRating.mutate({ bookId: book.id, userId });
-            setState((prev) => ({ ...prev, delete: false }));
-            return;
-        }
 
         if (state.interacting || state.rating === null || currentRating.data === state.rating) return;
 
@@ -52,7 +46,7 @@ const Rating = ({ book, tooltipSide = "top", userId }: Props) => {
 
         const isMouse = window.matchMedia("(hover: hover)").matches;
         if (isMouse) setState((prev) => ({ ...prev, interacting: true }));
-    }, [book.id, createRating, currentRating.data, currentRating.isLoading, state, deleteRating]);
+    }, [book.id, createRating, currentRating.data, currentRating.isLoading, state]);
 
     const calculateRating = (x: number) => {
         const rect = containerRef.current?.getBoundingClientRect();
@@ -70,15 +64,19 @@ const Rating = ({ book, tooltipSide = "top", userId }: Props) => {
     const onTouchMove = (event: TouchEvent<HTMLDivElement>) =>
         state.interacting && setState((prev) => ({ ...prev, rating: calculateRating(event.touches[0].clientX) }));
 
-    const onFocus = (newRating: number) => setState({ interacting: true, rating: newRating, delete: false });
-    const onBlur = () => setState({ interacting: false, rating: currentRating.data ?? null, delete: false });
+    const onFocus = (newRating: number) => setState({ interacting: true, rating: newRating });
+    const onBlur = () => setState({ interacting: false, rating: currentRating.data ?? null });
 
     const onClick = (newRating: number) => {
-        setState({ interacting: false, rating: newRating, delete: false });
+        setState({ interacting: false, rating: newRating });
     };
 
+    // Deleting runs here rather than through a state flag the effect picks up: the
+    // effect re-runs on unrelated renders, and routing a one-off action through it
+    // made the removal depend on which render won.
     const onDeleteClick = () => {
-        setState({ interacting: false, rating: null, delete: true });
+        setState({ interacting: false, rating: null });
+        deleteRating.mutate({ bookId: book.id, userId });
     };
 
     if (currentRating.isLoading)
@@ -125,10 +123,10 @@ const Rating = ({ book, tooltipSide = "top", userId }: Props) => {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="pointer-events-none absolute right-0 h-[unset] min-h-[unset] w-[unset] min-w-[unset] translate-x-full p-0 opacity-70 transition-opacity group-focus-within:opacity-70 group-hover:pointer-events-auto group-hover:opacity-100 focus-visible:opacity-100"
+                            className="absolute right-0 h-[unset] min-h-[unset] w-[unset] min-w-[unset] translate-x-full p-0 opacity-70 transition-opacity group-focus-within:opacity-70 group-hover:opacity-100 focus-visible:opacity-100"
                             onClick={onDeleteClick}
                         >
-                            <X className={cn("h-8 w-9 stroke-[3] px-2 py-1")} />
+                            <FontAwesomeIcon icon={faXmark} className={cn("h-8 w-9 stroke-[3] px-2 py-1")} />
                         </Button>
                     )}
                 </div>

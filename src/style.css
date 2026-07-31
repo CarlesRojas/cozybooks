@@ -1,4 +1,14 @@
 @import "tailwindcss";
+
+/* Font Awesome sizes its icons from this stylesheet. Shipping it with the rest of
+   the css keeps the icons correct in the server-rendered html — left to inject
+   itself at runtime, every icon renders at its natural size until React hydrates
+   (`config.autoAddCss` is turned off in `src/lib/fontAwesome.ts`).
+   Into `base` specifically: its `.svg-inline--fa` rule hard-codes a 1em height, and
+   unlayered css outranks every layer, so imported plainly it would override the
+   size utilities on every icon in the app. */
+@import "@fortawesome/fontawesome-svg-core/styles.css" layer(base);
+
 @plugin "tailwindcss-animate";
 @plugin "@tailwindcss/typography";
 

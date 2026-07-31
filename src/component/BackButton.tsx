@@ -1,7 +1,8 @@
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
 import { useRouter } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
     className?: string;
@@ -13,7 +14,7 @@ const BackButton = ({ className }: Props) => {
 
     return (
         <Button onClick={onBack} size="icon" variant="glass" className={cn("z-40", className)}>
-            <ArrowLeft className="icon" />
+            <FontAwesomeIcon icon={faArrowLeft} className="icon" />
         </Button>
     );
 };

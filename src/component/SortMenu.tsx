@@ -10,7 +10,8 @@ import {
 } from "@/component/ui/dropdown-menu";
 import { cn } from "@/lib/cn";
 import { useNavigate } from "@tanstack/react-router";
-import { Repeat, SlidersHorizontal } from "lucide-react";
+import { faRepeat, faSliders } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
     className?: string;
@@ -37,7 +38,7 @@ const SortMenu = ({ className, sort = DEFAULT_SORT, repeats = DEFAULT_REPEATS }:
         <DropdownMenu modal={false}>
             <Button size="icon" variant="glass" className={cn("size-14 min-h-14 min-w-14", className)} asChild>
                 <DropdownMenuTrigger>
-                    <SlidersHorizontal className="icon" />
+                    <FontAwesomeIcon icon={faSliders} className="icon" />
                 </DropdownMenuTrigger>
             </Button>
 
@@ -58,7 +59,7 @@ const SortMenu = ({ className, sort = DEFAULT_SORT, repeats = DEFAULT_REPEATS }:
                     checked={repeats}
                     onCheckedChange={(checked) => navigate({ to: `/finished`, search: { sort, repeats: checked } })}
                 >
-                    <Repeat className="mr-3 h-4 w-4" />
+                    <FontAwesomeIcon icon={faRepeat} className="mr-3 h-4 w-4" />
                     <p className="font-medium">Show repeat reads</p>
                 </DropdownMenuCheckboxItem>
             </DropdownMenuContent>

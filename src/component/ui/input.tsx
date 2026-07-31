@@ -1,6 +1,7 @@
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
-import { X } from "lucide-react";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ComponentProps, ReactNode } from "react";
 
 export interface InputProps extends ComponentProps<"input"> {
@@ -24,7 +25,7 @@ export const Input = ({ className, type, icon, onClear, ref, ...props }: InputPr
 
             {onClear && (
                 <Button type="button" size="ghost" variant="ghost" onClick={onClear}>
-                    <X className="icon" />
+                    <FontAwesomeIcon icon={faXmark} className="icon" />
                 </Button>
             )}
         </div>

@@ -100,10 +100,22 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                     to={homeRoute}
                     className="mr-5 hidden h-12 items-center gap-3 px-5 text-neutral-600 select-none hover:text-black lg:flex dark:text-neutral-200 hover:dark:text-white"
                 >
-                    {/* Decorative: the wordmark beside it already names the app. The
-                        tile version, so the mark holds against the pill behind it in
-                        either theme. */}
-                    <img src="/logoDark.svg" alt="" width={308} height={308} className="size-5 min-h-5 min-w-5 rounded-[4px]" />
+                    {/* The mark punched out of the link's own colour, so it follows the
+                        wordmark beside it through both themes and the hover — painted
+                        flat, a black silhouette would disappear on the dark one. */}
+                    <div
+                        className="size-5 min-h-5 min-w-5 bg-current"
+                        style={{
+                            maskImage: 'url("/logoDark.svg")',
+                            maskSize: "contain",
+                            maskRepeat: "no-repeat",
+                            maskPosition: "center",
+                            WebkitMaskImage: 'url("/logoDark.svg")',
+                            WebkitMaskSize: "contain",
+                            WebkitMaskRepeat: "no-repeat",
+                            WebkitMaskPosition: "center",
+                        }}
+                    />
 
                     <p className="text-base font-semibold whitespace-nowrap">CozyBooks</p>
                 </Link>

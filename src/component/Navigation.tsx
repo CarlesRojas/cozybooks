@@ -9,7 +9,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { Link, useLocation, useRouterState } from "@tanstack/react-router";
 import type { User } from "better-auth";
 import { motion } from "framer-motion";
-import { faBook, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ReactElement } from "react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -100,7 +100,10 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
                     to={homeRoute}
                     className="mr-5 hidden h-12 items-center gap-3 px-5 text-neutral-600 select-none hover:text-black lg:flex dark:text-neutral-200 hover:dark:text-white"
                 >
-                    <FontAwesomeIcon icon={faBook} className="size-5 min-h-5 min-w-5" />
+                    {/* Decorative: the wordmark beside it already names the app. The
+                        tile version, so the mark holds against the pill behind it in
+                        either theme. */}
+                    <img src="/logoDark.svg" alt="" width={308} height={308} className="size-5 min-h-5 min-w-5 rounded-[4px]" />
 
                     <p className="text-base font-semibold whitespace-nowrap">CozyBooks</p>
                 </Link>

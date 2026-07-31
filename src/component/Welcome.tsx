@@ -29,13 +29,24 @@ const Welcome = ({ isError }: Props) => {
                 className="pointer-events-none absolute top-1/2 left-1/2 size-[32rem] max-w-[130vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-500/15 blur-[100px] dark:bg-purple-500/20"
             />
 
-            <section className="bg-neutral-150 dark:bg-neutral-850 relative flex w-full max-w-md flex-col items-center gap-6 rounded-[22px] border border-neutral-500/25 px-6 py-10 shadow-xl shadow-neutral-950/5 sm:px-10 dark:border-neutral-500/40 dark:shadow-neutral-950/40">
-                {/* Decorative: the heading right below already names the app. */}
-                <img src="/logo512.png" alt="" width={256} height={256} className="size-24 rounded-3xl shadow-lg shadow-neutral-950/10" />
+            <section className="bg-neutral-150 dark:bg-neutral-850 relative flex w-full max-w-md flex-col items-center rounded-[22px] border border-neutral-500/25 px-6 py-10 shadow-xl shadow-neutral-950/5 sm:px-10 dark:border-neutral-500/40 dark:shadow-neutral-950/40">
+                {/* Mark and heading are one unit — they name the app together — so they
+                    sit tight, and the gap that separates them from the action goes
+                    below instead of being spread evenly down the card. */}
+                <div className="flex flex-col items-center gap-2">
+                    {/* Decorative: the heading right below already names the app. */}
+                    <img
+                        src="/logo512.png"
+                        alt=""
+                        width={256}
+                        height={256}
+                        className="size-32 rounded-3xl shadow-lg shadow-neutral-950/10"
+                    />
 
-                <h1 className="text-center text-3xl leading-tight font-bold tracking-wide text-balance">Welcome to CozyBooks</h1>
+                    <h1 className="text-center text-2xl leading-tight font-bold tracking-wide text-balance">Welcome to CozyBooks</h1>
+                </div>
 
-                <div className="flex w-full flex-col items-center gap-3">
+                <div className="mt-10 flex w-full flex-col items-center gap-3">
                     <SignInButton className="w-full" />
 
                     {isError && (

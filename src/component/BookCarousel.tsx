@@ -125,8 +125,10 @@ const BookCarousel = ({ title, books, isLoading, noBooksChildren, wantToRead, ha
                                 </CarouselItem>
                             ))}
 
+                            {/* 12 columns of two covers each, so the row stays shimmering
+                                past the edge of the widest screen while results load. */}
                             {showSkeletons &&
-                                Array.from({ length: 4 }, (_, index) => (
+                                Array.from({ length: 12 }, (_, index) => (
                                     <CarouselItem key={`skeleton-${index}`} className={itemClassName}>
                                         <div className="flex flex-col gap-4">
                                             <div className="skeleton aspect-book w-full rounded-[22px]" />

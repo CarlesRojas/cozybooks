@@ -55,10 +55,15 @@ function RouteComponent() {
 
     const wantToRead = { userId: context.user!.id };
 
-    // Nothing typed yet: on desktop there are no results to make room for, so the
-    // field sits in the middle of the viewport instead of pinned under the
-    // navigation. Equal top and bottom padding is what centers it there.
+    // Everything on screen keys off the input rather than the url. Router navigation
+    // runs inside a transition, so `query` lands a moment after the field changes —
+    // driving the layout from one and the results from the other made clearing the
+    // field re-center the page while the old results were still up.
     const isEmpty = internalQuery.length === 0;
+
+    // The url hasn't caught up with the field yet, so a search is on its way: keep
+    // the carousel in its loading state instead of briefly claiming no results.
+    const isSearchPending = internalQuery.trim() !== query.trim();
 
     return (
         <main
@@ -92,11 +97,11 @@ function RouteComponent() {
             </section>
 
             <div className="flex h-fit w-full flex-col gap-12">
-                {query.length > 0 && (
+                {!isEmpty && (
                     <BookCarousel
                         title="Results"
-                        books={searchedBooks.data?.items ?? []}
-                        isLoading={searchedBooks.isLoading}
+                        books={isSearchPending ? [] : (searchedBooks.data?.items ?? [])}
+                        isLoading={searchedBooks.isLoading || isSearchPending}
                         noBooksChildren={<p className="font-medium tracking-wide opacity-80">No results found</p>}
                         wantToRead={wantToRead}
                         hasNextPage={searchedBooks.hasNextPage}

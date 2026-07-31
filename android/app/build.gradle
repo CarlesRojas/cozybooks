@@ -21,11 +21,11 @@ plugins {
 }
 
 def twaManifest = [
-    applicationId: 'app.cuenext.pinya',
-    hostName: 'www.cuenext.app', // The domain being opened in the TWA.
+    applicationId: 'app.cozybooks.pinya',
+    hostName: 'www.cozybooks.app', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
-    name: 'CueNext', // The application name.
-    launcherName: 'CueNext', // The name shown on the Android Launcher.
+    name: 'CozyBooks', // The application name.
+    launcherName: 'CozyBooks', // The name shown on the Android Launcher.
     themeColor: '#0A0A0A', // The color used for the status bar.
     themeColorDark: '#0A0A0A', // The color used for the dark status bar.
     navigationColor: '#0A0A0A', // The color used for the navigation bar.
@@ -39,7 +39,7 @@ def twaManifest = [
     // - short_name: Shorter string used if |name| is too long.
     // - url: Absolute path of the URL to launch the app with (e.g '/create').
     // - icon: Name of the resource in the drawable folder to use as an icon.
-    shortcuts: [[name:'Watchlist', short_name:'Watchlist', url:'https://www.cuenext.app/', icon:'shortcut_0'],[name:'Upcoming', short_name:'Upcoming', url:'https://www.cuenext.app/upcoming', icon:'shortcut_1'],[name:'Discover', short_name:'Discover', url:'https://www.cuenext.app/discover', icon:'shortcut_2'],[name:'Profile', short_name:'Profile', url:'https://www.cuenext.app/profile', icon:'shortcut_3']],
+    shortcuts: [[name:'Finished Books', short_name:'Finished', url:'https://www.cozybooks.app/finished', icon:'shortcut_0'],[name:'Search Books', short_name:'Search', url:'https://www.cozybooks.app/search', icon:'shortcut_1']],
     // The duration of fade out animation in milliseconds to be played when removing splash screen.
     splashScreenFadeOutDuration: 300,
     generatorApp: 'bubblewrap-cli', // Application that generated the Android Project
@@ -52,13 +52,13 @@ def twaManifest = [
 
 android {
     compileSdkVersion 36
-    namespace "app.cuenext.pinya"
+    namespace "app.cozybooks.pinya"
     defaultConfig {
-        applicationId "app.cuenext.pinya"
+        applicationId "app.cozybooks.pinya"
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 6
-        versionName "6"
+        versionCode 10
+        versionName "10"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name
@@ -76,12 +76,12 @@ android {
             // The URL the Web Manifest for the Progressive Web App that the TWA points to. This
             // is used by Chrome OS and Meta Quest to open the Web version of the PWA instead of
             // the TWA, as it will probably give a better user experience for non-mobile devices.
-            resValue "string", "webManifestUrl", 'https://www.cuenext.app/manifest.json'
+            resValue "string", "webManifestUrl", 'https://www.cozybooks.app/manifest.json'
         
 
         
             // This is used by Meta Quest.
-            resValue "string", "fullScopeUrl", 'https://www.cuenext.app/'
+            resValue "string", "fullScopeUrl", 'https://www.cozybooks.app/'
         
 
         

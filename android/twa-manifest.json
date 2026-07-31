@@ -1,8 +1,8 @@
 {
-  "packageId": "app.cuenext.pinya",
-  "host": "www.cuenext.app",
-  "name": "CueNext",
-  "launcherName": "CueNext",
+  "packageId": "app.cozybooks.pinya",
+  "host": "www.cozybooks.app",
+  "name": "CozyBooks",
+  "launcherName": "CozyBooks",
   "display": "standalone",
   "themeColor": "#0A0A0A",
   "themeColorDark": "#0A0A0A",
@@ -13,43 +13,31 @@
   "backgroundColor": "#0A0A0A",
   "enableNotifications": true,
   "startUrl": "/",
-  "iconUrl": "https://www.cuenext.app/maskableIcon512.png",
-  "maskableIconUrl": "https://www.cuenext.app/maskableIcon512.png",
+  "iconUrl": "https://www.cozybooks.app/maskableIcon512.png",
+  "maskableIconUrl": "https://www.cozybooks.app/maskableIcon512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": "/Users/carles.rojas/Documents/Repos/cuenext/android/android.keystore",
-    "alias": "cuenext_key_store"
+    "path": "/Users/carles.rojas/Documents/Repos/cozybooks/android/android.keystore",
+    "alias": "cozybooks_key_store"
   },
-  "appVersionName": "6",
-  "appVersionCode": 6,
+  "appVersionName": "10",
+  "appVersionCode": 10,
   "shortcuts": [
     {
-      "name": "Watchlist",
-      "shortName": "Watchlist",
-      "url": "https://www.cuenext.app/",
-      "chosenIconUrl": "https://www.cuenext.app/shortcut/watchlist.png"
+      "name": "Finished Books",
+      "shortName": "Finished",
+      "url": "https://www.cozybooks.app/finished",
+      "chosenIconUrl": "https://www.cozybooks.app/shortcut/finished.png"
     },
     {
-      "name": "Upcoming",
-      "shortName": "Upcoming",
-      "url": "https://www.cuenext.app/upcoming",
-      "chosenIconUrl": "https://www.cuenext.app/shortcut/upcoming.png"
-    },
-    {
-      "name": "Discover",
-      "shortName": "Discover",
-      "url": "https://www.cuenext.app/discover",
-      "chosenIconUrl": "https://www.cuenext.app/shortcut/discover.png"
-    },
-    {
-      "name": "Profile",
-      "shortName": "Profile",
-      "url": "https://www.cuenext.app/profile",
-      "chosenIconUrl": "https://www.cuenext.app/shortcut/profile.png"
+      "name": "Search Books",
+      "shortName": "Search",
+      "url": "https://www.cozybooks.app/search",
+      "chosenIconUrl": "https://www.cozybooks.app/shortcut/search.png"
     }
   ],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://www.cuenext.app/manifest.json",
+  "webManifestUrl": "https://www.cozybooks.app/manifest.json",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
@@ -58,7 +46,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://www.cuenext.app/",
+  "fullScopeUrl": "https://www.cozybooks.app/",
   "minSdkVersion": 21,
   "orientation": "portrait",
   "fingerprints": [],
@@ -74,5 +62,5 @@
     "window-controls-overlay",
     "browser"
   ],
-  "appVersion": "6"
+  "appVersion": "10"
 }

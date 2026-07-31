@@ -1,13 +1,14 @@
 import BookCarousel from "@/component/BookCarousel";
-import { Sort } from "@/component/SortMenu";
+import { DEFAULT_REPEATS, DEFAULT_SORT, Sort } from "@/component/SortMenu";
 import Star from "@/component/Star";
 import Stats from "@/component/Stats";
+import { REPEATS_STORAGE_KEY, SORT_STORAGE_KEY } from "@/const";
 import { cn } from "@/lib/cn";
 import { useLibraryBooks } from "@/convex/use/useLibraryBooks";
 import type { Book } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
-import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useRef } from "react";
 import { isIOS } from "react-device-detect";
 
 export const Route = createFileRoute("/_protected/finished/")({
@@ -19,9 +20,68 @@ interface Group {
     books: Array<Book>;
 }
 
+// Read straight from storage rather than through a hook: the value is needed on the
+// first effect pass, and a storage hook still holds its initial value that early
+// under SSR, which restored the defaults instead of the last view used. Anything
+// unparseable or unrecognised counts as absent, so the schema default applies.
+const readStored = <T,>(key: string, isValid: (value: unknown) => value is T): T | null => {
+    try {
+        const raw = window.localStorage.getItem(key);
+        if (raw === null) return null;
+
+        const value: unknown = JSON.parse(raw);
+        return isValid(value) ? value : null;
+    } catch {
+        return null;
+    }
+};
+
+const write = (key: string, value: unknown) => {
+    try {
+        window.localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+        // Private mode and full quotas are not worth failing a render over.
+    }
+};
+
+const isSort = (value: unknown): value is Sort => Object.values(Sort).includes(value as Sort);
+const isBoolean = (value: unknown): value is boolean => typeof value === "boolean";
+
 function RouteComponent() {
     const context = Route.useRouteContext();
-    const { sort, repeats } = Route.useSearch();
+    const { sort: urlSort, repeats: urlRepeats } = Route.useSearch();
+    const navigate = useNavigate();
+
+    // url, then storage, then the default. The url decides what is rendered — it is
+    // what the sort menu writes and what a shared link carries — and storage only
+    // fills in what it left out, which is why the options carry no schema default:
+    // an absent param has to stay distinguishable from a chosen one.
+    const sort = urlSort ?? DEFAULT_SORT;
+    const repeats = urlRepeats ?? DEFAULT_REPEATS;
+    const hasRestored = useRef(false);
+
+    useEffect(() => {
+        if (!hasRestored.current) {
+            hasRestored.current = true;
+
+            const storedSort = urlSort === undefined ? readStored(SORT_STORAGE_KEY, isSort) : null;
+            const storedRepeats = urlRepeats === undefined ? readStored(REPEATS_STORAGE_KEY, isBoolean) : null;
+
+            if (storedSort !== null || storedRepeats !== null) {
+                // Storing is skipped this pass: the url is about to change, and this
+                // effect runs again with the restored values.
+                navigate({
+                    to: "/finished",
+                    search: { sort: storedSort ?? urlSort, repeats: storedRepeats ?? urlRepeats },
+                    replace: true,
+                });
+                return;
+            }
+        }
+
+        write(SORT_STORAGE_KEY, sort);
+        write(REPEATS_STORAGE_KEY, repeats);
+    }, [urlSort, urlRepeats, sort, repeats, navigate]);
 
     const finishedBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.FINISHED });
 

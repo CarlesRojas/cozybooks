@@ -14,8 +14,8 @@ import { Repeat, SlidersHorizontal } from "lucide-react";
 
 interface Props {
     className?: string;
-    sort: Sort;
-    repeats: boolean;
+    sort?: Sort;
+    repeats?: boolean;
 }
 
 export enum Sort {
@@ -24,7 +24,13 @@ export enum Sort {
     RATING = "RATING",
 }
 
-const SortMenu = ({ className, sort, repeats }: Props) => {
+// Used wherever the url says nothing and storage has nothing to say either. The
+// options are absent from the url until they are chosen, so both are optional
+// everywhere they travel.
+export const DEFAULT_SORT = Sort.DATE;
+export const DEFAULT_REPEATS = false;
+
+const SortMenu = ({ className, sort = DEFAULT_SORT, repeats = DEFAULT_REPEATS }: Props) => {
     const navigate = useNavigate();
 
     return (

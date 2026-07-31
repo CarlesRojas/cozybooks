@@ -7,7 +7,7 @@ import { fromWireVolumesResult } from "@/convex/map";
 import type { VolumesResult } from "@/type/Book";
 import { LibraryType } from "@/type/Library";
 import { api } from "@convex/_generated/api";
-import { useQuery } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache";
 import { useMemo } from "react";
 
 interface Props {

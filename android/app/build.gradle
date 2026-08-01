@@ -56,9 +56,9 @@ android {
     defaultConfig {
         applicationId "app.cozybooks.pinya"
         minSdkVersion 21
-        targetSdkVersion 35
-        versionCode 4
-        versionName "4"
+        targetSdkVersion 36
+        versionCode 5
+        versionName "5"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name

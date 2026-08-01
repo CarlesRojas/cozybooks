@@ -4,7 +4,7 @@
 # Run after `bubblewrap update`, before `bubblewrap build`.
 #
 # The masters in splash/ were rendered from public/logo.svg with the mark at
-# 28.125% of the canvas width. Bubblewrap's own splash fills the canvas with the
+# 36.5625% of the canvas width. Bubblewrap's own splash fills the canvas with the
 # whole icon, which puts the mark at 56.25% and reads as oversized on launch.
 
 set -eu

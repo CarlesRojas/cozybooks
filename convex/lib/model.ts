@@ -4,6 +4,7 @@
 // transaction (Convex mutations are transactional).
 
 import type { Infer } from "convex/values";
+import type { Doc } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import type { libraryTypeValidator } from "../schema";
 import type { bookValidator } from "./validators";
@@ -16,6 +17,37 @@ export const getBookByGoogleId = async (ctx: QueryCtx, googleId: string) => {
         .query("books")
         .withIndex("by_google_id", (q) => q.eq("googleId", googleId))
         .unique();
+};
+
+// Ids of user-created books, so a book id alone says whether it is a catalogue
+// volume or somebody's own.
+//
+// Letters and a hyphen, nothing more exotic, because a book id has to survive two
+// places that are picky about characters: a url path segment, and the CSS
+// `view-transition-name` the covers are animated by, which only accepts an
+// identifier. A Google volume id could in principle begin with these seven
+// characters — it is a 12-character base64url string — but the odds are around one
+// in ten trillion, and the cost of the collision is one book falling back to "not
+// found".
+export const CUSTOM_BOOK_ID_PREFIX = "custom-";
+
+export const isCustomBookId = (bookId: string) => bookId.startsWith(CUSTOM_BOOK_ID_PREFIX);
+
+// A catalogue book is everybody's; a custom book is only its owner's. Every read
+// that can return a book runs through this — a missing `userId` sees the catalogue
+// and nothing else.
+export const isBookVisibleTo = (book: Doc<"books">, userId: string | undefined) => !book.ownerId || book.ownerId === userId;
+
+export const getVisibleBook = async (ctx: QueryCtx, bookId: string, userId: string | undefined) => {
+    const book = await getBookByGoogleId(ctx, bookId);
+    return book && isBookVisibleTo(book, userId) ? book : null;
+};
+
+// Custom books are edited and deleted through their own mutations, which all start
+// here: no id that isn't this user's own book gets any further.
+export const getOwnedCustomBook = async (ctx: QueryCtx, bookId: string, userId: string) => {
+    const book = await getBookByGoogleId(ctx, bookId);
+    return book && book.ownerId === userId ? book : null;
 };
 
 // Insert-if-missing, like the old `addBook` whose duplicate-key errors were always

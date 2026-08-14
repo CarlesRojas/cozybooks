@@ -4,8 +4,10 @@
 // source of truth for the user's library.
 
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 import { action } from "./_generated/server";
 import { catalogueParams, clampMaxResults, googleBooksRequest, parseGoogleVolume } from "./lib/googleBooks";
+import type { PublishedBook } from "./lib/publish";
 
 const publishVolume = (volume: ReturnType<typeof parseGoogleVolume>) => {
     if (!volume) return null;
@@ -32,29 +34,53 @@ const parseVolumesResponse = (data: any) => {
 // `filter` is deliberately not sent: its only values that would cut down the
 // academic and scanned material (`ebooks`, `paid-ebooks`) also hide books with no
 // ebook edition, which was a worse result in practice than the noise it removed.
+//
+// The user's own books come first and the catalogue follows, as one paginated list.
+// They lead because they are the only results the reader put there on purpose: a
+// book typed in by hand is being searched for by name, and burying it behind forty
+// Google volumes would defeat the point of having written it down.
 export const search = action({
     args: {
         query: v.string(),
         maxResults: v.optional(v.number()),
         startIndex: v.optional(v.number()),
+        userId: v.optional(v.string()),
     },
-    handler: async (_ctx, { query, maxResults, startIndex }) => {
-        if (!query.trim()) return { totalItems: 0, items: [] };
+    handler: async (ctx, { query, maxResults, startIndex, userId }): Promise<{ totalItems: number; items: Array<PublishedBook> }> => {
+        const trimmed = query.trim();
+        if (!trimmed) return { totalItems: 0, items: [] };
+
+        const limit = clampMaxResults(maxResults);
+        const start = startIndex ?? 0;
+
+        const custom: Array<PublishedBook> = userId ? await ctx.runQuery(internal.customBooks.searchOwn, { userId, query: trimmed }) : [];
+        const customPage = custom.slice(start, start + limit);
+
+        // Google's offset counts only Google's results, so the custom books already
+        // handed out have to come off the front of it.
+        const googleLimit = limit - customPage.length;
+
+        // A page filled entirely by the reader's own books still has the catalogue
+        // behind it. `totalItems` is a lower bound rather than a count here — one
+        // more than what's been served is enough to keep the infinite list asking,
+        // and the next page comes back with the real total.
+        if (googleLimit <= 0) return { totalItems: custom.length + 1, items: customPage };
 
         const data = await googleBooksRequest({
             path: "/volumes",
             params: {
                 ...catalogueParams(),
-                q: query.trim(),
-                maxResults: clampMaxResults(maxResults).toString(),
-                startIndex: (startIndex ?? 0).toString(),
+                q: trimmed,
+                maxResults: googleLimit.toString(),
+                startIndex: Math.max(0, start - custom.length).toString(),
                 printType: "books",
                 orderBy: "relevance",
                 showPreorders: "true",
             },
         });
 
-        return parseVolumesResponse(data);
+        const { totalItems, items } = parseVolumesResponse(data);
+        return { totalItems: custom.length + totalItems, items: [...customPage, ...items] };
     },
 });
 

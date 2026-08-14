@@ -14,10 +14,13 @@ import { useEffect, useMemo, useState } from "react";
 
 interface Props {
     bookId: string;
+    // Books the user wrote themselves are only readable by them, so the reader is
+    // part of the read.
+    userId?: string;
 }
 
-export const useBook = ({ bookId }: Props): { data: Book | null | undefined; isLoading: boolean } => {
-    const cached = useQuery(api.books.get, { bookId });
+export const useBook = ({ bookId, userId }: Props): { data: Book | null | undefined; isLoading: boolean } => {
+    const cached = useQuery(api.books.get, { bookId, userId });
     const getWithGoogleFallback = useAction(api.books.getWithGoogleFallback);
     const [missingBookId, setMissingBookId] = useState<string | null>(null);
 
@@ -26,7 +29,7 @@ export const useBook = ({ bookId }: Props): { data: Book | null | undefined; isL
 
         let cancelled = false;
 
-        getWithGoogleFallback({ bookId })
+        getWithGoogleFallback({ bookId, userId })
             .then((book) => {
                 if (!cancelled && book === null) setMissingBookId(bookId);
             })
@@ -37,7 +40,7 @@ export const useBook = ({ bookId }: Props): { data: Book | null | undefined; isL
         return () => {
             cancelled = true;
         };
-    }, [cached, bookId, getWithGoogleFallback]);
+    }, [cached, bookId, userId, getWithGoogleFallback]);
 
     const data = useMemo(() => {
         if (cached) return fromWireBook(cached);

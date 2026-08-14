@@ -51,7 +51,7 @@ function RouteComponent() {
         search(value);
     };
 
-    const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE });
+    const searchedBooks = useSearchedBooks({ query, userId: context.user!.id, booksPerPage: PAGE_SIZE });
 
     const wantToRead = { userId: context.user!.id };
 

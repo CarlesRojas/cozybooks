@@ -13,11 +13,14 @@ import { useMemo } from "react";
 
 interface Props {
     query: string;
+    // Whose own books to search alongside the catalogue. They come back ahead of the
+    // Google results, in the same paginated list.
+    userId?: string;
     booksPerPage?: number;
 }
 
-export const useSearchedBooks = ({ query, booksPerPage }: Props) => {
-    const result = useInfiniteActionQuery(api.googleBooks.search, query.trim() ? { query } : "skip", booksPerPage ?? 8);
+export const useSearchedBooks = ({ query, userId, booksPerPage }: Props) => {
+    const result = useInfiniteActionQuery(api.googleBooks.search, query.trim() ? { query, userId } : "skip", booksPerPage ?? 8);
 
     const data: VolumesResult | undefined = useMemo(() => {
         if (!query.trim()) return { totalItems: 0, items: [] };

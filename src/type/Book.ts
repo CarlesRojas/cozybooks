@@ -30,6 +30,11 @@ export const BookSchema = z.object({
     large: z.string().optional().nullable(),
     extraLarge: z.string().optional().nullable(),
 
+    // Set only on books the user wrote themselves, and only ever to their own id —
+    // a custom book never reaches anybody else. Its presence is what puts the edit
+    // and delete controls on the book page.
+    ownerId: z.string().optional().nullable(),
+
     finished: z.array(FinishedSchema).optional().nullable(),
     rating: z
         .array(z.object({ rating: z.number().nullable() }))

@@ -13,13 +13,23 @@ import { fromWireBook } from "@/convex/map";
 import { api } from "@convex/_generated/api";
 import { convertHtmlToReact } from "@hedgedoc/html-to-react";
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { isIOS } from "react-device-detect";
 
 export const Route = createFileRoute("/_protected/book/$bookId/")({
     component: RouteComponent,
-    beforeLoad: async ({ params }) => {
+    beforeLoad: async ({ params, context }) => {
         if (!convexHttpClient) return { book: null };
-        const book = await convexHttpClient.action(api.books.getWithGoogleFallback, { bookId: params.bookId });
+
+        // The reader is part of the lookup: a book somebody wrote themselves is only
+        // ever returned to them, so anyone else asking for that id gets nothing —
+        // the same answer as an id that was never a book.
+        const book = await convexHttpClient.action(api.books.getWithGoogleFallback, {
+            bookId: params.bookId,
+            userId: context.user?.id,
+        });
+
         return { book: book ? fromWireBook(book) : null };
     },
 });
@@ -29,6 +39,10 @@ function RouteComponent() {
     if (!book) return <NotFound type={NotFoundType.BOOK} />;
 
     const { title, authors, description, pageCount, previewLink, categories } = book;
+
+    // A book this user wrote. It has no Google page to link to and no catalogue
+    // neighbours to relate it to — what it has instead is an owner, who can edit it.
+    const isOwnBook = !!book.ownerId && book.ownerId === user?.id;
 
     const categorySet = new Set(categories?.flatMap((c) => c.split("/").map((category) => category.trim())) ?? []);
 
@@ -84,11 +98,20 @@ function RouteComponent() {
                     ))}
                 </div>
 
-                <RelatedBooks book={book} />
+                {!isOwnBook && <RelatedBooks book={book} />}
+
+                {isOwnBook && (
+                    <Button asChild variant="glass" className="mt-8">
+                        <Link to="/custom/$bookId" params={{ bookId: book.id }}>
+                            <FontAwesomeIcon icon={faPenToSquare} className="icon mr-3" />
+                            <p>Edit book</p>
+                        </Link>
+                    </Button>
+                )}
 
                 {/* The gap the tags used to carry below them, now setting the link
                     apart from the related books instead. */}
-                {previewLink && (
+                {previewLink && !isOwnBook && (
                     <Button asChild variant="ghost" className="group mt-8">
                         <Link to={previewLink} target="_blank" rel="noopener noreferrer">
                             <div

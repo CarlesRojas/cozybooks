@@ -13,3 +13,4 @@ todos.json
 .env.local
 convex-export
 .vercel
+.env*

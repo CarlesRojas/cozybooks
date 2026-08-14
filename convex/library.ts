@@ -8,6 +8,7 @@ import {
     getFinishedForBook,
     getLibraryEntry,
     getRatingEntry,
+    isBookVisibleTo,
     removeBookFromLibrary,
 } from "./lib/model";
 import { publishBook, publishFinished } from "./lib/publish";
@@ -72,7 +73,12 @@ export const getBooks = query({
                     getRatingEntry(ctx, { userId, bookId: entry.bookId }),
                 ]);
 
-                if (!book) return null;
+                // A shelf can only ever hold this user's own books, so this filter has
+                // nothing to do under normal use. It is here because it is the last
+                // read that returns a book's contents, and a custom book must not come
+                // back through it either — a stray library row pointing at somebody
+                // else's private book would otherwise publish it.
+                if (!book || !isBookVisibleTo(book, userId)) return null;
 
                 return {
                     ...publishBook(book),

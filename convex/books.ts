@@ -2,7 +2,7 @@ import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import { action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
 import { catalogueParams, googleBooksRequest, parseGoogleVolume } from "./lib/googleBooks";
-import { getBookByGoogleId, upsertBook } from "./lib/model";
+import { getVisibleBook, isCustomBookId, upsertBook } from "./lib/model";
 import { publishBook } from "./lib/publish";
 import type { PublishedBook } from "./lib/publish";
 import { bookArgs } from "./lib/validators";
@@ -15,19 +15,21 @@ export const add = mutation({
     },
 });
 
-// Point read through the `by_google_id` index.
+// Point read through the `by_google_id` index. `userId` is what makes a custom book
+// readable: without it the read only ever sees the catalogue, and with it, only that
+// user's own books on top of the catalogue.
 export const get = query({
-    args: { bookId: v.string() },
-    handler: async (ctx, { bookId }) => {
-        const book = await getBookByGoogleId(ctx, bookId);
+    args: { bookId: v.string(), userId: v.optional(v.string()) },
+    handler: async (ctx, { bookId, userId }) => {
+        const book = await getVisibleBook(ctx, bookId, userId);
         return book ? publishBook(book) : null;
     },
 });
 
 export const getCached = internalQuery({
-    args: { bookId: v.string() },
-    handler: async (ctx, { bookId }) => {
-        const book = await getBookByGoogleId(ctx, bookId);
+    args: { bookId: v.string(), userId: v.optional(v.string()) },
+    handler: async (ctx, { bookId, userId }) => {
+        const book = await getVisibleBook(ctx, bookId, userId);
         return book ? publishBook(book) : null;
     },
 });
@@ -43,12 +45,17 @@ export const cache = internalMutation({
 // cache it. Requires the GOOGLE_BOOKS_API_KEY environment variable on the Convex
 // deployment.
 export const getWithGoogleFallback = action({
-    args: { bookId: v.string() },
+    args: { bookId: v.string(), userId: v.optional(v.string()) },
     // Explicit annotations break the type-inference cycle caused by referencing
     // `internal.books.*` from this same module.
-    handler: async (ctx, { bookId }): Promise<PublishedBook | null> => {
-        const cached: PublishedBook | null = await ctx.runQuery(internal.books.getCached, { bookId });
+    handler: async (ctx, { bookId, userId }): Promise<PublishedBook | null> => {
+        const cached: PublishedBook | null = await ctx.runQuery(internal.books.getCached, { bookId, userId });
         if (cached) return cached;
+
+        // A user-created book exists only here. Asking Google about one would be a
+        // guaranteed 404, and a slow one — worse, it would make somebody else's
+        // private book and a deleted book indistinguishable from a network hiccup.
+        if (isCustomBookId(bookId)) return null;
 
         try {
             const data = await googleBooksRequest({

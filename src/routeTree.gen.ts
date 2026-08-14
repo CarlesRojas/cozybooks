@@ -11,13 +11,18 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
+import { Route as ProtectedCustomIndexRouteImport } from './routes/_protected/custom/index'
 import { Route as ProtectedFinishedIndexRouteImport } from './routes/_protected/finished/index'
 import { Route as ProtectedReadingIndexRouteImport } from './routes/_protected/reading/index'
 import { Route as ProtectedSearchIndexRouteImport } from './routes/_protected/search/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiBlobDeleteRouteImport } from './routes/api/blob/delete'
+import { Route as ApiBlobUploadRouteImport } from './routes/api/blob/upload'
 import { Route as LegalPrivacyPolicyIndexRouteImport } from './routes/legal/privacy-policy/index'
 import { Route as LegalTermsAndConditionsIndexRouteImport } from './routes/legal/terms-and-conditions/index'
 import { Route as ProtectedBookBookIdIndexRouteImport } from './routes/_protected/book/$bookId/index'
+import { Route as ProtectedCustomBookIdIndexRouteImport } from './routes/_protected/custom/$bookId/index'
+import { Route as ProtectedCustomNewIndexRouteImport } from './routes/_protected/custom/new/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -27,6 +32,11 @@ const IndexRoute = IndexRouteImport.update({
 const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
   id: '/_protected',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedCustomIndexRoute = ProtectedCustomIndexRouteImport.update({
+  id: '/custom/',
+  path: '/custom/',
+  getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const ProtectedFinishedIndexRoute = ProtectedFinishedIndexRouteImport.update({
   id: '/finished/',
@@ -48,6 +58,16 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiBlobDeleteRoute = ApiBlobDeleteRouteImport.update({
+  id: '/api/blob/delete',
+  path: '/api/blob/delete',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBlobUploadRoute = ApiBlobUploadRouteImport.update({
+  id: '/api/blob/upload',
+  path: '/api/blob/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LegalPrivacyPolicyIndexRoute = LegalPrivacyPolicyIndexRouteImport.update({
   id: '/legal/privacy-policy/',
   path: '/legal/privacy-policy/',
@@ -65,77 +85,120 @@ const ProtectedBookBookIdIndexRoute =
     path: '/book/$bookId/',
     getParentRoute: () => ProtectedRouteRoute,
   } as any)
+const ProtectedCustomBookIdIndexRoute =
+  ProtectedCustomBookIdIndexRouteImport.update({
+    id: '/custom/$bookId/',
+    path: '/custom/$bookId/',
+    getParentRoute: () => ProtectedRouteRoute,
+  } as any)
+const ProtectedCustomNewIndexRoute = ProtectedCustomNewIndexRouteImport.update({
+  id: '/custom/new/',
+  path: '/custom/new/',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/blob/delete': typeof ApiBlobDeleteRoute
+  '/api/blob/upload': typeof ApiBlobUploadRoute
+  '/custom/': typeof ProtectedCustomIndexRoute
   '/finished/': typeof ProtectedFinishedIndexRoute
   '/reading/': typeof ProtectedReadingIndexRoute
   '/search/': typeof ProtectedSearchIndexRoute
   '/legal/privacy-policy/': typeof LegalPrivacyPolicyIndexRoute
   '/legal/terms-and-conditions/': typeof LegalTermsAndConditionsIndexRoute
   '/book/$bookId/': typeof ProtectedBookBookIdIndexRoute
+  '/custom/$bookId/': typeof ProtectedCustomBookIdIndexRoute
+  '/custom/new/': typeof ProtectedCustomNewIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/blob/delete': typeof ApiBlobDeleteRoute
+  '/api/blob/upload': typeof ApiBlobUploadRoute
+  '/custom': typeof ProtectedCustomIndexRoute
   '/finished': typeof ProtectedFinishedIndexRoute
   '/reading': typeof ProtectedReadingIndexRoute
   '/search': typeof ProtectedSearchIndexRoute
   '/legal/privacy-policy': typeof LegalPrivacyPolicyIndexRoute
   '/legal/terms-and-conditions': typeof LegalTermsAndConditionsIndexRoute
   '/book/$bookId': typeof ProtectedBookBookIdIndexRoute
+  '/custom/$bookId': typeof ProtectedCustomBookIdIndexRoute
+  '/custom/new': typeof ProtectedCustomNewIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/blob/delete': typeof ApiBlobDeleteRoute
+  '/api/blob/upload': typeof ApiBlobUploadRoute
+  '/_protected/custom/': typeof ProtectedCustomIndexRoute
   '/_protected/finished/': typeof ProtectedFinishedIndexRoute
   '/_protected/reading/': typeof ProtectedReadingIndexRoute
   '/_protected/search/': typeof ProtectedSearchIndexRoute
   '/legal/privacy-policy/': typeof LegalPrivacyPolicyIndexRoute
   '/legal/terms-and-conditions/': typeof LegalTermsAndConditionsIndexRoute
   '/_protected/book/$bookId/': typeof ProtectedBookBookIdIndexRoute
+  '/_protected/custom/$bookId/': typeof ProtectedCustomBookIdIndexRoute
+  '/_protected/custom/new/': typeof ProtectedCustomNewIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/api/auth/$'
+    | '/api/blob/delete'
+    | '/api/blob/upload'
+    | '/custom/'
     | '/finished/'
     | '/reading/'
     | '/search/'
     | '/legal/privacy-policy/'
     | '/legal/terms-and-conditions/'
     | '/book/$bookId/'
+    | '/custom/$bookId/'
+    | '/custom/new/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/api/auth/$'
+    | '/api/blob/delete'
+    | '/api/blob/upload'
+    | '/custom'
     | '/finished'
     | '/reading'
     | '/search'
     | '/legal/privacy-policy'
     | '/legal/terms-and-conditions'
     | '/book/$bookId'
+    | '/custom/$bookId'
+    | '/custom/new'
   id:
     | '__root__'
     | '/'
     | '/_protected'
     | '/api/auth/$'
+    | '/api/blob/delete'
+    | '/api/blob/upload'
+    | '/_protected/custom/'
     | '/_protected/finished/'
     | '/_protected/reading/'
     | '/_protected/search/'
     | '/legal/privacy-policy/'
     | '/legal/terms-and-conditions/'
     | '/_protected/book/$bookId/'
+    | '/_protected/custom/$bookId/'
+    | '/_protected/custom/new/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiBlobDeleteRoute: typeof ApiBlobDeleteRoute
+  ApiBlobUploadRoute: typeof ApiBlobUploadRoute
   LegalPrivacyPolicyIndexRoute: typeof LegalPrivacyPolicyIndexRoute
   LegalTermsAndConditionsIndexRoute: typeof LegalTermsAndConditionsIndexRoute
 }
@@ -155,6 +218,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof ProtectedRouteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_protected/custom/': {
+      id: '/_protected/custom/'
+      path: '/custom'
+      fullPath: '/custom/'
+      preLoaderRoute: typeof ProtectedCustomIndexRouteImport
+      parentRoute: typeof ProtectedRouteRoute
     }
     '/_protected/finished/': {
       id: '/_protected/finished/'
@@ -184,6 +254,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/blob/delete': {
+      id: '/api/blob/delete'
+      path: '/api/blob/delete'
+      fullPath: '/api/blob/delete'
+      preLoaderRoute: typeof ApiBlobDeleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/blob/upload': {
+      id: '/api/blob/upload'
+      path: '/api/blob/upload'
+      fullPath: '/api/blob/upload'
+      preLoaderRoute: typeof ApiBlobUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/legal/privacy-policy/': {
       id: '/legal/privacy-policy/'
       path: '/legal/privacy-policy'
@@ -205,21 +289,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedBookBookIdIndexRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
+    '/_protected/custom/$bookId/': {
+      id: '/_protected/custom/$bookId/'
+      path: '/custom/$bookId'
+      fullPath: '/custom/$bookId/'
+      preLoaderRoute: typeof ProtectedCustomBookIdIndexRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/custom/new/': {
+      id: '/_protected/custom/new/'
+      path: '/custom/new'
+      fullPath: '/custom/new/'
+      preLoaderRoute: typeof ProtectedCustomNewIndexRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
   }
 }
 
 interface ProtectedRouteRouteChildren {
+  ProtectedCustomIndexRoute: typeof ProtectedCustomIndexRoute
   ProtectedFinishedIndexRoute: typeof ProtectedFinishedIndexRoute
   ProtectedReadingIndexRoute: typeof ProtectedReadingIndexRoute
   ProtectedSearchIndexRoute: typeof ProtectedSearchIndexRoute
   ProtectedBookBookIdIndexRoute: typeof ProtectedBookBookIdIndexRoute
+  ProtectedCustomBookIdIndexRoute: typeof ProtectedCustomBookIdIndexRoute
+  ProtectedCustomNewIndexRoute: typeof ProtectedCustomNewIndexRoute
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
+  ProtectedCustomIndexRoute: ProtectedCustomIndexRoute,
   ProtectedFinishedIndexRoute: ProtectedFinishedIndexRoute,
   ProtectedReadingIndexRoute: ProtectedReadingIndexRoute,
   ProtectedSearchIndexRoute: ProtectedSearchIndexRoute,
   ProtectedBookBookIdIndexRoute: ProtectedBookBookIdIndexRoute,
+  ProtectedCustomBookIdIndexRoute: ProtectedCustomBookIdIndexRoute,
+  ProtectedCustomNewIndexRoute: ProtectedCustomNewIndexRoute,
 }
 
 const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
@@ -230,6 +334,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiBlobDeleteRoute: ApiBlobDeleteRoute,
+  ApiBlobUploadRoute: ApiBlobUploadRoute,
   LegalPrivacyPolicyIndexRoute: LegalPrivacyPolicyIndexRoute,
   LegalTermsAndConditionsIndexRoute: LegalTermsAndConditionsIndexRoute,
 }

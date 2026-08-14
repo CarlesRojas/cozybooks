@@ -12,6 +12,13 @@ export const env = createEnv({
         GOOGLE_BOOKS_API_KEY: z.string().min(1),
         BETTER_AUTH_SECRET: z.string().min(1), // Create using `openssl rand -base64 32`. Must also be set on the Convex deployment.
         BETTER_AUTH_URL: z.string().url(),
+        // Vercel Blob, where the covers of user-created books are stored. Vercel
+        // injects it automatically once a Blob store is connected to the project; pull
+        // it locally with `vercel env pull`. Optional rather than required on purpose:
+        // without it only cover uploads fail (with a clear message from
+        // `src/routes/api/blob/upload.ts`), where a required variable would take the
+        // whole app down over a feature most pages never touch.
+        BLOB_READ_WRITE_TOKEN: z.string().min(1).optional(),
         // Only needed for the legacy src/server code and `pnpm convex:export`.
         DATABASE_URL: z.string().url().optional(),
     },

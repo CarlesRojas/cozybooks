@@ -5,8 +5,11 @@
 
 import type { Doc } from "../_generated/dataModel";
 
+// `createdAt` is bookkeeping for the custom books list and stays server-side;
+// `ownerId` goes out because the book page needs to know whose book it is to offer
+// editing, and only its owner ever receives the book in the first place.
 export const publishBook = (book: Doc<"books">) => {
-    const { _id, _creationTime, googleId, ...fields } = book;
+    const { _id, _creationTime, googleId, createdAt, ...fields } = book;
     return { id: googleId, ...fields };
 };
 

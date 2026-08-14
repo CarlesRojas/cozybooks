@@ -29,6 +29,17 @@ export const bookFields = {
     extraLarge: v.optional(v.string()),
 };
 
+// Extra fields that only user-created ("custom") books carry. They live on the same
+// `books` table rather than a table of their own so every join the app already has —
+// library shelves, ratings, finished dates, the book page, the search results — works
+// on them unchanged. What separates them from the catalogue is `ownerId`: a book that
+// has one is private to that user, and every read that can reach a book has to say
+// who is asking.
+export const customBookFields = {
+    ownerId: v.optional(v.string()),
+    createdAt: v.optional(v.number()),
+};
+
 export default defineSchema({
     // ─── Auth (better-auth's live storage, via `betterAuth.ts`) ──────────────────
     // `authId` is the better-auth row id (imported 1:1 from Postgres), so domain
@@ -89,7 +100,10 @@ export default defineSchema({
         .index("by_identifier", ["identifier"]),
 
     // ─── Domain ──────────────────────────────────────────────────────────────────
-    books: defineTable(bookFields).index("by_google_id", ["googleId"]),
+    books: defineTable({ ...bookFields, ...customBookFields })
+        .index("by_google_id", ["googleId"])
+        // A user's own books, newest first, without touching the catalogue rows.
+        .index("by_owner_created", ["ownerId", "createdAt"]),
 
     // Counterpart of `library` (userId + type + bookId used to be the primary key).
     library: defineTable({

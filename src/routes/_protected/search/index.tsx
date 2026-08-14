@@ -93,20 +93,15 @@ function RouteComponent() {
                     show, and a wash anchored to the page would have been left behind.
                     Painted over the bar's own opaque background, which is what hides the
                     results scrolling underneath, so it has to sit above it to be seen at
-                    all. Flattened and softened once there are results: at full size what
-                    spills below the bar washes over the first row of covers, and the
-                    covers are what the page is about by then. Sized against the bar
-                    rather than fixed, so it can never widen the page — `overflow-hidden`
-                    would be the other way to contain it, and that would break the sticky
-                    bar it lives in. */}
+                    all. The same size and the same colour whether or not anything has
+                    been searched — it is the page's own light, and dimming it as results
+                    come in would read as the page losing it. Sized against the bar rather
+                    than fixed, so it can never widen the page — `overflow-hidden` would
+                    be the other way to contain it, and that would break the sticky bar it
+                    lives in. */}
                 <div
                     aria-hidden
-                    className={cn(
-                        "pointer-events-none absolute top-1/2 left-1/2 w-128 max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]",
-                        isEmpty
-                            ? "from-brand/40 to-brand-warm/40 dark:from-brand/25 dark:to-brand-warm/25 h-128"
-                            : "from-brand/30 to-brand-warm/30 dark:from-brand/20 dark:to-brand-warm/20 h-40",
-                    )}
+                    className="from-brand/40 to-brand-warm/40 dark:from-brand/25 dark:to-brand-warm/25 pointer-events-none absolute top-1/2 left-1/2 size-128 max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
                 />
 
                 {/* Searching is automatic, so Enter has nothing to submit — without this

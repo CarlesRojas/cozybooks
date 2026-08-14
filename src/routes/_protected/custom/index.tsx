@@ -34,7 +34,11 @@ function RouteComponent() {
                 there are no books yet. */}
             <BookCarousel
                 title={
-                    <Button asChild className="w-full">
+                    // Full width only where the screen is narrow enough for it to be the
+                    // whole row anyway — `sm` is the same break the covers widen at. Past
+                    // it the button takes its content's width and stays at the left
+                    // gutter, above the first cover.
+                    <Button asChild className="w-full sm:w-fit">
                         <Link to="/custom/new">
                             <FontAwesomeIcon icon={faPlus} className="icon mr-3" />
                             <p>New book</p>

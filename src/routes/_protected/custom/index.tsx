@@ -28,12 +28,6 @@ function RouteComponent() {
             </div>
 
             <div className="flex w-full flex-col items-center gap-8 px-6">
-                <p className="w-full max-w-xl text-pretty opacity-50">
-                    {
-                        "Books you write yourself, for the ones the catalogue doesn't have. Only you can see them, and they turn up in your searches and shelves like any other book."
-                    }
-                </p>
-
                 <Button asChild>
                     <Link to="/custom/new">
                         <FontAwesomeIcon icon={faPlus} className="icon mr-3" />
@@ -53,7 +47,7 @@ function RouteComponent() {
                 )}
 
                 {!customBooks.isLoading && books.length === 0 && (
-                    <p className="font-medium tracking-wide opacity-80">{"You haven't written any books yet."}</p>
+                    <p className="font-medium tracking-wide opacity-80">{"You haven't created any custom books yet."}</p>
                 )}
             </div>
         </main>

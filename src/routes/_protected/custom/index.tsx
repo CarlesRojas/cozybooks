@@ -1,4 +1,4 @@
-import BookCover from "@/component/BookCover";
+import BookCarousel from "@/component/BookCarousel";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
 import { useCustomBooks } from "@/convex/use/customBook/useCustomBooks";
@@ -27,29 +27,24 @@ function RouteComponent() {
                 <h1 className="text-2xl leading-5 font-bold text-neutral-950/90 dark:text-neutral-50/90">Custom books</h1>
             </div>
 
-            <div className="flex w-full flex-col items-center gap-8 px-6">
-                <Button asChild>
-                    <Link to="/custom/new">
-                        <FontAwesomeIcon icon={faPlus} className="icon mr-3" />
-                        <p>New book</p>
-                    </Link>
-                </Button>
-
-                {/* A grid rather than the carousel the shelves use: this is the page
-                    for finding one book among all of them, not for browsing past a
-                    few. */}
-                {books.length > 0 && (
-                    <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
-                        {books.map((book) => (
-                            <BookCover key={book.id} book={book} linkToBook />
-                        ))}
-                    </div>
-                )}
-
-                {!customBooks.isLoading && books.length === 0 && (
-                    <p className="font-medium tracking-wide opacity-80">{"You haven't created any custom books yet."}</p>
-                )}
-            </div>
+            {/* The same horizontal row the shelves use, so a custom book is browsed
+                exactly like any other. Its heading slot takes the button rather than a
+                title — the page already has one above, and sitting there is what lines
+                the button up with the first cover's gutter and keeps it on screen when
+                there are no books yet. */}
+            <BookCarousel
+                title={
+                    <Button asChild className="w-full">
+                        <Link to="/custom/new">
+                            <FontAwesomeIcon icon={faPlus} className="icon mr-3" />
+                            <p>New book</p>
+                        </Link>
+                    </Button>
+                }
+                books={books}
+                isLoading={customBooks.isLoading}
+                noBooksChildren={<p className="font-medium tracking-wide opacity-80">{"You haven't created any custom books yet."}</p>}
+            />
         </main>
     );
 }

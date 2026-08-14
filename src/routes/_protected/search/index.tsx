@@ -79,31 +79,35 @@ function RouteComponent() {
                 isEmpty && "lg:min-h-dvh lg:justify-center lg:pb-25",
             )}
         >
-            {/* The same wash that sits behind the welcome card, for the same reason:
-                an empty search page is one field on a blank screen. Only while it is
-                empty — once results arrive they are what the page is about, and the
-                bar goes back to being a sticky header over them. Sized against the
-                page rather than fixed, so it can never widen it: `overflow-hidden`
-                would be the other way to contain it, and that would break the sticky
-                bar below. */}
-            {isEmpty && (
-                <div
-                    aria-hidden
-                    className="from-brand/40 to-brand-warm/40 dark:from-brand/25 dark:to-brand-warm/25 pointer-events-none absolute top-1/2 left-1/2 size-128 max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
-                />
-            )}
-
             <section
                 className={cn(
                     "relative sticky top-0 z-30 h-fit w-full pt-6 pb-3 lg:top-25",
                     !isEmpty && "bg-neutral-50 dark:bg-neutral-950",
-                    isEmpty && "lg:static lg:pt-0",
+                    isEmpty && "lg:relative lg:pt-0",
                 )}
             >
+                {/* The same wash that sits behind the welcome card, for the same reason:
+                    an empty search page is one field on a blank screen. It belongs to the
+                    bar rather than to the page, so it travels with it — on a desktop the
+                    field starts centred and jumps to the top once there is something to
+                    show, and a wash anchored to the page would have been left behind.
+                    Painted over the bar's own opaque background, which is what hides the
+                    results scrolling underneath, so it has to sit above it to be seen at
+                    all. The same size and the same colour whether or not anything has
+                    been searched — it is the page's own light, and dimming it as results
+                    come in would read as the page losing it. Sized against the bar rather
+                    than fixed, so it can never widen the page — `overflow-hidden` would
+                    be the other way to contain it, and that would break the sticky bar it
+                    lives in. */}
+                <div
+                    aria-hidden
+                    className="from-brand/40 to-brand-warm/40 dark:from-brand/25 dark:to-brand-warm/25 pointer-events-none absolute top-1/2 left-1/2 size-128 max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-45 blur-[100px]"
+                />
+
                 {/* Searching is automatic, so Enter has nothing to submit — without this
                     the browser submits the form itself and reloads the page. */}
                 <form
-                    className="mx-auto flex h-fit w-full px-6 lg:max-w-xl"
+                    className="relative mx-auto flex h-fit w-full px-6 lg:max-w-xl"
                     autoComplete="off"
                     onSubmit={(event) => event.preventDefault()}
                 >

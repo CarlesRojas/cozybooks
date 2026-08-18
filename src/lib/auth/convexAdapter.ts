@@ -13,6 +13,9 @@ const DATE_FIELDS: Record<string, Array<string>> = {
     session: ["createdAt", "updatedAt", "expiresAt"],
     account: ["createdAt", "updatedAt", "accessTokenExpiresAt", "refreshTokenExpiresAt"],
     verification: ["createdAt", "updatedAt", "expiresAt"],
+    // The `jwt` plugin picks the newest key with `b.createdAt.getTime()`, so this one is
+    // not cosmetic: a plain number there throws rather than sorting.
+    jwks: ["createdAt", "expiresAt"],
 };
 
 const serializeValue = (value: unknown) => (value instanceof Date ? value.getTime() : value);
@@ -48,13 +51,43 @@ const deserializeRow = (model: string, row: Record<string, any> | null) => {
     return result;
 };
 
+// The signing keys, held in this process rather than re-read on every token.
+//
+// `jwks` is the busiest read in this adapter by a wide margin, and none of it is about
+// the visitor: better-auth's `jwt` plugin loads the whole key set to sign, so every
+// token minted — SSR of a document, the browser's `/api/auth/token`, the hourly refresh
+// of an open socket — is a `betterAuth.findMany` against a table that holds one row.
+// Signing keys are the one thing in these tables that does not change per request: no
+// `rotationInterval` is configured, so the key created on first sign-in is the key still
+// in use.
+//
+// The promise rather than the rows, so concurrent mints share one read instead of racing
+// to make their own. It is per adapter instance, and the adapter is built once in
+// `src/lib/auth/index.ts`, so its lifetime is the server process.
+//
+// One slot, keyed by the query it answers, because better-auth only ever asks this model
+// one way — the whole table, which is how both `getAllKeys` and `getLatestKey` read it.
+//
+// A write to the model drops the cache, so the key minted on a cold database is visible
+// at once. The TTL is for the writes this process cannot see: another instance rotating
+// a key, or the table being cleared underneath a running server, which would otherwise
+// leave it signing with a key Convex no longer publishes.
+const JWKS_MODEL = "jwks";
+const JWKS_CACHE_MS = 10 * 60 * 1000;
+
 interface Props {
     client: ConvexHttpClient;
     secret: string;
 }
 
-export const convexAdapter = ({ client, secret }: Props) =>
-    createAdapter({
+export const convexAdapter = ({ client, secret }: Props) => {
+    let jwks: { query: string; rows: Promise<Array<Record<string, any>>>; readAt: number } | undefined;
+
+    const forgetJwks = (model: string) => {
+        if (model === JWKS_MODEL) jwks = undefined;
+    };
+
+    return createAdapter({
         config: {
             adapterId: "convex",
             adapterName: "Convex Adapter",
@@ -67,6 +100,7 @@ export const convexAdapter = ({ client, secret }: Props) =>
         adapter: () => ({
             create: async ({ model, data }) => {
                 const row = await client.mutation(api.betterAuth.create, { secret, model, data: serializeRecord(data) });
+                forgetJwks(model);
                 return deserializeRow(model, row) as any;
             },
 
@@ -76,14 +110,37 @@ export const convexAdapter = ({ client, secret }: Props) =>
             },
 
             findMany: async ({ model, where, limit, sortBy, offset }) => {
-                const rows = await client.query(api.betterAuth.findMany, {
+                const args = {
                     secret,
                     model,
                     where: where ? serializeWhere(where) : undefined,
                     limit,
                     offset,
                     sortBy,
-                });
+                };
+                const read = () => client.query(api.betterAuth.findMany, args) as Promise<Array<Record<string, any>>>;
+
+                if (model === JWKS_MODEL) {
+                    // The secret is left out: it is the same on every call, and this
+                    // string lives in memory for as long as the cached rows do.
+                    const query = JSON.stringify([args.where, limit, offset, sortBy]);
+                    if (!jwks || jwks.query !== query || Date.now() - jwks.readAt > JWKS_CACHE_MS)
+                        jwks = { query, rows: read(), readAt: Date.now() };
+
+                    // A failed read must not be remembered, or the next mint replays the
+                    // same rejection out of the cache instead of asking again.
+                    const rows = await jwks.rows.catch((error: unknown) => {
+                        jwks = undefined;
+                        throw error;
+                    });
+
+                    // Deserialized per call rather than once: `deserializeRow` hands back
+                    // `Date` objects, and a caller that mutated a shared one would be
+                    // mutating every later mint's copy of the key.
+                    return rows.map((row) => deserializeRow(model, row)) as any;
+                }
+
+                const rows = await read();
                 return rows.map((row: Record<string, any>) => deserializeRow(model, row)) as any;
             },
 
@@ -94,24 +151,30 @@ export const convexAdapter = ({ client, secret }: Props) =>
                     where: serializeWhere(where),
                     update: serializeRecord(update as Record<string, unknown>),
                 });
+                forgetJwks(model);
                 return deserializeRow(model, row) as any;
             },
 
             updateMany: async ({ model, where, update }) => {
-                return await client.mutation(api.betterAuth.updateMany, {
+                const count = await client.mutation(api.betterAuth.updateMany, {
                     secret,
                     model,
                     where: serializeWhere(where),
                     update: serializeRecord(update),
                 });
+                forgetJwks(model);
+                return count;
             },
 
             delete: async ({ model, where }) => {
                 await client.mutation(api.betterAuth.deleteOne, { secret, model, where: serializeWhere(where) });
+                forgetJwks(model);
             },
 
             deleteMany: async ({ model, where }) => {
-                return await client.mutation(api.betterAuth.deleteMany, { secret, model, where: serializeWhere(where) });
+                const count = await client.mutation(api.betterAuth.deleteMany, { secret, model, where: serializeWhere(where) });
+                forgetJwks(model);
+                return count;
             },
 
             count: async ({ model, where }) => {
@@ -119,3 +182,4 @@ export const convexAdapter = ({ client, secret }: Props) =>
             },
         }),
     });
+};

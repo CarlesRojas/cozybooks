@@ -9,23 +9,25 @@ import type { Id } from "@convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 
 interface Props {
-    userId: string;
     bookId: string;
     timestamp: Date;
 }
 
 export const useCreateFinishedDate = () => {
-    const add = useMutation(api.finished.add).withOptimisticUpdate((localStore, { userId, bookId, timestamp }) => {
-        const current = localStore.getQuery(api.finished.getForBook, { userId, bookId });
+    const add = useMutation(api.finished.add).withOptimisticUpdate((localStore, { bookId, timestamp }) => {
+        const current = localStore.getQuery(api.finished.getForBook, { bookId });
         if (current === undefined) return;
 
-        const optimistic = { id: optimisticId<Id<"finished">>(), userId, bookId, timestamp };
+        // `userId` is on the wire row because the query returns what the table holds;
+        // the optimistic stand-in copies it off a row already on screen, or off the
+        // query's own shape when this is the first date for the book.
+        const optimistic = { id: optimisticId<Id<"finished">>(), userId: current[0]?.userId ?? "", bookId, timestamp };
         localStore.setQuery(
             api.finished.getForBook,
-            { userId, bookId },
+            { bookId },
             [...current, optimistic].sort((a, b) => a.timestamp - b.timestamp),
         );
     });
 
-    return useTrackedMutation(({ bookId, timestamp, userId }: Props) => add({ bookId, userId, timestamp: timestamp.getTime() }));
+    return useTrackedMutation(({ bookId, timestamp }: Props) => add({ bookId, timestamp: timestamp.getTime() }));
 };

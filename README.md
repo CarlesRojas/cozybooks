@@ -313,3 +313,38 @@ Files prefixed with `demo` can be safely deleted. They are there to provide a st
 # Learn More
 
 You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+
+## Node
+
+Node 22 or newer. Three things hold that in place, and none of them depends on
+remembering: `.nvmrc` pins 24 for `nvm use`, `engine-strict=true` in `.npmrc` makes
+`pnpm install` refuse a Node that does not satisfy `engines` instead of warning, and
+`use-node-version` pins the exact Node every pnpm script runs on — so `pnpm dev` is on
+24 even in a shell that is on 20.
+
+This is not a formality. On Node 20 this stack puts only the **last** `Set-Cookie` header
+of a response on the wire, and better-auth's Google callback sets three: it expires the
+oauth `state`, sets the session token, and sets the cached session. The session token is
+the middle one, so signing in completes on Google's side, sets nothing that matters, and
+lands back on the signed-out page with no error anywhere. Node 22+ sends all three.
+
+## Convex deployment variables
+
+Convex verifies the JWT better-auth issues, so `ctx.auth.getUserIdentity()` resolves inside
+Convex functions and every function reads the signed-in user from it — nothing is passed a
+user id. Two of these are what makes that work, and a missing one shows up as every
+authenticated read coming back empty rather than as an error:
+
+```bash
+npx convex env set BETTER_AUTH_SECRET <the same value the app server uses>
+npx convex env set BETTER_AUTH_URL <the app's own origin, e.g. https://cozybooks.app>
+npx convex env set GOOGLE_BOOKS_API_KEY <key>
+
+# and again for production
+npx convex env set --prod BETTER_AUTH_URL https://cozybooks.app
+```
+
+`BETTER_AUTH_URL` is the token's issuer — the app server signs it, since better-auth runs
+there — and `convex/auth.config.ts` checks it. The key set it verifies against is served by
+the deployment itself, from `convex/http.ts`, because a Convex deployment cannot reach the
+app when the app is `localhost`.

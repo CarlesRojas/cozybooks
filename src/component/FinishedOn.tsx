@@ -16,7 +16,6 @@ import { useState } from "react";
 
 interface Props {
     book: Book;
-    userId: string;
 }
 
 const months: Record<number, string> = {
@@ -34,8 +33,8 @@ const months: Record<number, string> = {
     11: "December",
 };
 
-const FinishedOn = ({ book, userId }: Props) => {
-    const finishedDates = useFinishedDates({ bookId: book.id, userId });
+const FinishedOn = ({ book }: Props) => {
+    const finishedDates = useFinishedDates({ bookId: book.id });
 
     const removeBookFromFinished = useRemoveBookFromFinished();
     const updateFinishedDate = useUpdateFinishedDate();
@@ -144,7 +143,6 @@ const FinishedOn = ({ book, userId }: Props) => {
                                         id: finishedDate.id,
                                         bookId: book.id,
                                         timestamp: newDate,
-                                        userId,
                                     });
                                     setEditPopoverOpen(undefined);
                                 },
@@ -162,8 +160,8 @@ const FinishedOn = ({ book, userId }: Props) => {
                             <Button
                                 variant="destructive"
                                 onClick={() => {
-                                    deleteFinishedDate.mutate({ id: finishedDate.id, bookId: book.id, userId });
-                                    if (finishedDates.data!.length === 1) removeBookFromFinished.mutate({ book, userId });
+                                    deleteFinishedDate.mutate({ id: finishedDate.id, bookId: book.id });
+                                    if (finishedDates.data!.length === 1) removeBookFromFinished.mutate({ book });
                                     setEditPopoverOpen(undefined);
                                 }}
                             >
@@ -193,7 +191,7 @@ const FinishedOn = ({ book, userId }: Props) => {
                         {updateForm({
                             date: new Date(),
                             onUpdate: (newDate) => {
-                                createFinishedDate.mutate({ bookId: book.id, timestamp: newDate, userId });
+                                createFinishedDate.mutate({ bookId: book.id, timestamp: newDate });
                                 setNewDatePopoverOpen(false);
                             },
                             submit: (

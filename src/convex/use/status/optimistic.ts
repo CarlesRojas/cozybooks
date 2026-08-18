@@ -7,8 +7,8 @@ type WireBookStatus = FunctionReturnType<typeof api.status.getBookStatus>;
 // Flips the reactive `getBookStatus` query instantly while the mutation is in flight.
 export const setOptimisticBookStatus = (
     localStore: OptimisticLocalStore,
-    { bookId, userId, status }: { bookId: string; userId: string; status: WireBookStatus },
+    { bookId, status }: { bookId: string; status: WireBookStatus },
 ) => {
-    if (localStore.getQuery(api.status.getBookStatus, { bookId, userId }) === undefined) return;
-    localStore.setQuery(api.status.getBookStatus, { bookId, userId }, status);
+    if (localStore.getQuery(api.status.getBookStatus, { bookId }) === undefined) return;
+    localStore.setQuery(api.status.getBookStatus, { bookId }, status);
 };

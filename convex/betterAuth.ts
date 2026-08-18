@@ -10,7 +10,7 @@
 // (stored as `authId` — Convex document ids stay internal), dates as ms since epoch.
 
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalQuery, mutation, query } from "./_generated/server";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 
 const TABLES = {
@@ -18,6 +18,7 @@ const TABLES = {
     session: "sessions",
     account: "accounts",
     verification: "verifications",
+    jwks: "jwks",
 } as const;
 
 type AuthModel = keyof typeof TABLES;
@@ -29,6 +30,7 @@ const INDEXED_FIELDS: Record<AuthTable, Record<string, string>> = {
     sessions: { id: "by_auth_id", token: "by_token", userId: "by_user" },
     accounts: { id: "by_auth_id", userId: "by_user" },
     verifications: { id: "by_auth_id", identifier: "by_identifier" },
+    jwks: { id: "by_auth_id" },
 };
 
 // `operator`/`connector`/`mode` are optional in better-auth's own WhereClause type
@@ -83,8 +85,7 @@ const toRow = (doc: Record<string, any>) => {
 
 // `mode: "insensitive"` asks for case-insensitive string equality and pattern
 // matching; it has no effect on non-string values.
-const foldCase = (value: any, insensitive: boolean): any =>
-    insensitive && typeof value === "string" ? value.toLowerCase() : value;
+const foldCase = (value: any, insensitive: boolean): any => (insensitive && typeof value === "string" ? value.toLowerCase() : value);
 
 const matchesClause = (doc: Record<string, any>, clause: WhereClause) => {
     const insensitive = clause.mode === "insensitive";
@@ -244,5 +245,31 @@ export const count = query({
         assertAccess(secret);
         const results = await findMatches(ctx, tableFor(model), where ?? []);
         return results.length;
+    },
+});
+
+// The public half of the signing keys, in JWKS shape, for the HTTP route in
+// `convex/http.ts`.
+//
+// better-auth serves the same thing at `<BETTER_AUTH_URL>/api/auth/jwks`, but that is
+// the app server, and this deployment is what has to fetch it to verify a token —
+// which it cannot do when the app is `localhost`. Serving it from here works in
+// development and production alike, and the keys are already stored here.
+//
+// `alg` is stamped from the algorithm `src/lib/auth/index.ts` pins, not read off the
+// row: better-auth drops the `alg` it generates, since its own `jwks` schema does not
+// declare the field.
+const KEY_ALGORITHM = "RS256";
+
+export const publicKeys = internalQuery({
+    args: {},
+    handler: async (ctx) => {
+        const keys = await ctx.db.query("jwks").collect();
+
+        return keys.map((key) => ({
+            alg: KEY_ALGORITHM,
+            ...(JSON.parse(key.publicKey) as Record<string, unknown>),
+            kid: key.authId,
+        }));
     },
 });

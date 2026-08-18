@@ -8,11 +8,10 @@ import { useQuery } from "convex-helpers/react/cache";
 
 interface Props {
     bookId: string;
-    userId: string;
 }
 
-export const useBookStatus = ({ bookId, userId }: Props): { data: BookStatus | undefined; isLoading: boolean } => {
-    const status = useQuery(api.status.getBookStatus, { bookId, userId });
+export const useBookStatus = ({ bookId }: Props): { data: BookStatus | undefined; isLoading: boolean } => {
+    const status = useQuery(api.status.getBookStatus, { bookId });
 
     return { data: status !== undefined ? BookStatus[status] : undefined, isLoading: status === undefined };
 };

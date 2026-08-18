@@ -9,11 +9,10 @@ import { useMemo } from "react";
 
 interface Props {
     bookId: string;
-    userId: string;
 }
 
-export const useFinishedDates = ({ bookId, userId }: Props): { data: Array<Finished> | undefined; isLoading: boolean } => {
-    const finished = useQuery(api.finished.getForBook, { userId, bookId });
+export const useFinishedDates = ({ bookId }: Props): { data: Array<Finished> | undefined; isLoading: boolean } => {
+    const finished = useQuery(api.finished.getForBook, { bookId });
     const data = useMemo(() => finished?.map(fromWireFinished), [finished]);
 
     return { data, isLoading: finished === undefined };

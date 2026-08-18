@@ -5,6 +5,7 @@
 
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
+import { getUserId } from "./lib/auth";
 import { action } from "./_generated/server";
 import { catalogueParams, clampMaxResults, googleBooksRequest, parseGoogleVolume } from "./lib/googleBooks";
 import type { PublishedBook } from "./lib/publish";
@@ -44,9 +45,12 @@ export const search = action({
         query: v.string(),
         maxResults: v.optional(v.number()),
         startIndex: v.optional(v.number()),
-        userId: v.optional(v.string()),
     },
-    handler: async (ctx, { query, maxResults, startIndex, userId }): Promise<{ totalItems: number; items: Array<PublishedBook> }> => {
+    handler: async (ctx, { query, maxResults, startIndex }): Promise<{ totalItems: number; items: Array<PublishedBook> }> => {
+        // The reader's own books are searched alongside the catalogue, so this needs to
+        // know who is asking — from the verified token, not from an argument.
+        const userId = await getUserId(ctx);
+
         const trimmed = query.trim();
         if (!trimmed) return { totalItems: 0, items: [] };
 

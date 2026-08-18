@@ -11,7 +11,7 @@ interface Props {
     books: Array<Book>;
     isLoading?: boolean;
     noBooksChildren?: ReactNode;
-    wantToRead?: { userId: string };
+    wantToRead?: boolean;
 
     // Centres the section on desktop when its covers are too few to fill the row.
     // Off by default: the library pages stack several sections down the page, and

@@ -11,20 +11,19 @@ import { useMutation } from "convex/react";
 interface Props {
     bookId: string;
     id: string;
-    userId: string;
 }
 
 export const useDeleteFinishedDate = () => {
-    const remove = useMutation(api.finished.remove).withOptimisticUpdate((localStore, { id, userId, bookId }) => {
-        const current = localStore.getQuery(api.finished.getForBook, { userId, bookId });
+    const remove = useMutation(api.finished.remove).withOptimisticUpdate((localStore, { id, bookId }) => {
+        const current = localStore.getQuery(api.finished.getForBook, { bookId });
         if (current === undefined) return;
 
         localStore.setQuery(
             api.finished.getForBook,
-            { userId, bookId },
+            { bookId },
             current.filter((finished) => finished.id !== id),
         );
     });
 
-    return useTrackedMutation(({ id, bookId, userId }: Props) => remove({ id: id as Id<"finished">, userId, bookId }));
+    return useTrackedMutation(({ id, bookId }: Props) => remove({ id: id as Id<"finished">, bookId }));
 };

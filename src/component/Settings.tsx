@@ -11,24 +11,19 @@ import {
     DropdownMenuTrigger,
 } from "@/component/ui/dropdown-menu";
 import { authClient } from "@/lib/auth/client";
+import { useUser } from "@/lib/auth/useUser";
 import type { Theme } from "@/lib/theme";
 import { useTheme } from "@/lib/theme";
-import { QueryKey } from "@/type/QueryKey";
-import type { QueryClient } from "@tanstack/react-query";
-import { Link, useRouter } from "@tanstack/react-router";
-import type { User } from "better-auth";
+import { Link } from "@tanstack/react-router";
 import { faFeather, faRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
-interface Props {
-    user: User;
-    queryClient: QueryClient;
-}
-
-const Settings = ({ user, queryClient }: Props) => {
+const Settings = () => {
+    // The avatar and name come off the better-auth session, which the client keeps live
+    // — signing out empties it without a reload.
+    const { user } = useUser();
     const { theme, setTheme } = useTheme();
-    const router = useRouter();
 
     const [signOutFailed, setSignOutFailed] = useState(false);
 
@@ -43,8 +38,10 @@ const Settings = ({ user, queryClient }: Props) => {
             return;
         }
 
-        await queryClient.invalidateQueries({ queryKey: [QueryKey.USER] });
-        await router.invalidate();
+        // A full document load rather than a router invalidation: the token the root
+        // route resolved is remembered for the life of the document (see
+        // `src/routes/__root.tsx`), and leaving the document is what forgets it.
+        window.location.href = "/";
     };
 
     return (
@@ -56,14 +53,18 @@ const Settings = ({ user, queryClient }: Props) => {
             </Button>
 
             <DropdownMenuContent className="mx-2 my-3">
-                <DropdownMenuLabel className="flex items-center gap-4">
-                    <Avatar>
-                        <AvatarImage src={user.image ?? undefined} />
-                        <AvatarFallback className="uppercase">{user.name[0]}</AvatarFallback>
-                    </Avatar>
+                {/* The session may not have arrived yet on the first paint after a
+                    cold load, so the greeting waits rather than rendering half of one. */}
+                {user && (
+                    <DropdownMenuLabel className="flex items-center gap-4">
+                        <Avatar>
+                            <AvatarImage src={user.image ?? undefined} />
+                            <AvatarFallback className="uppercase">{user.name[0]}</AvatarFallback>
+                        </Avatar>
 
-                    {`Hi ${user.name.split(" ").slice(0, 2).join(" ")}!`}
-                </DropdownMenuLabel>
+                        {`Hi ${user.name.split(" ").slice(0, 2).join(" ")}!`}
+                    </DropdownMenuLabel>
+                )}
 
                 <DropdownMenuSeparator />
 

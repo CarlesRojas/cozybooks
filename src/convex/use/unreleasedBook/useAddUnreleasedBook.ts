@@ -7,21 +7,23 @@ import { useMutation } from "convex/react";
 
 interface Props {
     name: string;
-    userId: string;
 }
 
 export const useAddUnreleasedBook = () => {
-    const add = useMutation(api.unreleasedBooks.add).withOptimisticUpdate((localStore, { name, userId }) => {
-        const current = localStore.getQuery(api.unreleasedBooks.list, { userId });
+    const add = useMutation(api.unreleasedBooks.add).withOptimisticUpdate((localStore, { name }) => {
+        const current = localStore.getQuery(api.unreleasedBooks.list, {});
         if (current === undefined) return;
 
-        const optimistic = { id: optimisticId<Id<"unreleasedBooks">>(), userId, name };
+        // `userId` is on the wire row because the query returns what the table holds;
+        // the optimistic stand-in copies it off a row already on screen, or is empty
+        // when this is the first one.
+        const optimistic = { id: optimisticId<Id<"unreleasedBooks">>(), userId: current[0]?.userId ?? "", name };
         localStore.setQuery(
             api.unreleasedBooks.list,
-            { userId },
+            {},
             [...current, optimistic].sort((a, b) => a.name.localeCompare(b.name)),
         );
     });
 
-    return useTrackedMutation(({ name, userId }: Props) => add({ name, userId }));
+    return useTrackedMutation(({ name }: Props) => add({ name }));
 };

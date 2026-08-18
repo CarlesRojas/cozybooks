@@ -12,6 +12,7 @@ import { v } from "convex/values";
 import type { Doc } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 import { internalQuery, mutation, query } from "./_generated/server";
+import { getUserId, requireUserId } from "./lib/auth";
 import { CUSTOM_BOOK_ID_PREFIX, getOwnedCustomBook } from "./lib/model";
 import { publishBook } from "./lib/publish";
 
@@ -44,8 +45,10 @@ const customBookInput = {
 // until it exists — hence insert, then patch. Both happen inside the one mutation,
 // so no reader ever observes the placeholder.
 export const create = mutation({
-    args: { userId: v.string(), ...customBookInput },
-    handler: async (ctx, { userId, coverUrl, ...fields }) => {
+    args: customBookInput,
+    handler: async (ctx, { coverUrl, ...fields }) => {
+        const userId = await requireUserId(ctx);
+
         const id = await ctx.db.insert("books", {
             googleId: "",
             ownerId: userId,
@@ -64,8 +67,10 @@ export const create = mutation({
 // Returns the cover URL that is no longer in use, if any, so the caller can drop the
 // blob behind it. Convex has no access to the Blob store — the app server does.
 export const update = mutation({
-    args: { bookId: v.string(), userId: v.string(), ...customBookInput },
-    handler: async (ctx, { bookId, userId, coverUrl, ...fields }) => {
+    args: { bookId: v.string(), ...customBookInput },
+    handler: async (ctx, { bookId, coverUrl, ...fields }) => {
+        const userId = await requireUserId(ctx);
+
         const book = await getOwnedCustomBook(ctx, bookId, userId);
         if (!book) return { discardedCoverUrl: undefined };
 
@@ -81,8 +86,10 @@ export const update = mutation({
 // re-joined to a book that still exists. Only the owner can hold any of them, so
 // this user's rows are all of them.
 export const remove = mutation({
-    args: { bookId: v.string(), userId: v.string() },
-    handler: async (ctx, { bookId, userId }) => {
+    args: { bookId: v.string() },
+    handler: async (ctx, { bookId }) => {
+        const userId = await requireUserId(ctx);
+
         const book = await getOwnedCustomBook(ctx, bookId, userId);
         if (!book) return { discardedCoverUrl: undefined };
 
@@ -122,8 +129,11 @@ const listForUser = async (ctx: QueryCtx, userId: string) =>
 
 // The Custom books page: everything this user has written, newest first.
 export const list = query({
-    args: { userId: v.string() },
-    handler: async (ctx, { userId }) => {
+    args: {},
+    handler: async (ctx) => {
+        const userId = await getUserId(ctx);
+        if (!userId) return [];
+
         const books = await listForUser(ctx, userId);
         return books.map(publishBook);
     },

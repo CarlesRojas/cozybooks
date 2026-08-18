@@ -6,11 +6,10 @@ import { useQuery } from "convex-helpers/react/cache";
 
 interface Props {
     bookId: string;
-    userId: string;
 }
 
-export const useRating = ({ bookId, userId }: Props): { data: number | null | undefined; isLoading: boolean } => {
-    const rating = useQuery(api.ratings.get, { userId, bookId });
+export const useRating = ({ bookId }: Props): { data: number | null | undefined; isLoading: boolean } => {
+    const rating = useQuery(api.ratings.get, { bookId });
 
     return { data: rating, isLoading: rating === undefined };
 };

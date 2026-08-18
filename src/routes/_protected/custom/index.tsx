@@ -10,8 +10,7 @@ import { isIOS } from "react-device-detect";
 export const Route = createFileRoute("/_protected/custom/")({ component: RouteComponent });
 
 function RouteComponent() {
-    const context = Route.useRouteContext();
-    const customBooks = useCustomBooks(context.user!.id);
+    const customBooks = useCustomBooks();
 
     const books = customBooks.data ?? [];
 

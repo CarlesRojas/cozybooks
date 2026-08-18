@@ -13,6 +13,8 @@ import type * as books from "../books.js";
 import type * as customBooks from "../customBooks.js";
 import type * as finished from "../finished.js";
 import type * as googleBooks from "../googleBooks.js";
+import type * as http from "../http.js";
+import type * as lib_auth from "../lib/auth.js";
 import type * as lib_googleBooks from "../lib/googleBooks.js";
 import type * as lib_model from "../lib/model.js";
 import type * as lib_publish from "../lib/publish.js";
@@ -35,6 +37,8 @@ declare const fullApi: ApiFromModules<{
   customBooks: typeof customBooks;
   finished: typeof finished;
   googleBooks: typeof googleBooks;
+  http: typeof http;
+  "lib/auth": typeof lib_auth;
   "lib/googleBooks": typeof lib_googleBooks;
   "lib/model": typeof lib_model;
   "lib/publish": typeof lib_publish;

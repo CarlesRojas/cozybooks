@@ -22,7 +22,6 @@ export const Route = createFileRoute("/_protected/search/")({
 
 function RouteComponent() {
     const { query } = Route.useSearch();
-    const context = Route.useRouteContext();
     const navigate = useNavigate();
 
     // The field takes whatever the url carried in — the unreleased book list links
@@ -51,9 +50,9 @@ function RouteComponent() {
         search(value);
     };
 
-    const searchedBooks = useSearchedBooks({ query, userId: context.user!.id, booksPerPage: PAGE_SIZE });
+    const searchedBooks = useSearchedBooks({ query, booksPerPage: PAGE_SIZE });
 
-    const wantToRead = { userId: context.user!.id };
+    const wantToRead = true;
 
     // Everything on screen keys off the input rather than the url. Router navigation
     // runs inside a transition, so `query` lands a moment after the field changes —

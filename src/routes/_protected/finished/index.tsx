@@ -74,7 +74,6 @@ export const Route = createFileRoute("/_protected/finished/")({
 });
 
 function RouteComponent() {
-    const context = Route.useRouteContext();
     const { sort: urlSort, repeats: urlRepeats } = Route.useSearch();
     const navigate = useNavigate();
 
@@ -112,7 +111,7 @@ function RouteComponent() {
         write(REPEATS_STORAGE_KEY, repeats);
     }, [urlSort, urlRepeats, sort, repeats, navigate]);
 
-    const finishedBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.FINISHED });
+    const finishedBooks = useLibraryBooks({ type: LibraryType.FINISHED });
 
     const sortedBooks = useMemo(
         () =>

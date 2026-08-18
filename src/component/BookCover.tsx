@@ -12,7 +12,9 @@ export interface Props {
     book: Book;
     maxWidth?: number;
     linkToBook?: boolean;
-    wantToRead?: { userId: string };
+    // Whether to overlay the want-to-read toggle. It used to carry the reader's id;
+    // the mutation behind it reads that from the verified identity now.
+    wantToRead?: boolean;
 }
 
 const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) => {
@@ -114,7 +116,7 @@ const BookCover = ({ book, maxWidth, linkToBook, wantToRead, ...props }: Props) 
                 </div>
             )}
 
-            {wantToRead && <WantToReadButton book={book} userId={wantToRead.userId} />}
+            {wantToRead && <WantToReadButton book={book} />}
         </>,
     );
 };

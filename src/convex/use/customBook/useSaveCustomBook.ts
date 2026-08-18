@@ -13,6 +13,9 @@ import { useMutation } from "convex/react";
 import { useCallback, useState } from "react";
 
 interface Props extends CustomBookInput {
+    // Only to name the cover's path in the blob store, which is checked against the
+    // session server-side (`src/routes/api/blob/upload.ts`). The book itself is written
+    // against the identity Convex verified.
     userId: string;
     // Absent when creating.
     bookId?: string;
@@ -33,9 +36,9 @@ export const useSaveCustomBook = () => {
             try {
                 const cover = coverFile ? await uploadCover(coverFile, userId) : coverUrl;
 
-                if (!bookId) return await create({ userId, coverUrl: cover, ...fields });
+                if (!bookId) return await create({ coverUrl: cover, ...fields });
 
-                const { discardedCoverUrl } = await update({ bookId, userId, coverUrl: cover, ...fields });
+                const { discardedCoverUrl } = await update({ bookId, coverUrl: cover, ...fields });
                 if (discardedCoverUrl) void deleteCover(discardedCoverUrl);
 
                 return bookId;

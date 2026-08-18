@@ -1,7 +1,13 @@
 // Counterpart of `src/server/repo/library.ts`.
+//
+// Whose library is being read or written comes from the verified token now (see
+// `convex/lib/auth.ts`), not from an argument. Reads degrade to an empty shelf while
+// signed out rather than throwing, the same way the book page renders for a visitor;
+// writes require a session.
 
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { getUserId, requireUserId } from "./lib/auth";
 import {
     addBookToLibrary,
     getBookByGoogleId,
@@ -15,7 +21,6 @@ import { publishBook, publishFinished } from "./lib/publish";
 import { libraryTypeValidator } from "./schema";
 
 const libraryEntryArgs = {
-    userId: v.string(),
     bookId: v.string(),
     type: libraryTypeValidator,
 };
@@ -24,7 +29,8 @@ const libraryEntryArgs = {
 export const add = mutation({
     args: libraryEntryArgs,
     handler: async (ctx, args) => {
-        await addBookToLibrary(ctx, args);
+        const userId = await requireUserId(ctx);
+        await addBookToLibrary(ctx, { ...args, userId });
     },
 });
 
@@ -32,7 +38,8 @@ export const add = mutation({
 export const remove = mutation({
     args: libraryEntryArgs,
     handler: async (ctx, args) => {
-        await removeBookFromLibrary(ctx, args);
+        const userId = await requireUserId(ctx);
+        await removeBookFromLibrary(ctx, { ...args, userId });
     },
 });
 
@@ -40,7 +47,10 @@ export const remove = mutation({
 export const isInLibrary = query({
     args: libraryEntryArgs,
     handler: async (ctx, args) => {
-        return !!(await getLibraryEntry(ctx, args));
+        const userId = await getUserId(ctx);
+        if (!userId) return false;
+
+        return !!(await getLibraryEntry(ctx, { ...args, userId }));
     },
 });
 
@@ -50,12 +60,14 @@ export const isInLibrary = query({
 // in parallel through point-read indexes.
 export const getBooks = query({
     args: {
-        userId: v.string(),
         type: libraryTypeValidator,
         maxResults: v.optional(v.number()),
         startIndex: v.optional(v.number()),
     },
-    handler: async (ctx, { userId, type, maxResults, startIndex }) => {
+    handler: async (ctx, { type, maxResults, startIndex }) => {
+        const userId = await getUserId(ctx);
+        if (!userId) return { totalItems: 0, items: [] };
+
         const entries = await ctx.db
             .query("library")
             .withIndex("by_user_type_created", (q) => q.eq("userId", userId).eq("type", type))

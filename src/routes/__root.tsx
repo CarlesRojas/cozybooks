@@ -49,7 +49,25 @@ export const Route = createRootRouteWithContext<Context>()({
     }),
 
     beforeLoad: async ({ context }) => {
-        const result = await context.queryClient.fetchQuery({ queryKey: [QueryKey.USER], queryFn: getUser });
+        // How often this may ask the server is a bigger question here than it looks.
+        // The root route matches every url, and TanStack re-runs `beforeLoad` on every
+        // navigation and on every *preload* — `defaultPreload: "intent"` means a preload
+        // per link hovered. Without a stale time the query is stale the moment it
+        // resolves, so `fetchQuery` went back to `getUser` every single time: a server
+        // round trip per hover, and two `betterAuth.findMany` calls behind it.
+        //
+        // Who is signed in cannot change under the app without something invalidating
+        // this key: signing in leaves for Google and comes back as a fresh document,
+        // and signing out invalidates it by hand (see `Settings.tsx`) before asking the
+        // router to reload. So within the window the cached answer is the answer.
+        //
+        // Five minutes, matching `session.cookieCache` in `src/lib/auth/index.ts`, so
+        // the two windows over a stale session are the same one rather than stacking.
+        const result = await context.queryClient.fetchQuery({
+            queryKey: [QueryKey.USER],
+            queryFn: getUser,
+            staleTime: 5 * 60 * 1000,
+        });
 
         return { user: result.user };
     },

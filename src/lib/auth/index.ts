@@ -41,6 +41,10 @@ export const auth = betterAuth({
         },
     },
 
+    // This app has only ever had Google sign-in. Leaving email and password off keeps it
+    // that way rather than quietly opening a second route in.
+    emailAndPassword: { enabled: false },
+
     // The session, cached in a signed cookie for five minutes, so reading it stops
     // costing a database round trip. Every session read went to Convex as *two*
     // `betterAuth.findMany` calls — better-auth looks the session up by token and then

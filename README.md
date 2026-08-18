@@ -316,7 +316,11 @@ You can learn more about all of the offerings from TanStack in the [TanStack doc
 
 ## Node
 
-Node 22 or newer — `.nvmrc` pins 24, so `nvm use` picks it up.
+Node 22 or newer. Three things hold that in place, and none of them depends on
+remembering: `.nvmrc` pins 24 for `nvm use`, `engine-strict=true` in `.npmrc` makes
+`pnpm install` refuse a Node that does not satisfy `engines` instead of warning, and
+`use-node-version` pins the exact Node every pnpm script runs on — so `pnpm dev` is on
+24 even in a shell that is on 20.
 
 This is not a formality. On Node 20 this stack puts only the **last** `Set-Cookie` header
 of a response on the wire, and better-auth's Google callback sets three: it expires the

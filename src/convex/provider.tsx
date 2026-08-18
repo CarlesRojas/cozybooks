@@ -21,7 +21,11 @@ const InitialTokenContext = createContext<string | undefined>(undefined);
 // session, so a signed-out call comes back without one and Convex stays anonymous.
 const fetchToken = async () => {
     const response = await fetch("/api/auth/token", { credentials: "include" });
-    if (!response.ok) return null;
+    // TEMPORARY DIAGNOSTICS.
+    if (!response.ok) {
+        console.log(`[auth:client] /api/auth/token ${response.status}: ${(await response.text()).slice(0, 300)}`);
+        return null;
+    }
 
     const { token } = (await response.json()) as { token?: string };
     return token ?? null;
@@ -45,8 +49,15 @@ const useBetterAuth = () => {
         const token = unspentToken.current;
         unspentToken.current = undefined;
 
-        if (!forceRefreshToken && token) return token;
-        return await fetchToken();
+        // TEMPORARY DIAGNOSTICS.
+        if (!forceRefreshToken && token) {
+            console.log("[auth:client] fetchAccessToken → ssr token");
+            return token;
+        }
+
+        const fetched = await fetchToken();
+        console.log(`[auth:client] fetchAccessToken force=${forceRefreshToken} → ${fetched ? `token len=${fetched.length}` : "null"}`);
+        return fetched;
     }, []);
 
     // Before the session query has answered, the token SSR resolved still stands. Without
@@ -55,6 +66,11 @@ const useBetterAuth = () => {
     // mismatch.
     const settled = !session.isPending;
     const isAuthenticated = settled ? !!session.data : !!initialToken;
+
+    // TEMPORARY DIAGNOSTICS.
+    console.log(
+        `[auth:client] session settled=${settled} hasSession=${!!session.data} initialToken=${!!initialToken} isAuthenticated=${isAuthenticated}`,
+    );
 
     return useMemo(
         () => ({ isLoading: !settled && !initialToken, isAuthenticated, fetchAccessToken }),

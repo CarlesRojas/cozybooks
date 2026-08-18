@@ -2,7 +2,7 @@ import Navigation from "@/component/Navigation";
 import { Sort } from "@/component/SortMenu";
 import type { Context } from "@/lib/context";
 import { seo } from "@/lib/seo";
-import { ThemeProvider } from "@/lib/theme";
+import { THEME_COLOR, ThemeProvider } from "@/lib/theme";
 import { getUser } from "@/lib/auth/getUser";
 import "@/lib/fontAwesome";
 import appCss from "@/style.css?url";
@@ -28,8 +28,11 @@ export const Route = createRootRouteWithContext<Context>()({
                 name: "viewport",
                 content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, interactive-widget=resizes-content",
             },
-            { name: "theme-color", media: "(prefers-color-scheme: light)", content: "#fafafa" },
-            { name: "theme-color", media: "(prefers-color-scheme: dark)", content: "#0a0a0a" },
+            // The colour of the status bar above the Android app. Light because that is
+            // what a document with no `dark` class on it renders as; `ThemeProvider`
+            // replaces it with the chosen theme's colour before the first paint, and on
+            // every change after — see `applyThemeColor`.
+            { name: "theme-color", content: THEME_COLOR.light },
             { name: "apple-mobile-web-app-capable", content: "yes" },
             { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
             ...seo({

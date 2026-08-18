@@ -314,6 +314,16 @@ Files prefixed with `demo` can be safely deleted. They are there to provide a st
 
 You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
 
+## Node
+
+Node 22 or newer — `.nvmrc` pins 24, so `nvm use` picks it up.
+
+This is not a formality. On Node 20 this stack puts only the **last** `Set-Cookie` header
+of a response on the wire, and better-auth's Google callback sets three: it expires the
+oauth `state`, sets the session token, and sets the cached session. The session token is
+the middle one, so signing in completes on Google's side, sets nothing that matters, and
+lands back on the signed-out page with no error anywhere. Node 22+ sends all three.
+
 ## Convex deployment variables
 
 Convex verifies the JWT better-auth issues, so `ctx.auth.getUserIdentity()` resolves inside

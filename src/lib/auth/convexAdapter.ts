@@ -99,14 +99,7 @@ export const convexAdapter = ({ client, secret }: Props) => {
 
         adapter: () => ({
             create: async ({ model, data }) => {
-                // TEMPORARY DIAGNOSTICS.
-                if (model === JWKS_MODEL) console.log(`[auth:adapter] jwks create fields=${Object.keys(data).join(",")}`);
-                const row = await client
-                    .mutation(api.betterAuth.create, { secret, model, data: serializeRecord(data) })
-                    .catch((error: unknown) => {
-                        console.log(`[auth:adapter] ${model} create FAILED: ${error instanceof Error ? error.message : String(error)}`);
-                        throw error;
-                    });
+                const row = await client.mutation(api.betterAuth.create, { secret, model, data: serializeRecord(data) });
                 forgetJwks(model);
                 return deserializeRow(model, row) as any;
             },
@@ -128,8 +121,6 @@ export const convexAdapter = ({ client, secret }: Props) => {
                 const read = () => client.query(api.betterAuth.findMany, args) as Promise<Array<Record<string, any>>>;
 
                 if (model === JWKS_MODEL) {
-                    // TEMPORARY DIAGNOSTICS.
-                    console.log(`[auth:adapter] jwks findMany cached=${jwks ? "maybe" : "no"}`);
                     // The secret is left out: it is the same on every call, and this
                     // string lives in memory for as long as the cached rows do.
                     const query = JSON.stringify([args.where, limit, offset, sortBy]);
@@ -142,8 +133,6 @@ export const convexAdapter = ({ client, secret }: Props) => {
                         jwks = undefined;
                         throw error;
                     });
-
-                    console.log(`[auth:adapter] jwks findMany rows=${rows.length}`);
 
                     // Deserialized per call rather than once: `deserializeRow` hands back
                     // `Date` objects, and a caller that mutated a shared one would be

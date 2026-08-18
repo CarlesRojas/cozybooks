@@ -87,8 +87,6 @@ export const Route = createRootRouteWithContext<Context>()({
 
     beforeLoad: async () => {
         const token = await resolveToken();
-        // TEMPORARY DIAGNOSTICS.
-        console.log(`[auth:root] browser=${isBrowser()} token=${token ? "yes" : "no"}`);
 
         // What "signed in" means to the router. Who that is is not decided here at all:
         // the token says so, Convex verifies it, and every function reads the user off

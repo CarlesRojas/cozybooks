@@ -11,11 +11,10 @@ import type { MouseEvent } from "react";
 
 interface Props {
     book: Book;
-    userId: string;
 }
 
-const WantToReadButton = ({ book, userId }: Props) => {
-    const bookStatus = useBookStatus({ bookId: book.id, userId });
+const WantToReadButton = ({ book }: Props) => {
+    const bookStatus = useBookStatus({ bookId: book.id });
 
     const addToWantToRead = useAddToWantToRead();
     const removeFromWantToRead = useRemoveFromWantToRead();
@@ -29,8 +28,8 @@ const WantToReadButton = ({ book, userId }: Props) => {
         event.preventDefault();
         event.stopPropagation();
 
-        if (isAdded) removeFromWantToRead.mutate({ book, userId });
-        else addToWantToRead.mutate({ book, userId });
+        if (isAdded) removeFromWantToRead.mutate({ book });
+        else addToWantToRead.mutate({ book });
     };
 
     return (

@@ -13,10 +13,9 @@ import { isIOS } from "react-device-detect";
 export const Route = createFileRoute("/_protected/reading/")({ component: Reading });
 
 function Reading() {
-    const context = Route.useRouteContext();
-    const readingBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.READING });
-    const toReadBooks = useLibraryBooks({ userId: context.user!.id, type: LibraryType.TO_READ });
-    const unreleasedBooks = useUnreleasedBooks(context.user!.id);
+    const readingBooks = useLibraryBooks({ type: LibraryType.READING });
+    const toReadBooks = useLibraryBooks({ type: LibraryType.TO_READ });
+    const unreleasedBooks = useUnreleasedBooks();
 
     return (
         <main
@@ -52,11 +51,7 @@ function Reading() {
                 )}
 
                 {unreleasedBooks.data && (
-                    <UnreleasedBookList
-                        unreleasedBooks={unreleasedBooks.data}
-                        stickyClassName="top-0 pt-3 lg:top-25"
-                        userId={context.user!.id}
-                    />
+                    <UnreleasedBookList unreleasedBooks={unreleasedBooks.data} stickyClassName="top-0 pt-3 lg:top-25" />
                 )}
             </div>
         </main>

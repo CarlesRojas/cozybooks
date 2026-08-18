@@ -7,8 +7,8 @@ import { api } from "@convex/_generated/api";
 import { useQuery } from "convex-helpers/react/cache";
 import { useMemo } from "react";
 
-export const useCustomBooks = (userId: string): { data: Array<Book> | undefined; isLoading: boolean } => {
-    const books = useQuery(api.customBooks.list, { userId });
+export const useCustomBooks = (): { data: Array<Book> | undefined; isLoading: boolean } => {
+    const books = useQuery(api.customBooks.list, {});
     const data = useMemo(() => books?.map(fromWireBook), [books]);
 
     return { data, isLoading: books === undefined };

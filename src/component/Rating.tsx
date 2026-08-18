@@ -14,7 +14,6 @@ import { useEffect, useRef, useState } from "react";
 interface Props {
     book: Book;
     tooltipSide?: "top" | "right" | "bottom" | "left";
-    userId: string;
 }
 
 interface State {
@@ -22,8 +21,8 @@ interface State {
     interacting: boolean;
 }
 
-const Rating = ({ book, tooltipSide = "top", userId }: Props) => {
-    const currentRating = useRating({ bookId: book.id, userId });
+const Rating = ({ book, tooltipSide = "top" }: Props) => {
+    const currentRating = useRating({ bookId: book.id });
     const createRating = useCreateRating();
     const deleteRating = useDeleteRating();
 
@@ -41,7 +40,7 @@ const Rating = ({ book, tooltipSide = "top", userId }: Props) => {
 
         // Ensure rating is a valid number before calling createRating
         if (typeof state.rating === "number" && state.rating >= 1 && state.rating <= 10) {
-            createRating.mutate({ bookId: book.id, rating: state.rating, userId });
+            createRating.mutate({ bookId: book.id, rating: state.rating });
         }
 
         const isMouse = window.matchMedia("(hover: hover)").matches;
@@ -76,7 +75,7 @@ const Rating = ({ book, tooltipSide = "top", userId }: Props) => {
     // made the removal depend on which render won.
     const onDeleteClick = () => {
         setState({ interacting: false, rating: null });
-        deleteRating.mutate({ bookId: book.id, userId });
+        deleteRating.mutate({ bookId: book.id });
     };
 
     if (currentRating.isLoading)

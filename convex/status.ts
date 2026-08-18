@@ -1,3 +1,6 @@
+// Book-status flows. Whose shelves are being moved comes from the verified token —
+// see `convex/lib/auth.ts`.
+//
 // Book-status flows. Each one is a single transactional mutation over the library rows
 // and finished dates. The Convex tables are the sole source of truth — the old mirror
 // onto the user's Google "My Library" shelves was removed along with the rest of the
@@ -5,28 +8,34 @@
 
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { getUserId, requireUserId } from "./lib/auth";
 import { addBookToLibrary, getLibraryEntry, removeBookFromLibrary, upsertBook } from "./lib/model";
 import { bookArgs } from "./lib/validators";
 
 export const addToWantToRead = mutation({
-    args: { book: v.object(bookArgs), userId: v.string() },
-    handler: async (ctx, { book, userId }) => {
+    args: { book: v.object(bookArgs) },
+    handler: async (ctx, { book }) => {
+        const userId = await requireUserId(ctx);
+
         await upsertBook(ctx, book);
         await addBookToLibrary(ctx, { userId, type: "TO_READ", bookId: book.id });
     },
 });
 
 export const removeFromWantToRead = mutation({
-    args: { bookId: v.string(), userId: v.string() },
-    handler: async (ctx, { bookId, userId }) => {
+    args: { bookId: v.string() },
+    handler: async (ctx, { bookId }) => {
+        const userId = await requireUserId(ctx);
         await removeBookFromLibrary(ctx, { userId, type: "TO_READ", bookId });
     },
 });
 
 // Leaves TO_READ, enters READING.
 export const startReading = mutation({
-    args: { book: v.object(bookArgs), userId: v.string() },
-    handler: async (ctx, { book, userId }) => {
+    args: { book: v.object(bookArgs) },
+    handler: async (ctx, { book }) => {
+        const userId = await requireUserId(ctx);
+
         await upsertBook(ctx, book);
         await removeBookFromLibrary(ctx, { userId, type: "TO_READ", bookId: book.id });
         await addBookToLibrary(ctx, { userId, type: "READING", bookId: book.id });
@@ -35,8 +44,10 @@ export const startReading = mutation({
 
 // Leaves READING, back to TO_READ.
 export const stopReading = mutation({
-    args: { book: v.object(bookArgs), userId: v.string() },
-    handler: async (ctx, { book, userId }) => {
+    args: { book: v.object(bookArgs) },
+    handler: async (ctx, { book }) => {
+        const userId = await requireUserId(ctx);
+
         await upsertBook(ctx, book);
         await removeBookFromLibrary(ctx, { userId, type: "READING", bookId: book.id });
         await addBookToLibrary(ctx, { userId, type: "TO_READ", bookId: book.id });
@@ -45,8 +56,10 @@ export const stopReading = mutation({
 
 // Leaves READING, enters FINISHED and records a finished date.
 export const finishBook = mutation({
-    args: { book: v.object(bookArgs), userId: v.string() },
-    handler: async (ctx, { book, userId }) => {
+    args: { book: v.object(bookArgs) },
+    handler: async (ctx, { book }) => {
+        const userId = await requireUserId(ctx);
+
         await upsertBook(ctx, book);
         await removeBookFromLibrary(ctx, { userId, type: "READING", bookId: book.id });
         await addBookToLibrary(ctx, { userId, type: "FINISHED", bookId: book.id });
@@ -55,16 +68,20 @@ export const finishBook = mutation({
 });
 
 export const removeFromFinished = mutation({
-    args: { bookId: v.string(), userId: v.string() },
-    handler: async (ctx, { bookId, userId }) => {
+    args: { bookId: v.string() },
+    handler: async (ctx, { bookId }) => {
+        const userId = await requireUserId(ctx);
         await removeBookFromLibrary(ctx, { userId, type: "FINISHED", bookId });
     },
 });
 
 // Two point reads, and reactive: status buttons update live after mutations.
 export const getBookStatus = query({
-    args: { bookId: v.string(), userId: v.string() },
-    handler: async (ctx, { bookId, userId }) => {
+    args: { bookId: v.string() },
+    handler: async (ctx, { bookId }) => {
+        const userId = await getUserId(ctx);
+        if (!userId) return "NONE";
+
         const [reading, toRead] = await Promise.all([
             getLibraryEntry(ctx, { userId, type: "READING", bookId }),
             getLibraryEntry(ctx, { userId, type: "TO_READ", bookId }),

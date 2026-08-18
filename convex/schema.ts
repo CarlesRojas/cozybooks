@@ -88,6 +88,18 @@ export default defineSchema({
         .index("by_auth_id", ["authId"])
         .index("by_user", ["userId"]),
 
+    // The signing keys better-auth's `jwt` plugin mints, and the reason Convex can
+    // verify a token at all: `convex/http.ts` serves their public halves as a JWKS and
+    // `convex/auth.config.ts` points at it. The private half is encrypted with
+    // BETTER_AUTH_SECRET.
+    jwks: defineTable({
+        authId: v.string(),
+        publicKey: v.string(),
+        privateKey: v.string(),
+        createdAt: v.number(),
+        expiresAt: v.optional(v.number()),
+    }).index("by_auth_id", ["authId"]),
+
     verifications: defineTable({
         authId: v.string(),
         identifier: v.string(),

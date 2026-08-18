@@ -5,9 +5,7 @@ import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
 import { NAVIGATION_BLOCK_MS } from "@/const";
 import { NO_NAVBAR_ROUTES, Route } from "@/type/Route";
-import type { QueryClient } from "@tanstack/react-query";
 import { Link, useLocation, useRouterState } from "@tanstack/react-router";
-import type { User } from "better-auth";
 import { motion } from "framer-motion";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,13 +14,14 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { isIOS } from "react-device-detect";
 
 interface Props {
-    user: User | null;
-    queryClient: QueryClient;
+    // Whether there is a session at all, which is all the navigation needs to know.
+    // Who it belongs to is the session's own business — `Settings` reads it there.
+    isAuthenticated: boolean;
     sort?: Sort;
     repeats?: boolean;
 }
 
-const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
+const Navigation = ({ isAuthenticated, sort, repeats }: Props) => {
     const location = useLocation();
 
     const homeRoute: string = Route.READING;
@@ -80,7 +79,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
         return () => observer.disconnect();
     }, [location.pathname]);
 
-    if (NO_NAVBAR_ROUTES.includes(location.pathname as Route) || !user) return null;
+    if (NO_NAVBAR_ROUTES.includes(location.pathname as Route) || !isAuthenticated) return null;
 
     return (
         <motion.nav
@@ -154,7 +153,7 @@ const Navigation = ({ user, queryClient, sort, repeats }: Props) => {
 
             <SortMenu className={cn("lg:ml-auto", !showSortButton && "pointer-events-none opacity-0")} sort={sort} repeats={repeats} />
 
-            <Settings user={user} queryClient={queryClient} />
+            <Settings />
         </motion.nav>
     );
 };

@@ -7,20 +7,19 @@ import { useMutation } from "convex/react";
 
 interface Props {
     unreleasedBookId: string;
-    userId: string;
 }
 
 export const useDeleteUnreleasedBook = () => {
-    const remove = useMutation(api.unreleasedBooks.remove).withOptimisticUpdate((localStore, { id, userId }) => {
-        const current = localStore.getQuery(api.unreleasedBooks.list, { userId });
+    const remove = useMutation(api.unreleasedBooks.remove).withOptimisticUpdate((localStore, { id }) => {
+        const current = localStore.getQuery(api.unreleasedBooks.list, {});
         if (current === undefined) return;
 
         localStore.setQuery(
             api.unreleasedBooks.list,
-            { userId },
+            {},
             current.filter((unreleasedBook) => unreleasedBook.id !== id),
         );
     });
 
-    return useTrackedMutation(({ unreleasedBookId, userId }: Props) => remove({ id: unreleasedBookId as Id<"unreleasedBooks">, userId }));
+    return useTrackedMutation(({ unreleasedBookId }: Props) => remove({ id: unreleasedBookId as Id<"unreleasedBooks"> }));
 };

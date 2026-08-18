@@ -313,3 +313,24 @@ Files prefixed with `demo` can be safely deleted. They are there to provide a st
 # Learn More
 
 You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+
+## Convex deployment variables
+
+Convex verifies the JWT better-auth issues, so `ctx.auth.getUserIdentity()` resolves inside
+Convex functions and every function reads the signed-in user from it — nothing is passed a
+user id. Two of these are what makes that work, and a missing one shows up as every
+authenticated read coming back empty rather than as an error:
+
+```bash
+npx convex env set BETTER_AUTH_SECRET <the same value the app server uses>
+npx convex env set BETTER_AUTH_URL <the app's own origin, e.g. https://cozybooks.app>
+npx convex env set GOOGLE_BOOKS_API_KEY <key>
+
+# and again for production
+npx convex env set --prod BETTER_AUTH_URL https://cozybooks.app
+```
+
+`BETTER_AUTH_URL` is the token's issuer — the app server signs it, since better-auth runs
+there — and `convex/auth.config.ts` checks it. The key set it verifies against is served by
+the deployment itself, from `convex/http.ts`, because a Convex deployment cannot reach the
+app when the app is `localhost`.

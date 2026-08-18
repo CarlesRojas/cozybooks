@@ -14,13 +14,12 @@ import { useEffect, useMemo, useState } from "react";
 
 interface Props {
     bookId: string;
-    // Books the user wrote themselves are only readable by them, so the reader is
-    // part of the read.
-    userId?: string;
 }
 
-export const useBook = ({ bookId, userId }: Props): { data: Book | null | undefined; isLoading: boolean } => {
-    const cached = useQuery(api.books.get, { bookId, userId });
+// Books the user wrote themselves are only readable by them, and who is reading comes
+// from the token Convex verified — the read no longer says whose it is.
+export const useBook = ({ bookId }: Props): { data: Book | null | undefined; isLoading: boolean } => {
+    const cached = useQuery(api.books.get, { bookId });
     const getWithGoogleFallback = useAction(api.books.getWithGoogleFallback);
     const [missingBookId, setMissingBookId] = useState<string | null>(null);
 
@@ -29,7 +28,7 @@ export const useBook = ({ bookId, userId }: Props): { data: Book | null | undefi
 
         let cancelled = false;
 
-        getWithGoogleFallback({ bookId, userId })
+        getWithGoogleFallback({ bookId })
             .then((book) => {
                 if (!cancelled && book === null) setMissingBookId(bookId);
             })
@@ -40,7 +39,7 @@ export const useBook = ({ bookId, userId }: Props): { data: Book | null | undefi
         return () => {
             cancelled = true;
         };
-    }, [cached, bookId, userId, getWithGoogleFallback]);
+    }, [cached, bookId, getWithGoogleFallback]);
 
     const data = useMemo(() => {
         if (cached) return fromWireBook(cached);

@@ -8,7 +8,7 @@ import RelatedBooks from "@/component/RelatedBooks";
 import ShowMore from "@/component/ShowMore";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/cn";
-import { convexHttpClient } from "@/convex/http";
+import { authedConvexClient } from "@/convex/http";
 import { fromWireBook } from "@/convex/map";
 import { api } from "@convex/_generated/api";
 import { convertHtmlToReact } from "@hedgedoc/html-to-react";
@@ -20,29 +20,31 @@ import { isIOS } from "react-device-detect";
 export const Route = createFileRoute("/_protected/book/$bookId/")({
     component: RouteComponent,
     beforeLoad: async ({ params, context }) => {
-        if (!convexHttpClient) return { book: null };
+        // Authenticated with the token the root route resolved, and a fresh client per
+        // call. The reader is still part of the lookup — a book somebody wrote themselves
+        // is only ever returned to them, so anyone else asking for that id gets nothing,
+        // the same answer as an id that was never a book — but Convex reads that reader
+        // off the token now, rather than being told.
+        const client = authedConvexClient(context.token);
+        if (!client) return { book: null };
 
-        // The reader is part of the lookup: a book somebody wrote themselves is only
-        // ever returned to them, so anyone else asking for that id gets nothing —
-        // the same answer as an id that was never a book.
-        const book = await convexHttpClient.action(api.books.getWithGoogleFallback, {
-            bookId: params.bookId,
-            userId: context.user?.id,
-        });
+        const book = await client.action(api.books.getWithGoogleFallback, { bookId: params.bookId });
 
         return { book: book ? fromWireBook(book) : null };
     },
 });
 
 function RouteComponent() {
-    const { book, user } = Route.useRouteContext();
+    const { book } = Route.useRouteContext();
     if (!book) return <NotFound type={NotFoundType.BOOK} />;
 
     const { title, authors, description, pageCount, previewLink, categories } = book;
 
     // A book this user wrote. It has no Google page to link to and no catalogue
     // neighbours to relate it to — what it has instead is an owner, who can edit it.
-    const isOwnBook = !!book.ownerId && book.ownerId === user?.id;
+    // An owner is enough on its own: the query only ever returns a custom book to the
+    // reader who owns it.
+    const isOwnBook = !!book.ownerId;
 
     const categorySet = new Set(categories?.flatMap((c) => c.split("/").map((category) => category.trim())) ?? []);
 
@@ -76,11 +78,11 @@ function RouteComponent() {
                     {pageCount && <p className="text-sm leading-snug font-medium tracking-wide opacity-60">{pageCount} pages</p>}
                 </div>
 
-                <Rating book={book} tooltipSide="top" userId={user!.id} />
+                <Rating book={book} tooltipSide="top" />
 
-                <LibraryButton book={book} userId={user!.id} />
+                <LibraryButton book={book} />
 
-                <FinishedOn book={book} userId={user!.id} />
+                <FinishedOn book={book} />
 
                 {description && (
                     <div className="prose prose-neutral bg-neutral-150 dark:prose-invert dark:bg-neutral-850 flex w-fit flex-col items-center rounded-3xl px-4 pt-1 pb-5 sm:px-6 sm:pt-2 sm:pb-6">

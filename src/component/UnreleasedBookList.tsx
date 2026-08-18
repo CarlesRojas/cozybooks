@@ -12,10 +12,9 @@ import { useState } from "react";
 interface Props {
     stickyClassName?: string;
     unreleasedBooks: Array<UnreleasedBook>;
-    userId: string;
 }
 
-const UnreleasedBookList = ({ stickyClassName, unreleasedBooks, userId }: Props) => {
+const UnreleasedBookList = ({ stickyClassName, unreleasedBooks }: Props) => {
     const addUnreleasedBook = useAddUnreleasedBook();
 
     const [popoverOpen, setPopoverOpen] = useState(false);
@@ -23,7 +22,7 @@ const UnreleasedBookList = ({ stickyClassName, unreleasedBooks, userId }: Props)
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        addUnreleasedBook.mutate({ name: newBookName, userId });
+        addUnreleasedBook.mutate({ name: newBookName });
         setPopoverOpen(false);
     };
 
@@ -45,7 +44,6 @@ const UnreleasedBookList = ({ stickyClassName, unreleasedBooks, userId }: Props)
                         <UnreleasedBookItem
                             key={unreleasedBook.id}
                             unreleasedBook={unreleasedBook}
-                            userId={userId}
                             isLoading={addUnreleasedBook.isPending}
                         />
                     ))}

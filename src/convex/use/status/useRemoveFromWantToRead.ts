@@ -8,13 +8,12 @@ import { useMutation } from "convex/react";
 
 interface Props {
     book: Book;
-    userId: string;
 }
 
 export const useRemoveFromWantToRead = () => {
-    const removeFromWantToRead = useMutation(api.status.removeFromWantToRead).withOptimisticUpdate((localStore, { bookId, userId }) => {
-        setOptimisticBookStatus(localStore, { bookId, userId, status: "NONE" });
+    const removeFromWantToRead = useMutation(api.status.removeFromWantToRead).withOptimisticUpdate((localStore, { bookId }) => {
+        setOptimisticBookStatus(localStore, { bookId, status: "NONE" });
     });
 
-    return useTrackedMutation(({ book, userId }: Props) => removeFromWantToRead({ bookId: book.id, userId }));
+    return useTrackedMutation(({ book }: Props) => removeFromWantToRead({ bookId: book.id }));
 };

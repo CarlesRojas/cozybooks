@@ -3,10 +3,10 @@ import { Sort } from "@/component/SortMenu";
 import type { Context } from "@/lib/context";
 import { seo } from "@/lib/seo";
 import { THEME_COLOR, ThemeProvider } from "@/lib/theme";
-import { getUser } from "@/lib/auth/getUser";
+import { ConvexClientProvider } from "@/convex/provider";
+import { getToken } from "@/lib/auth/getToken";
 import "@/lib/fontAwesome";
 import appCss from "@/style.css?url";
-import { QueryKey } from "@/type/QueryKey";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import z from "zod";
@@ -19,6 +19,43 @@ const finishedSearchParamsSchema = z.object({
     sort: z.nativeEnum(Sort).optional(),
     repeats: z.coerce.boolean().optional(),
 });
+
+// How often `beforeLoad` may ask the server is a bigger question here than it looks.
+//
+// The root route matches every url, and TanStack re-runs `beforeLoad` on every navigation
+// and on every *preload* — `defaultPreload: "intent"` means a preload per link hovered.
+// A server function in here therefore costs an http round trip per hover, which is what
+// resolving the session that way used to do: two `betterAuth.findMany` calls, every time,
+// to re-confirm something that had not changed.
+//
+// The browser can answer it itself. The session cannot change without a document load:
+// signing in leaves for Google and comes back as a fresh page, and signing out sets
+// `window.location` (see `Settings.tsx`). So within one document the answer is fixed, and
+// asking again on every hover can only ever confirm it.
+//
+// It is remembered per document — never on the server, where the module outlives the
+// request and the next one belongs to somebody else.
+//
+// The promise rather than the token, so that concurrent navigations share one request
+// instead of racing to make their own.
+let clientToken: { value: Promise<string | undefined> } | undefined;
+
+const isBrowser = () => typeof document !== "undefined";
+
+const resolveToken = async () => {
+    if (!isBrowser()) return await getToken();
+
+    clientToken ??= { value: getToken() };
+    return await clientToken.value;
+};
+
+// Seeded from the context the server already resolved, so the first hover of the document
+// does not pay for an answer that arrived with the html. Both write the same box, so
+// whichever gets there first wins and the other is a no-op.
+const rememberToken = (token: string | undefined) => {
+    if (!isBrowser()) return;
+    clientToken ??= { value: Promise.resolve(token) };
+};
 
 export const Route = createRootRouteWithContext<Context>()({
     head: () => ({
@@ -48,28 +85,13 @@ export const Route = createRootRouteWithContext<Context>()({
         ],
     }),
 
-    beforeLoad: async ({ context }) => {
-        // How often this may ask the server is a bigger question here than it looks.
-        // The root route matches every url, and TanStack re-runs `beforeLoad` on every
-        // navigation and on every *preload* — `defaultPreload: "intent"` means a preload
-        // per link hovered. Without a stale time the query is stale the moment it
-        // resolves, so `fetchQuery` went back to `getUser` every single time: a server
-        // round trip per hover, and two `betterAuth.findMany` calls behind it.
-        //
-        // Who is signed in cannot change under the app without something invalidating
-        // this key: signing in leaves for Google and comes back as a fresh document,
-        // and signing out invalidates it by hand (see `Settings.tsx`) before asking the
-        // router to reload. So within the window the cached answer is the answer.
-        //
-        // Five minutes. A session revoked on another device outlives itself by up to
-        // that long in this tab, which for a reading list is nothing.
-        const result = await context.queryClient.fetchQuery({
-            queryKey: [QueryKey.USER],
-            queryFn: getUser,
-            staleTime: 5 * 60 * 1000,
-        });
+    beforeLoad: async () => {
+        const token = await resolveToken();
 
-        return { user: result.user };
+        // What "signed in" means to the router. Who that is is not decided here at all:
+        // the token says so, Convex verifies it, and every function reads the user off
+        // the identity — see `convex/lib/auth.ts`.
+        return { token, isAuthenticated: !!token };
     },
 
     shellComponent: RootDocument,
@@ -78,8 +100,12 @@ export const Route = createRootRouteWithContext<Context>()({
 });
 
 function RootDocument({ children }: { children: ReactNode }) {
-    const { user, queryClient } = Route.useRouteContext();
+    const { token, isAuthenticated } = Route.useRouteContext();
     const { sort, repeats } = Route.useSearch();
+
+    // During render rather than in an effect, so it is in place before anything can
+    // navigate or hover. It only ever fills an empty box, so it is safe to repeat.
+    rememberToken(token);
 
     return (
         // The FOUC script in ThemeProvider toggles `dark` on <html> before React
@@ -90,10 +116,12 @@ function RootDocument({ children }: { children: ReactNode }) {
             </head>
 
             <body className="font-montserrat relative overflow-y-auto bg-neutral-50 text-neutral-950 dark:bg-neutral-950 dark:text-neutral-50">
-                <ThemeProvider>
-                    {children}
-                    <Navigation user={user} queryClient={queryClient} sort={sort} repeats={repeats} />
-                </ThemeProvider>
+                <ConvexClientProvider initialToken={token}>
+                    <ThemeProvider>
+                        {children}
+                        <Navigation isAuthenticated={isAuthenticated} sort={sort} repeats={repeats} />
+                    </ThemeProvider>
+                </ConvexClientProvider>
 
                 <Scripts />
             </body>

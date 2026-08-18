@@ -14,12 +14,11 @@ import type { ReactNode } from "react";
 
 interface Props {
     book: Book;
-    userId: string;
 }
 
-const LibraryButton = ({ book, userId }: Props) => {
-    const bookStatus = useBookStatus({ bookId: book.id, userId });
-    const finishedDates = useFinishedDates({ bookId: book.id, userId });
+const LibraryButton = ({ book }: Props) => {
+    const bookStatus = useBookStatus({ bookId: book.id });
+    const finishedDates = useFinishedDates({ bookId: book.id });
 
     const addToWantToRead = useAddToWantToRead();
     const removeFromWantToRead = useRemoveFromWantToRead();
@@ -57,7 +56,7 @@ const LibraryButton = ({ book, userId }: Props) => {
     // which "Stop reading" hid and "Pause reading" doesn't.
     const map: Record<BookStatus, ReactNode> = {
         [BookStatus.NONE]: (
-            <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book, userId })}>
+            <Button disabled={isLoading} onClick={() => addToWantToRead.mutate({ book })}>
                 {finishedDates.data.length > 0 ? (
                     <FontAwesomeIcon icon={faRepeat} className="icon mr-3" />
                 ) : (
@@ -69,12 +68,12 @@ const LibraryButton = ({ book, userId }: Props) => {
 
         [BookStatus.WANT_TO_READ]: (
             <>
-                <Button disabled={isLoading} onClick={() => startReading.mutate({ book, userId })}>
+                <Button disabled={isLoading} onClick={() => startReading.mutate({ book })}>
                     <FontAwesomeIcon icon={faPlay} className="icon mr-3" />
                     <p>Start reading</p>
                 </Button>
 
-                <Button disabled={isLoading} variant="glass" onClick={() => removeFromWantToRead.mutate({ book, userId })}>
+                <Button disabled={isLoading} variant="glass" onClick={() => removeFromWantToRead.mutate({ book })}>
                     <FontAwesomeIcon icon={faXmark} className="icon mr-3" />
                     <p>Remove</p>
                 </Button>
@@ -83,12 +82,12 @@ const LibraryButton = ({ book, userId }: Props) => {
 
         [BookStatus.READING_NOW]: (
             <>
-                <Button disabled={isLoading} onClick={() => finishBook.mutate({ book, userId })}>
+                <Button disabled={isLoading} onClick={() => finishBook.mutate({ book })}>
                     <FontAwesomeIcon icon={faFlag} className="icon mr-3" />
                     <p>Finished</p>
                 </Button>
 
-                <Button disabled={isLoading} variant="glass" onClick={() => stopReading.mutate({ book, userId })}>
+                <Button disabled={isLoading} variant="glass" onClick={() => stopReading.mutate({ book })}>
                     <FontAwesomeIcon icon={faPause} className="icon mr-3" />
                     <p>Pause reading</p>
                 </Button>

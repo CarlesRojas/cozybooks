@@ -6,6 +6,7 @@ import { useSaveCustomBook } from "@/convex/use/customBook/useSaveCustomBook";
 import { ALLOWED_COVER_TYPES, MAX_COVER_BYTES } from "@/lib/blob";
 import { cn } from "@/lib/cn";
 import type { Book } from "@/type/Book";
+import { useUser } from "@/lib/auth/useUser";
 import { useNavigate } from "@tanstack/react-router";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faBook, faImage, faPlus, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -14,7 +15,6 @@ import type { FormEvent, ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 
 interface Props {
-    userId: string;
     // Editing when present, creating when not. The two differ by so little — a
     // starting value and a delete button — that one form covers both.
     book?: Book;
@@ -102,8 +102,14 @@ const Field = ({ label, children }: { label: string; children: ReactNode }) => (
     </div>
 );
 
-const CustomBookForm = ({ userId, book }: Props) => {
+const CustomBookForm = ({ book }: Props) => {
     const navigate = useNavigate();
+
+    // Only the cover upload needs to know who is saving: every cover lives under its
+    // owner's prefix in the blob store, and `src/routes/api/blob/upload.ts` checks that
+    // prefix against the session before it hands out a token. The book row itself is
+    // written against the identity Convex verified, so nothing here says whose it is.
+    const { user } = useUser();
 
     const saveCustomBook = useSaveCustomBook();
     const deleteCustomBook = useDeleteCustomBook();
@@ -156,16 +162,17 @@ const CustomBookForm = ({ userId, book }: Props) => {
         if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
-    const isSaveable = title.trim().length > 0 && !saveCustomBook.isPending && !deleteCustomBook.isPending;
+    const isSaveable = !!user && title.trim().length > 0 && !saveCustomBook.isPending && !deleteCustomBook.isPending;
 
     const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        // `isSaveable` covers the session too, and TypeScript narrows `user` through it.
         if (!isSaveable) return;
 
         const parsedPageCount = Number.parseInt(pageCount, 10);
 
         const bookId = await saveCustomBook.save({
-            userId,
+            userId: user.id,
             bookId: book?.id,
             title: title.trim(),
             authors: authors.length > 0 ? authors : undefined,
@@ -182,7 +189,7 @@ const CustomBookForm = ({ userId, book }: Props) => {
     const onDelete = async () => {
         if (!book) return;
 
-        const deleted = await deleteCustomBook.mutate({ bookId: book.id, userId });
+        const deleted = await deleteCustomBook.mutate({ bookId: book.id });
         if (deleted) navigate({ to: "/custom" });
     };
 

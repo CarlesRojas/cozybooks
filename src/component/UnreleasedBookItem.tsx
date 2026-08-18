@@ -9,11 +9,10 @@ import { useState } from "react";
 
 interface Props {
     unreleasedBook: UnreleasedBook;
-    userId: string;
     isLoading?: boolean;
 }
 
-const UnreleasedBookItem = ({ unreleasedBook, userId, isLoading }: Props) => {
+const UnreleasedBookItem = ({ unreleasedBook, isLoading }: Props) => {
     const navigate = useNavigate();
 
     const { id, name } = unreleasedBook;
@@ -45,7 +44,7 @@ const UnreleasedBookItem = ({ unreleasedBook, userId, isLoading }: Props) => {
                 <Button
                     variant="destructive"
                     onClick={() => {
-                        deleteUnreleasedBook.mutate({ unreleasedBookId: id, userId });
+                        deleteUnreleasedBook.mutate({ unreleasedBookId: id });
                         setPopoverOpen(false);
                     }}
                 >

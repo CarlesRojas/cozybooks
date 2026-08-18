@@ -11,7 +11,6 @@ import { useQuery } from "convex-helpers/react/cache";
 import { useMemo } from "react";
 
 interface Props {
-    userId: string;
     type: LibraryType;
     maxResults?: number;
     startIndex?: number;
@@ -23,13 +22,8 @@ const WIRE_LIBRARY_TYPE = {
     [LibraryType.FINISHED]: "FINISHED",
 } as const;
 
-export const useLibraryBooks = ({
-    userId,
-    type,
-    maxResults,
-    startIndex,
-}: Props): { data: VolumesResult | undefined; isLoading: boolean } => {
-    const result = useQuery(api.library.getBooks, { userId, type: WIRE_LIBRARY_TYPE[type], maxResults, startIndex });
+export const useLibraryBooks = ({ type, maxResults, startIndex }: Props): { data: VolumesResult | undefined; isLoading: boolean } => {
+    const result = useQuery(api.library.getBooks, { type: WIRE_LIBRARY_TYPE[type], maxResults, startIndex });
     const data = useMemo(() => (result ? fromWireVolumesResult(result) : undefined), [result]);
 
     return { data, isLoading: result === undefined };

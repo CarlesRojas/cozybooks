@@ -9,13 +9,12 @@ import { useMutation } from "convex/react";
 
 interface Props {
     book: Book;
-    userId: string;
 }
 
 export const useStopReading = () => {
-    const stopReading = useMutation(api.status.stopReading).withOptimisticUpdate((localStore, { book, userId }) => {
-        setOptimisticBookStatus(localStore, { bookId: book.id, userId, status: "WANT_TO_READ" });
+    const stopReading = useMutation(api.status.stopReading).withOptimisticUpdate((localStore, { book }) => {
+        setOptimisticBookStatus(localStore, { bookId: book.id, status: "WANT_TO_READ" });
     });
 
-    return useTrackedMutation(({ book, userId }: Props) => stopReading({ book: toWireBook(book), userId }));
+    return useTrackedMutation(({ book }: Props) => stopReading({ book: toWireBook(book) }));
 };

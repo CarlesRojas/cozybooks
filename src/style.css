@@ -118,6 +118,21 @@
         /* Reserve the scrollbar gutter so switching between pages that do and
            don't scroll doesn't change the viewport width and shift the layout. */
         scrollbar-gutter: stable;
+
+        /* Which scheme the document is in, said out loud rather than left to be
+           assumed. Everything the browser paints itself instead of from this
+           stylesheet reads it: scrollbars, form controls, the overscroll edge, and —
+           in the installed Android app — the surfaces it draws around the page.
+           Declared nowhere, all of that follows the phone's setting, which the theme
+           in Settings is entitled to disagree with, and a page painted from one
+           answer beside surfaces painted from the other meets them at a visible
+           line. It tracks the same `dark` class as everything else, so it is right
+           from the first paint and cannot drift from what the page is wearing. */
+        color-scheme: light;
+    }
+
+    html.dark {
+        color-scheme: dark;
     }
 
     body {

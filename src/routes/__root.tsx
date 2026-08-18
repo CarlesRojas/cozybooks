@@ -61,8 +61,8 @@ export const Route = createRootRouteWithContext<Context>()({
         // and signing out invalidates it by hand (see `Settings.tsx`) before asking the
         // router to reload. So within the window the cached answer is the answer.
         //
-        // Five minutes, matching `session.cookieCache` in `src/lib/auth/index.ts`, so
-        // the two windows over a stale session are the same one rather than stacking.
+        // Five minutes. A session revoked on another device outlives itself by up to
+        // that long in this tab, which for a reading list is nothing.
         const result = await context.queryClient.fetchQuery({
             queryKey: [QueryKey.USER],
             queryFn: getUser,

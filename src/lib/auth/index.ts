@@ -35,23 +35,5 @@ export const auth = betterAuth({
         },
     },
 
-    // The session, cached in a signed cookie for five minutes, so reading it stops
-    // costing a database round trip.
-    //
-    // Every server-side session read went to Convex, and each one cost *two*
-    // `betterAuth.findMany` calls: better-auth looks a session up by token and then
-    // joins the user, and this adapter declares no join support, so the factory falls
-    // back to a second query. `getUser` runs in the root route's `beforeLoad`, which
-    // TanStack re-runs on every navigation and every preload, and the blob routes ask
-    // again per upload — so a session check was the busiest thing on the deployment.
-    // Within the window the cookie itself is the answer.
-    //
-    // The cost is that a session revoked elsewhere outlives itself by up to the window
-    // on other devices, which for a reading list is nothing. Signing out clears the
-    // cookie along with the session, so the device that signed out never sees the lag.
-    session: {
-        cookieCache: { enabled: true, maxAge: 5 * 60 },
-    },
-
     plugins: [tanstackStartCookies()],
 });

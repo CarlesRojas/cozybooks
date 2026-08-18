@@ -16,9 +16,14 @@ export const getRouter = () => {
         else window.addEventListener("load", registerServiceWorker);
     }
 
+    // Once, and shared with the SSR query integration below: `getContext` builds a
+    // fresh QueryClient per call, so asking twice would leave the router hydrating one
+    // cache while the integration dehydrated another.
+    const context = Provider.getContext();
+
     const router = createTanstackRouter({
         routeTree,
-        context: { ...Provider.getContext() },
+        context: { ...context },
         // Mounts the Convex reactive client above every route match, so the `useQuery`
         // hooks in `src/convex/use/**` find a client. `Wrap` is the router-wide
         // provider slot; ConvexProvider renders no DOM, so it can't skew hydration.
@@ -31,7 +36,7 @@ export const getRouter = () => {
         defaultNotFoundComponent: NotFound,
     });
 
-    setupRouterSsrQueryIntegration({ router, queryClient: Provider.getContext().queryClient });
+    setupRouterSsrQueryIntegration({ router, queryClient: context.queryClient });
 
     return router;
 };

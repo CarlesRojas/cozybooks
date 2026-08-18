@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
+import { Route as ApiCookietestRouteImport } from './routes/api/cookietest'
 import { Route as ProtectedCustomIndexRouteImport } from './routes/_protected/custom/index'
 import { Route as ProtectedFinishedIndexRouteImport } from './routes/_protected/finished/index'
 import { Route as ProtectedReadingIndexRouteImport } from './routes/_protected/reading/index'
@@ -31,6 +32,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
   id: '/_protected',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCookietestRoute = ApiCookietestRouteImport.update({
+  id: '/api/cookietest',
+  path: '/api/cookietest',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProtectedCustomIndexRoute = ProtectedCustomIndexRouteImport.update({
@@ -99,6 +105,7 @@ const ProtectedCustomNewIndexRoute = ProtectedCustomNewIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/cookietest': typeof ApiCookietestRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/blob/delete': typeof ApiBlobDeleteRoute
   '/api/blob/upload': typeof ApiBlobUploadRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/cookietest': typeof ApiCookietestRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/blob/delete': typeof ApiBlobDeleteRoute
   '/api/blob/upload': typeof ApiBlobUploadRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteRouteWithChildren
+  '/api/cookietest': typeof ApiCookietestRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/blob/delete': typeof ApiBlobDeleteRoute
   '/api/blob/upload': typeof ApiBlobUploadRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/api/cookietest'
     | '/api/auth/$'
     | '/api/blob/delete'
     | '/api/blob/upload'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/api/cookietest'
     | '/api/auth/$'
     | '/api/blob/delete'
     | '/api/blob/upload'
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_protected'
+    | '/api/cookietest'
     | '/api/auth/$'
     | '/api/blob/delete'
     | '/api/blob/upload'
@@ -196,6 +208,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
+  ApiCookietestRoute: typeof ApiCookietestRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiBlobDeleteRoute: typeof ApiBlobDeleteRoute
   ApiBlobUploadRoute: typeof ApiBlobUploadRoute
@@ -217,6 +230,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof ProtectedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cookietest': {
+      id: '/api/cookietest'
+      path: '/api/cookietest'
+      fullPath: '/api/cookietest'
+      preLoaderRoute: typeof ApiCookietestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_protected/custom/': {
@@ -333,6 +353,7 @@ const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
+  ApiCookietestRoute: ApiCookietestRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiBlobDeleteRoute: ApiBlobDeleteRoute,
   ApiBlobUploadRoute: ApiBlobUploadRoute,

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Google Play step of the Release workflow (.github/workflows/release.yml).
+Google Play step of the Android Release workflow (.github/workflows/android-release.yml).
 
   play.py upload --package app.cozybooks.pinya --aab app.aab --version-code 10
       Uploads the bundle and creates a DRAFT production release named "v10", with NOTES as its

@@ -28,9 +28,9 @@ def twaManifest = [
     launcherName: 'CozyBooks', // The name shown on the Android Launcher.
     themeColor: '#0A0A0A', // The color used for the status bar.
     themeColorDark: '#0A0A0A', // The color used for the dark status bar.
-    navigationColor: '#0A0A0A', // The color used for the navigation bar.
+    navigationColor: '#FAFAFA', // The color used for the navigation bar.
     navigationColorDark: '#0A0A0A', // The color used for the dark navbar.
-    navigationDividerColor: '#0A0A0A', // The navbar divider color.
+    navigationDividerColor: '#FAFAFA', // The navbar divider color.
     navigationDividerColorDark: '#0A0A0A', // The dark navbar divider color.
     backgroundColor: '#0A0A0A', // The color used for the splash screen background.
     enableNotifications: false, // Set to true to enable notification delegation.
@@ -55,7 +55,7 @@ android {
     namespace "app.cozybooks.pinya"
     defaultConfig {
         applicationId "app.cozybooks.pinya"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 36
         versionCode 7
         versionName "7"

@@ -16,18 +16,17 @@
 package app.cozybooks.pinya;
 
 import android.content.pm.ActivityInfo;
-import android.content.pm.ShortcutManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import java.util.Collections;
 
-import com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity;
 
-// Master copy. `bubblewrap update` regenerates app/ from its template, so apply-splash.sh copies
-// this file over the generated LauncherActivity on every release. Edit it here, not in app/.
 public class LauncherActivity
         extends com.google.androidbrowserhelper.trusted.LauncherActivity {
+    
+
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,18 +43,12 @@ public class LauncherActivity
     }
 
     @Override
-    protected void launchTwa() {
-        super.launchTwa();
-        // The library adds a "Site settings" shortcut on every launch, which shows first in the
-        // launcher's long-press menu. Remove it right after. Turning off enableSiteSettingsShortcut
-        // in twa-manifest.json instead drops ManageDataLauncherActivity from the manifest, which
-        // the library still tries to enable on launch.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
-            if (shortcutManager != null) {
-                shortcutManager.removeDynamicShortcuts(
-                        Collections.singletonList(ManageDataLauncherActivity.SITE_SETTINGS_SHORTCUT_ID));
-            }
-        }
+    protected Uri getLaunchingUrl() {
+        // Get the original launch Url.
+        Uri uri = super.getLaunchingUrl();
+
+        
+
+        return uri;
     }
 }

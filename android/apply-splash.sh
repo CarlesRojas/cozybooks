@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copy the custom splash screens over the ones Bubblewrap generates.
+# Copy the custom splash screens and LauncherActivity over the ones Bubblewrap generates.
 # Run after `bubblewrap update`, before `bubblewrap build`.
 #
 # The masters in splash/ were rendered from public/logo.svg with the mark at
@@ -21,4 +21,11 @@ for density in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
     cp "$source_file" "$target_file"
 done
 
-echo "Splash screens restored from splash/."
+# Bubblewrap's LauncherActivity leaves the library's "Site settings" shortcut in the launcher's
+# long-press menu. Ours removes it.
+launcher_target="app/src/main/java/app/cozybooks/pinya/LauncherActivity.java"
+[ -f launcher/LauncherActivity.java ] || { echo "missing launcher/LauncherActivity.java" >&2; exit 1; }
+[ -d "$(dirname "$launcher_target")" ] || { echo "missing $(dirname "$launcher_target")" >&2; exit 1; }
+cp launcher/LauncherActivity.java "$launcher_target"
+
+echo "Splash screens and LauncherActivity restored."

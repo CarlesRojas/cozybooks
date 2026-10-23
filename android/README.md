@@ -26,8 +26,8 @@ cd android && bubblewrap update && ./apply-splash.sh && bubblewrap build
 ## Home-screen widget
 
 Native Java in `widget/`, with no dependencies on purpose so `build.gradle` never needs
-patching. It shows one shelf (Reading, Want to read or Finished this year) as a scrolling
-grid of covers, in the app's light or dark palette following the phone's mode.
+patching. It shows one shelf (Reading, Want to read or Finished this year), or Reading and
+Want to read with a toggle between them, as a scrolling grid of covers, in the app's light or dark palette following the phone's mode.
 
 It reads `GET /widget/sections` on the Convex deployment's `.convex.site` domain
 (`convex/http.ts`), authenticated by a read-only widget token. The token is minted on the

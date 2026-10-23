@@ -25,6 +25,7 @@ public class WidgetConfigActivity extends Activity {
     private static final String[][] SECTIONS = {
             { "reading", "Reading" },
             { "to-read", "Want to read" },
+            { WidgetPrefs.SHELVES_READING, "Reading & Want to read" },
             { "finished-year", "Finished this year" },
     };
 
@@ -82,7 +83,7 @@ public class WidgetConfigActivity extends Activity {
         column.addView(title);
 
         TextView subtitle = new TextView(this);
-        subtitle.setText("The widget shows its books, newest first. Tap a book to open it in CozyBooks.");
+        subtitle.setText("The widget shows its books, newest first. Reading & Want to read gets a toggle to switch between the two.");
         subtitle.setTextColor(colorMuted);
         subtitle.setTextSize(15);
         subtitle.setPadding(0, Math.round(8 * density), 0, Math.round(20 * density));

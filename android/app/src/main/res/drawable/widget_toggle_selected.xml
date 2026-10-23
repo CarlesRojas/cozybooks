@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The shelf on show: the app's checked option, filled with brand/80. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#CC9E4CE0" />
+    <corners android:radius="999dp" />
+</shape>

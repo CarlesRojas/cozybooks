@@ -10,4 +10,6 @@
     <string name="widgetConnectedToast">CozyBooks widget connected. Add or refresh the widget on your home screen.</string>
     <string name="widgetConnectFailedToast">Could not connect the CozyBooks widget. Try again from the app.</string>
     <string name="widgetCoverDescription">Book cover</string>
+    <string name="widgetToggleReading">Reading</string>
+    <string name="widgetToggleToRead">Want to read</string>
 </resources>

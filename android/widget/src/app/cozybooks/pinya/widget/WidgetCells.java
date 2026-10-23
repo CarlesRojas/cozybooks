@@ -42,7 +42,7 @@ final class WidgetCells {
             for (int i = 0; i < SKELETON_CELLS; i++) cells.add(skeletonCell(context, widthPx, heightPx));
         } else {
             try {
-                JSONArray items = itemsOf(json, WidgetPrefs.getSection(context, widgetId));
+                JSONArray items = itemsOf(json, WidgetPrefs.getShown(context, widgetId));
 
                 for (int i = 0; i < items.length(); i++) {
                     JSONObject item = items.getJSONObject(i);

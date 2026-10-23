@@ -50,6 +50,11 @@ public final class WidgetPrefs {
 
     // --- Per-widget configuration ------------------------------------------------------
 
+    // A widget shows one shelf (section key), or SHELVES_READING, which carries a toggle
+    // between Reading and Want to read and remembers which of the two is on show.
+
+    public static final String SHELVES_READING = "reading+to-read";
+
     public static void setSection(Context context, int widgetId, String section) {
         prefs(context).edit().putString("widget_" + widgetId + "_section", section).apply();
     }
@@ -64,8 +69,23 @@ public final class WidgetPrefs {
         return prefs(context).contains("widget_" + widgetId + "_section");
     }
 
+    public static void setShown(Context context, int widgetId, String shelf) {
+        prefs(context).edit().putString("widget_" + widgetId + "_shown", shelf).apply();
+    }
+
+    /** The shelf on show: the toggle's choice for SHELVES_READING, the section otherwise. */
+    public static String getShown(Context context, int widgetId) {
+        String section = getSection(context, widgetId);
+        if (!section.equals(SHELVES_READING)) return section;
+
+        return prefs(context).getString("widget_" + widgetId + "_shown", "reading");
+    }
+
     public static void deleteWidget(Context context, int widgetId) {
-        prefs(context).edit().remove("widget_" + widgetId + "_section").apply();
+        prefs(context).edit()
+                .remove("widget_" + widgetId + "_section")
+                .remove("widget_" + widgetId + "_shown")
+                .apply();
     }
 
     // --- Sections cache ----------------------------------------------------------------

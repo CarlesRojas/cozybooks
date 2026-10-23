@@ -15,7 +15,7 @@ import { useUser } from "@/lib/auth/useUser";
 import type { Theme } from "@/lib/theme";
 import { useTheme } from "@/lib/theme";
 import { Link } from "@tanstack/react-router";
-import { faFeather, faRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faFeather, faRightFromBracket, faTableCellsLarge, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
@@ -72,6 +72,13 @@ const Settings = () => {
                     <Link to="/custom">
                         <FontAwesomeIcon icon={faFeather} className="mr-3 h-4 w-4" />
                         <p className="font-medium">Custom books</p>
+                    </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem asChild>
+                    <Link to="/widget">
+                        <FontAwesomeIcon icon={faTableCellsLarge} className="mr-3 h-4 w-4" />
+                        <p className="font-medium">Home screen widget</p>
                     </Link>
                 </DropdownMenuItem>
 

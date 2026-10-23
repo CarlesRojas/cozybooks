@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The app's dark theme; see values/widget_colors.xml. -->
+<resources>
+    <!-- neutral-950 page, neutral-500/40 border -->
+    <color name="widget_background">#FF0A0A0A</color>
+    <color name="widget_border">#66737373</color>
+    <!-- neutral-50 at the app's 90% for titles and 80% for body text -->
+    <color name="widget_title">#E6FAFAFA</color>
+    <color name="widget_text">#CCFAFAFA</color>
+    <!-- The primary button at its dark-theme 75% -->
+    <color name="widget_cta_start">#BF9E4CE0</color>
+    <color name="widget_cta_end">#BFDB7048</color>
+</resources>

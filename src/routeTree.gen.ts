@@ -15,6 +15,7 @@ import { Route as ProtectedCustomIndexRouteImport } from './routes/_protected/cu
 import { Route as ProtectedFinishedIndexRouteImport } from './routes/_protected/finished/index'
 import { Route as ProtectedReadingIndexRouteImport } from './routes/_protected/reading/index'
 import { Route as ProtectedSearchIndexRouteImport } from './routes/_protected/search/index'
+import { Route as ProtectedWidgetIndexRouteImport } from './routes/_protected/widget/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiBlobDeleteRouteImport } from './routes/api/blob/delete'
 import { Route as ApiBlobUploadRouteImport } from './routes/api/blob/upload'
@@ -51,6 +52,11 @@ const ProtectedReadingIndexRoute = ProtectedReadingIndexRouteImport.update({
 const ProtectedSearchIndexRoute = ProtectedSearchIndexRouteImport.update({
   id: '/search/',
   path: '/search/',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedWidgetIndexRoute = ProtectedWidgetIndexRouteImport.update({
+  id: '/widget/',
+  path: '/widget/',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/finished/': typeof ProtectedFinishedIndexRoute
   '/reading/': typeof ProtectedReadingIndexRoute
   '/search/': typeof ProtectedSearchIndexRoute
+  '/widget/': typeof ProtectedWidgetIndexRoute
   '/legal/privacy-policy/': typeof LegalPrivacyPolicyIndexRoute
   '/legal/terms-and-conditions/': typeof LegalTermsAndConditionsIndexRoute
   '/book/$bookId/': typeof ProtectedBookBookIdIndexRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/finished': typeof ProtectedFinishedIndexRoute
   '/reading': typeof ProtectedReadingIndexRoute
   '/search': typeof ProtectedSearchIndexRoute
+  '/widget': typeof ProtectedWidgetIndexRoute
   '/legal/privacy-policy': typeof LegalPrivacyPolicyIndexRoute
   '/legal/terms-and-conditions': typeof LegalTermsAndConditionsIndexRoute
   '/book/$bookId': typeof ProtectedBookBookIdIndexRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/_protected/finished/': typeof ProtectedFinishedIndexRoute
   '/_protected/reading/': typeof ProtectedReadingIndexRoute
   '/_protected/search/': typeof ProtectedSearchIndexRoute
+  '/_protected/widget/': typeof ProtectedWidgetIndexRoute
   '/legal/privacy-policy/': typeof LegalPrivacyPolicyIndexRoute
   '/legal/terms-and-conditions/': typeof LegalTermsAndConditionsIndexRoute
   '/_protected/book/$bookId/': typeof ProtectedBookBookIdIndexRoute
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/finished/'
     | '/reading/'
     | '/search/'
+    | '/widget/'
     | '/legal/privacy-policy/'
     | '/legal/terms-and-conditions/'
     | '/book/$bookId/'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/finished'
     | '/reading'
     | '/search'
+    | '/widget'
     | '/legal/privacy-policy'
     | '/legal/terms-and-conditions'
     | '/book/$bookId'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/_protected/finished/'
     | '/_protected/reading/'
     | '/_protected/search/'
+    | '/_protected/widget/'
     | '/legal/privacy-policy/'
     | '/legal/terms-and-conditions/'
     | '/_protected/book/$bookId/'
@@ -245,6 +257,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search/'
       preLoaderRoute: typeof ProtectedSearchIndexRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/widget/': {
+      id: '/_protected/widget/'
+      path: '/widget'
+      fullPath: '/widget/'
+      preLoaderRoute: typeof ProtectedWidgetIndexRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
     '/api/auth/$': {
@@ -311,6 +330,7 @@ interface ProtectedRouteRouteChildren {
   ProtectedFinishedIndexRoute: typeof ProtectedFinishedIndexRoute
   ProtectedReadingIndexRoute: typeof ProtectedReadingIndexRoute
   ProtectedSearchIndexRoute: typeof ProtectedSearchIndexRoute
+  ProtectedWidgetIndexRoute: typeof ProtectedWidgetIndexRoute
   ProtectedBookBookIdIndexRoute: typeof ProtectedBookBookIdIndexRoute
   ProtectedCustomBookIdIndexRoute: typeof ProtectedCustomBookIdIndexRoute
   ProtectedCustomNewIndexRoute: typeof ProtectedCustomNewIndexRoute
@@ -321,6 +341,7 @@ const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
   ProtectedFinishedIndexRoute: ProtectedFinishedIndexRoute,
   ProtectedReadingIndexRoute: ProtectedReadingIndexRoute,
   ProtectedSearchIndexRoute: ProtectedSearchIndexRoute,
+  ProtectedWidgetIndexRoute: ProtectedWidgetIndexRoute,
   ProtectedBookBookIdIndexRoute: ProtectedBookBookIdIndexRoute,
   ProtectedCustomBookIdIndexRoute: ProtectedCustomBookIdIndexRoute,
   ProtectedCustomNewIndexRoute: ProtectedCustomNewIndexRoute,

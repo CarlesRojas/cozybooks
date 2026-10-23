@@ -145,6 +145,20 @@ export default defineSchema({
         rating: v.number(),
     }).index("by_user_book", ["userId", "bookId"]),
 
+    // Long-lived credentials for the Android home-screen widget. The widget runs native
+    // code, so it can't reuse the better-auth session living in Chrome's cookie jar;
+    // instead the web app mints a token and hands it to the app through a cozybooks://
+    // deep link. Only a SHA-256 hash is stored, the plaintext token exists nowhere but
+    // on the device.
+    widgetTokens: defineTable({
+        userId: v.string(),
+        tokenHash: v.string(),
+        createdAt: v.number(),
+        lastUsedAt: v.union(v.number(), v.null()),
+    })
+        .index("by_user", ["userId"])
+        .index("by_token_hash", ["tokenHash"]),
+
     // Counterpart of `unreleasedBook` (serial id → Convex _id).
     unreleasedBooks: defineTable({
         userId: v.string(),

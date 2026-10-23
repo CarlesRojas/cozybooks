@@ -51,7 +51,7 @@
                 {
                     "src": "shortcut/finished.png",
                     "type": "image/png",
-                    "sizes": "96x96"
+                    "sizes": "192x192"
                 }
             ]
         },
@@ -63,7 +63,7 @@
                 {
                     "src": "shortcut/search.png",
                     "type": "image/png",
-                    "sizes": "96x96"
+                    "sizes": "192x192"
                 }
             ]
         }

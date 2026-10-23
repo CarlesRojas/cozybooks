@@ -1,6 +1,7 @@
 #!/bin/sh
 #
-# Copy the custom splash screens and LauncherActivity over the ones Bubblewrap generates.
+# Copy the custom splash screens and LauncherActivity over the ones Bubblewrap generates,
+# then put the home-screen widget back.
 # Run after `bubblewrap update`, before `bubblewrap build`.
 #
 # The masters in splash/ were rendered from public/logo.svg with the mark at
@@ -29,3 +30,7 @@ launcher_target="app/src/main/java/app/cozybooks/pinya/LauncherActivity.java"
 cp launcher/LauncherActivity.java "$launcher_target"
 
 echo "Splash screens and LauncherActivity restored."
+
+# The home-screen widget lives in widget/ for the same reason the masters above live
+# outside app/: `bubblewrap update` deletes app/ wholesale.
+./apply-widget.sh

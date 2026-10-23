@@ -24,6 +24,7 @@ import type * as ratings from "../ratings.js";
 import type * as status from "../status.js";
 import type * as unreleasedBooks from "../unreleasedBooks.js";
 import type * as users from "../users.js";
+import type * as widget from "../widget.js";
 
 import type {
   ApiFromModules,
@@ -48,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   status: typeof status;
   unreleasedBooks: typeof unreleasedBooks;
   users: typeof users;
+  widget: typeof widget;
 }>;
 
 /**

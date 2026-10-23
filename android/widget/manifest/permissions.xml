@@ -1,0 +1,5 @@
+    <!-- cozybooks-widget:permissions:begin -->
+    <!-- The widget fetches shelves and covers itself; the TWA alone doesn't need
+         this because Chrome does its networking. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- cozybooks-widget:permissions:end -->

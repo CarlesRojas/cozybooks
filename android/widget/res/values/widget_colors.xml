@@ -3,12 +3,14 @@
      phone's mode; it can't see the theme picked inside the app. Prefixed so nothing
      Bubblewrap generates can collide. -->
 <resources>
-    <!-- neutral-50 page, neutral-500/25 border -->
+    <!-- neutral-50 page -->
     <color name="widget_background">#FFFAFAFA</color>
-    <color name="widget_border">#40737373</color>
     <!-- neutral-950 at the app's 90% for titles and 80% for body text -->
     <color name="widget_title">#E60A0A0A</color>
     <color name="widget_text">#CC0A0A0A</color>
+    <!-- The glass pill behind the toggle, and its idle icon (neutral-600) -->
+    <color name="widget_toggle_background">#B3D4D4D4</color>
+    <color name="widget_toggle_icon">#FF525252</color>
     <!-- The primary button: brand to brand-warm at 45 degrees -->
     <color name="widget_cta_start">#FF9E4CE0</color>
     <color name="widget_cta_end">#FFDB7048</color>

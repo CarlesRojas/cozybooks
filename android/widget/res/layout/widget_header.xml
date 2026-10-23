@@ -1,14 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Header shared by the column-count layout variants: the shelf's title, in the app's
-     section heading style (bold, 90% of the text colour). Tapping it opens the shelf. -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/widget_title"
+     section heading style, and, for the Reading & Want to read choice, the toggle between
+     the two (the app's glass pill, the shelf on show filled with the brand colour). -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
-    android:ellipsize="end"
-    android:paddingTop="2dp"
-    android:singleLine="true"
-    android:textColor="@color/widget_title"
-    android:textSize="17sp"
-    android:textStyle="bold" />
+    android:layout_marginBottom="10dp">
+
+    <LinearLayout
+        android:id="@+id/widget_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/widget_toggle_background"
+        android:orientation="horizontal"
+        android:padding="3dp"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:id="@+id/toggle_reading_wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/toggle_reading"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:contentDescription="@string/widgetToggleReading"
+                android:src="@drawable/ic_widget_book_open" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/toggle_to_read_wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/toggle_to_read"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:contentDescription="@string/widgetToggleToRead"
+                android:src="@drawable/ic_widget_bookmark" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/widget_toggle"
+        android:ellipsize="end"
+        android:paddingTop="2dp"
+        android:singleLine="true"
+        android:textColor="@color/widget_title"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+</RelativeLayout>

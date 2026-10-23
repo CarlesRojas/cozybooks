@@ -16,8 +16,9 @@ import java.util.List;
 import app.cozybooks.pinya.R;
 
 /**
- * Builds the RemoteViews shell of one widget instance: the shelf's title, the vertically
- * scrolling cover grid, and the message shown when there is nothing to render. The grid
+ * Builds the RemoteViews shell of one widget instance: the header (the shelf's title, plus
+ * the Reading/Want to read toggle when the widget shows both), the vertically scrolling
+ * cover grid, and the message shown when there is nothing to render. The grid
  * shows 1, 2 or 3 covers per row depending on the width the widget was given;
  * GridView.setNumColumns is not remotable, so the count is picked by choosing between
  * three otherwise identical layouts.
@@ -37,9 +38,18 @@ public final class WidgetRenderer {
     public static void updateWidget(Context context, AppWidgetManager manager, int widgetId) {
         android.util.Log.d(WidgetLog.TAG, "updateWidget widget=" + widgetId);
 
-        String section = WidgetPrefs.getSection(context, widgetId);
+        String section = WidgetPrefs.getShown(context, widgetId);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), gridLayout(manager, widgetId));
+
+        // Only the Reading & Want to read choice carries the toggle; a single shelf pins
+        // the widget and the toggle would be dead weight.
+        if (WidgetPrefs.getSection(context, widgetId).equals(WidgetPrefs.SHELVES_READING)) {
+            views.setViewVisibility(R.id.widget_toggle, View.VISIBLE);
+            renderToggle(context, views, widgetId, section);
+        } else {
+            views.setViewVisibility(R.id.widget_toggle, View.GONE);
+        }
 
         views.setTextViewText(R.id.widget_title, sectionTitle(section));
         views.setOnClickPendingIntent(R.id.widget_title,
@@ -164,6 +174,33 @@ public final class WidgetRenderer {
             case 2: return R.layout.widget_shelf_2col;
             default: return R.layout.widget_shelf_3col;
         }
+    }
+
+    // The app's checked option: the shelf on show is filled with the brand colour, its
+    // icon in white; the other icon keeps the glass pill's text colour.
+    private static void renderToggle(Context context, RemoteViews views, int widgetId, String shown) {
+        boolean reading = !shown.equals("to-read");
+        int idle = context.getColor(R.color.widget_toggle_icon);
+        int checked = 0xFFFAFAFA;
+
+        views.setInt(R.id.toggle_reading_wrap, "setBackgroundResource", reading ? R.drawable.widget_toggle_selected : 0);
+        views.setInt(R.id.toggle_to_read_wrap, "setBackgroundResource", reading ? 0 : R.drawable.widget_toggle_selected);
+        views.setInt(R.id.toggle_reading, "setColorFilter", reading ? checked : idle);
+        views.setInt(R.id.toggle_to_read, "setColorFilter", reading ? idle : checked);
+
+        views.setOnClickPendingIntent(R.id.toggle_reading_wrap, setShelfIntent(context, widgetId, "reading"));
+        views.setOnClickPendingIntent(R.id.toggle_to_read_wrap, setShelfIntent(context, widgetId, "to-read"));
+    }
+
+    private static PendingIntent setShelfIntent(Context context, int widgetId, String shelf) {
+        Intent intent = new Intent(context, BookshelfWidgetProvider.class)
+                .setAction(BookshelfWidgetProvider.ACTION_SET_SHELF)
+                .setData(Uri.parse("cozybooks://widget/" + widgetId + "/shelf/" + shelf))
+                .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+                .putExtra(BookshelfWidgetProvider.EXTRA_SHELF, shelf);
+
+        return PendingIntent.getBroadcast(context, requestCode(widgetId, shelf.equals("reading") ? 5 : 6), intent,
+                immutableFlags());
     }
 
     /** Opens the TWA on the given URL, e.g. a book's page or a shelf. */
